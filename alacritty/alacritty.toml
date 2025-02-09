@@ -26,20 +26,22 @@ foreground = "0xf8f8f2"
 blinking = "Always"
 shape = "Block"
 
-#[font]
-#size = 12.0
 
-#[font.bold]
-#family = "JetBrainsMono Nerd Font"
-#style = "Bold"
+[font]
+size = 12.0  # Adjust if needed
 
-#[font.italic]
-#family = "JetBrainsMono Nerd Font"
-#style = "Italic"
+[font.bold]
+family = "FiraCode Nerd Font"
+style = "Bold"
 
-#[font.normal]
-#family = "JetBrainsMono Nerd Font"
-#style = "Regular"
+[font.italic]
+family = "FiraCode Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+
 
 [scrolling]
 history = 10000
