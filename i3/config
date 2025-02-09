@@ -191,6 +191,8 @@ bindsym $mod+r mode "resize"
 
 
 exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
+
 
 # ---------------------------------------------
 # CUSTOM KEYS START
