@@ -1,0 +1,121 @@
+{
+    // "layer": "top", // Uncomment this if you want Waybar on top of fullscreen windows
+    "position": "top", // "top" or "bottom"
+    "height": 30, // Bar height
+    // "spacing": 4, // Gaps between modules
+    // "exclusive": true, // Not usually needed with Hyprland's layer-shell protocol
+
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/mode"
+    ],
+    "modules-center": [
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "tray",
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "battery",
+        "clock"
+    ],
+
+    // Module Specific Configurations
+    "hyprland/workspaces": {
+        // MODIFICATION: Changed format to display ID (number)
+        "format": "{id}",
+        // MODIFICATION: format-icons can be simplified or removed if you only want numbers and rely on CSS for active state.
+        // Kept for flexibility if you want specific icons for urgent or a different active look beyond CSS.
+        "format-icons": {
+            "urgent": "", // Exclamation mark for urgent workspace
+            "active": "{id}"  // Can just be "{id}" and styled with CSS, or an icon like "" if preferred alongside CSS
+            // You no longer need to define icons for "1", "2", etc., here if "format": "{id}" is used
+            // and persistent_workspaces handles showing them.
+        },
+        "on-click": "activate",
+        // "all-outputs": true, // Uncomment if you want to see workspaces from all monitors merged
+        // MODIFICATION: Added persistent_workspaces to show 1-10
+        "persistent_workspaces": {
+            "1": [], // Makes workspace "1" always visible
+            "2": [], // Makes workspace "2" always visible
+            "3": [], // Makes workspace "3" always visible
+            "4": [], // Makes workspace "4" always visible
+            "5": [], // Makes workspace "5" always visible
+            "6": [], // Makes workspace "6" always visible
+            "7": [], // Makes workspace "7" always visible
+            "8": [], // Makes workspace "8" always visible
+            "9": [], // Makes workspace "9" always visible
+            "10": [] // Makes workspace "10" always visible
+        }
+    },
+    "hyprland/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "hyprland/window": {
+        "format": "🐦 {} ",
+        "max-length": 50, // Max length of the window title
+        "separate-outputs": true
+    },
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
+    },
+    "clock": {
+        "format": " {:%H:%M}", // Icon and HH:MM format
+        "format-alt": " {:%A, %B %d, %Y}", // Icon and full date on hover/alt click
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "swaync-client -t -sw" // Example: toggle notification center
+    },
+    "cpu": {
+        "format": " {usage}%", // CPU icon and usage
+        "tooltip": true,
+        "on-click": "alacritty -e htop" // Example: open htop
+    },
+    "memory": {
+        "format": " {}%", // Memory icon and usage
+        "on-click": "alacritty -e htop" // Example: open htop
+    },
+    "network": {
+        // "interface": "wlp2s0", // Check your network interface name with `ip addr`
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": " {ifname}: {ipaddr}/{cidr}",
+        "format-linked": " {ifname} (No IP)",
+        "format-disconnected": "⚠ Disconnected",
+        "format-alt": " {ifname}: {ipaddr}/{cidr}",
+        "tooltip-format": "{ifname} via {gwaddr} ",
+        "on-click": "alacritty -e nmtui" // Example: open network manager TUI
+    },
+    "pulseaudio": {
+        // "scroll_step": 1, // % to increase/decrease volume on scroll
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""] // Icons for different volume levels
+        },
+        "on-click": "pavucontrol" // Example: open pavucontrol
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": " {capacity}% {icon}",
+        "format-plugged": " {capacity}% {icon}",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""] // Battery icons from low to full
+    }
+}

@@ -1,0 +1,102 @@
+* {
+    /* `otf-font-awesome` is required for icons. Uncomment the following line and adjust it to your preferred font. */
+    /* font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif; */
+    font-family: "JetBrainsMono Nerd Font", FontAwesome, sans-serif; /* Example: Use a Nerd Font */
+    font-size: 13px;
+    border: none; /* Reset all borders */
+    border-radius: 0; /* Reset all border radiuses */
+    min-height: 0; /* Reset min-height */
+}
+
+window#waybar {
+    background-color: rgba(26, 27, 38, 0.85); /* Dark background with some transparency */
+    color: #cdd6f4; /* Light text color (Catppuccin Macchiato text) */
+    transition-property: background-color;
+    transition-duration: .5s;
+    border-radius: 0px; /* Rounded corners for the bar */
+    margin: 5px; /* Small margin around the bar */
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* Add this if you want to see a border around the bar */
+
+
+
+tooltip {
+    background: rgba(40, 42, 54, 0.95); /* Slightly different background for tooltips */
+    border: 1px solid #4c566a; /* Border for tooltips */
+    border-radius: 4px;
+}
+
+tooltip label {
+    color: #cdd6f4;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #cdd6f4; /* Default workspace button color */
+    border-radius: 5px; /* Rounded corners for workspace buttons */
+    margin: 2px 3px;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inherit;
+    text-shadow: inherit;
+}
+
+#workspaces button.focused,
+#workspaces button.active { /* .focused is for Hyprland, .active for general Wayland */
+    background-color: #89b4fa; /* Blue for active/focused workspace (Catppuccin Macchiato blue) */
+    color: #1e1e2e; /* Darker text for contrast */
+}
+
+#workspaces button.urgent {
+    background-color: #f38ba8; /* Red for urgent workspace (Catppuccin Macchiato red) */
+    color: #1e1e2e;
+}
+
+#mode {
+    padding: 0 10px;
+    margin: 0 3px;
+    color: #f9e2af; /* Yellow for mode indicator (Catppuccin Macchiato yellow) */
+    font-weight: bold;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray,
+#custom-weather {
+    padding: 0 10px; /* Horizontal padding for modules */
+    margin: 0 3px; /* Horizontal margin between modules */
+    color: #cdd6f4;
+    /* border-radius: 5px; */ /* Optional: if you want individual modules to have rounded corners */
+}
+
+/* Example: Different color for specific modules */
+#clock {
+    /* background-color: #1abc9c; */
+    color: #a6e3a1; /* Green for clock (Catppuccin Macchiato green) */
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f38ba8; /* Red background for critical battery */
+    color: #1e1e2e;
+    border-radius: 5px;
+}
+
+#pulseaudio.muted {
+    color: #f38ba8; /* Red when muted */
+}
+
+label:focus {
+    background-color: #000000;
+}
