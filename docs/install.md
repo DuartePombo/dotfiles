@@ -106,8 +106,9 @@ passwd <user>
 echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
 ```
-Initramfs. The `systemd` and `sd-encrypt` hooks unlock the disk at boot; `sd-vconsole` and `keyboard` come
-before them so the passphrase prompt uses the right keymap:
+Initramfs. `systemd` makes it a systemd-based initramfs, and `sd-encrypt` unlocks the disk at boot.
+`keyboard` and `sd-vconsole` must come before `sd-encrypt`, so the keyboard works at the passphrase prompt and
+uses the right keymap:
 ```
 sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)/' /etc/mkinitcpio.conf
 mkinitcpio -P
