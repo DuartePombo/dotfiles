@@ -1,0 +1,17 @@
+# This repo is public. Keep secrets and app data out of it.
+
+# Keys and credentials
+**/.ssh/
+**/.gnupg/
+**/.config/gh/
+*.pem
+*.key
+.netrc
+.env
+.env.*
+
+# App data (logins, caches)
+**/.config/google-chrome/
+**/.config/discord/
+**/.config/Mullvad VPN/
+**/.mozilla/
