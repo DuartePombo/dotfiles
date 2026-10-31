@@ -1,0 +1,4 @@
+linux-headers
+linux-lts-headers
+nvidia-open-dkms
+nvidia-prime
