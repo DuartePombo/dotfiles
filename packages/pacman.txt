@@ -12,6 +12,8 @@ man-db
 neovim
 networkmanager
 openssh
+snap-pac
+snapper
 sof-firmware
 stow
 sudo
