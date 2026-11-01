@@ -42,10 +42,8 @@
 - Settings: `~/.config/hypr/hypridle.conf`, look of the lock screen: `~/.config/hypr/hyprlock.conf`.
 
 ## Graphics (NVIDIA + Intel)
-- Default ("mobile"): Intel draws the desktop, the NVIDIA GPU sleeps. Run a program on NVIDIA with
-  `prime-run <program>`.
-- Is the NVIDIA GPU asleep? `cat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status` (`suspended` = yes).
-  Which program keeps it awake? `sudo lsof +c0 /dev/nvidia*`. `lspci` and `nvidia-smi` wake it up themselves.
+- Default ("mobile"): Intel draws the desktop. Run a program on NVIDIA with `prime-run <program>`.
+- The NVIDIA GPU stays powered on all the time (its power saving broke external monitors with this driver).
 - Monitor on the laptop's HDMI port (it's wired to the NVIDIA GPU): Hyprland has to start in "docked" mode, which
   it picks by itself when that monitor is plugged in at login. Plugged in later: `Alt+M`, then `hyprland-session`
   at the tty1 prompt. The USB-C port carries no video (USB only).

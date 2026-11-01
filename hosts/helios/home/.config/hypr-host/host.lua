@@ -1,7 +1,7 @@
 -- helios: monitors and GPU-specific settings, loaded by ~/.config/hypr/hyprland.lua.
 -- hyprland-session (~/.local/bin) sets HELIOS_GPU_MODE before starting Hyprland:
---   mobile: Intel renders the laptop panel, the NVIDIA GPU stays asleep (apps can still use it via prime-run)
---   docked: an external monitor is on the NVIDIA GPU, so NVIDIA renders (DRAFT, not tested yet)
+--   mobile: Intel renders the laptop panel; Hyprland doesn't use the NVIDIA GPU (apps can, via prime-run)
+--   docked: an external monitor is on the NVIDIA GPU, so NVIDIA renders
 
 local mode = os.getenv("HELIOS_GPU_MODE") or "mobile"
 
