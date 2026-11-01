@@ -1,0 +1,15 @@
+# clangd, Neovim's C/C++ language server (user-wide config).
+# Use the same language standard that <leader>rr and the debugger compile with (nvim/lua/custom/run.lua):
+# without this, clangd parses single files as C++17 and flags valid C++20/23 code (ranges, concepts, std::print).
+# The GNU dialects keep POSIX functions (getline, popen...) declared.
+# In projects with a compile_commands.json (CMake: -DCMAKE_EXPORT_COMPILE_COMMANDS=ON) this is appended to the
+# project's flags, which at worst makes clangd accept newer code than the project targets.
+If:
+  PathMatch: .*\.c
+CompileFlags:
+  Add: [-std=gnu23]
+---
+If:
+  PathMatch: .*\.(cpp|cc|cxx|c\+\+|hpp|hh|hxx|ipp|tpp)
+CompileFlags:
+  Add: [-std=gnu++23]

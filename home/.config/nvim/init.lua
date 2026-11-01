@@ -203,18 +203,8 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- Open terminal at bottom
-vim.keymap.set('n', '<leader>tt', function()
-  vim.cmd('below 15split | terminal')
-  -- Auto-activate conda environment if one is selected
-  vim.defer_fn(function()
-    local venv = vim.env.CONDA_DEFAULT_ENV or vim.env.VIRTUAL_ENV
-    if venv then
-      local keys = vim.api.nvim_replace_termcodes('conda activate ' .. venv .. '<CR>', true, false, true)
-      vim.api.nvim_feedkeys(keys, 't', false)
-    end
-  end, 100)
-end, { desc = '[T]oggle [T]erminal' })
+-- Terminal at the bottom (<leader>tt) and running the current file (<leader>r...): lua/custom/run.lua
+require('custom.run').setup()
 
 -- Easier window resizing
 vim.keymap.set('n', '<M-Up>', ':resize +2<CR>', { desc = 'Increase window height' })
@@ -388,7 +378,10 @@ require('lazy').setup({
       spec = {
         { '<leader>a', group = '[A]I' },
         { '<leader>g', group = '[G]it' },
-        { '<leader>v', group = '[V]env' },
+        { '<leader>v', group = '[V]env (Python interpreter)' },
+        { '<leader>d', group = '[D]ebug', mode = { 'n', 'v' } },
+        { '<leader>r', group = '[R]un' },
+        { '<leader>j', group = '[J]upyter' },
         { '<leader>c', group = '[C]ode' }, -- you already use <leader>c* for jdtls
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
@@ -1052,6 +1045,29 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return '%2l:%-2v'
+      end
+
+      -- In Python buffers, show the active environment (picked with <leader>vs) next to the file info
+      local section_fileinfo = statusline.section_fileinfo
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_fileinfo = function(args)
+        local info = section_fileinfo(args)
+        if vim.bo.filetype ~= 'python' then return info end
+        local ok, venv_selector = pcall(require, 'venv-selector')
+        local venv = ok and venv_selector.venv() or vim.env.VIRTUAL_ENV or vim.env.CONDA_PREFIX
+        local name = 'system python'
+        if venv then
+          local tail = vim.fn.fnamemodify(venv, ':t')
+          if tail == 'miniforge3' then
+            name = 'base'
+          elseif tail == '.venv' or tail == 'venv' then
+            name = vim.fn.fnamemodify(venv, ':h:t') .. '/' .. tail
+          else
+            name = tail
+          end
+        end
+        local icon = vim.g.have_nerd_font and '\u{e73c} ' or 'py:'
+        return icon .. name .. '  ' .. info
       end
 
       -- ... and there is more!
