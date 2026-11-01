@@ -17,8 +17,8 @@
 | `Alt+Q` | close window |
 | `Alt+M` | quit Hyprland |
 | `Alt+.` | lock the screen (hyprlock) |
-| `Alt+H` / `J` / `K` / `L` | move focus left / down / up / right |
-| `Alt+J` | also toggles the split direction (two binds share this key, as in the old config) |
+| `Alt+H` / `J` / `K` / `L` | move focus left / down / up / right (vim keys) |
+| `Alt+T` | toggle the split direction (side by side / stacked) |
 | `Alt+1` … `Alt+0` | go to workspace 1–10 |
 | `Alt+Shift+1` … `Alt+Shift+0` | move window to workspace 1–10 |
 | `Alt+S` | show/hide the scratchpad workspace |
@@ -71,7 +71,9 @@
   (helios-specific: `stow -R -d hosts/helios -t ~ home`).
 
 ## Development
-- `fz`: pick a project folder and jump into a tmux session for it (`tmux-sessionizer`).
+- `fz`: pick a project folder and jump into a tmux session for it (`tmux-sessionizer`). It lists the folders in
+  `~/pombo/projects`, plus those in each path listed in `~/.tmux-sessionizer.local` (one per line; that file stays
+  on this machine, so work paths never reach the repo).
 - tmux (prefix `Ctrl+b`): `f` projects, `h`/`j`/`k`/`l` panes, `r` reload config, `[` copy mode (`v` select, `y` copy).
 - Node: mise (`mise use -g node@lts`, per project `mise use node@22`). Python: `uv` for pip-style projects;
   conda (Miniforge) for environments: `conda activate jupyter && jupyter lab`.

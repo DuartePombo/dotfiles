@@ -25,6 +25,7 @@ hypridle
 hyprland
 hyprlock
 hyprpolkitagent
+imagemagick
 intel-ucode
 jdk-openjdk
 libreoffice-fresh

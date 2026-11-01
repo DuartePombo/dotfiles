@@ -200,7 +200,7 @@ hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V",      hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D",      hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())          -- dwindle
-hl.bind(mainMod .. " + J",      hl.dsp.layout("togglesplit"))    -- dwindle; note: Alt+J also moves focus down (below)
+hl.bind(mainMod .. " + T",      hl.dsp.layout("togglesplit"))    -- dwindle
 hl.bind(mainMod .. " + F9",     hl.dsp.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh"))
 hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(lock))
 

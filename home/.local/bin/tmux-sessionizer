@@ -1,14 +1,25 @@
 #!/usr/bin/env bash
 # tmux-sessionizer: pick a project folder with fzf and switch to a tmux session for it, creating it if needed.
 # Usage: tmux-sessionizer [folder]   (alias `fz`; inside tmux: prefix + f)
-# Folders searched (one level deep): $TMUX_SESSIONIZER_PATHS, space-separated. Default: ~/pombo/projects
-# Machine-local extra folders go in ~/.bashrc.local, e.g.
-#   export TMUX_SESSIONIZER_PATHS="$HOME/pombo/projects $HOME/some/other/folder"
+# Searches the folders one level inside ~/pombo/projects, plus those inside every path listed in
+# ~/.tmux-sessionizer.local (one path per line, ~ allowed, # comments). That file is machine-local and not in
+# the dotfiles repo, so work paths stay out of it.
+
+local_paths=~/.tmux-sessionizer.local
 
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    read -ra paths <<< "${TMUX_SESSIONIZER_PATHS:-$HOME/pombo/projects}"
+    paths=("$HOME/pombo/projects")
+    if [[ -f $local_paths ]]; then
+        while IFS= read -r line; do
+            line=${line%%#*}                          # strip comments
+            line=${line#"${line%%[![:space:]]*}"}     # trim leading spaces
+            line=${line%"${line##*[![:space:]]}"}     # trim trailing spaces
+            [[ -z $line ]] && continue
+            paths+=("${line/#\~/$HOME}")
+        done < "$local_paths"
+    fi
     selected=$(find "${paths[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | fzf)
 fi
 [[ -z $selected ]] && exit 0
