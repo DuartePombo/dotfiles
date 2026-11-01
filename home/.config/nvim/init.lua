@@ -1058,10 +1058,10 @@ require('lazy').setup({
       statusline.section_fileinfo = function(args)
         local info = section_fileinfo(args)
         if vim.bo.filetype ~= 'python' then return info end
-        local ok, venv_selector = pcall(require, 'venv-selector')
-        local venv = ok and venv_selector.venv() or vim.env.VIRTUAL_ENV or vim.env.CONDA_PREFIX
+        -- the same interpreter that <leader>rr, the debugger and notebooks use (lua/custom/run.lua)
+        local venv = vim.fn.fnamemodify(require('custom.run').python(), ':h:h')
         local name = 'system python'
-        if venv then
+        if venv ~= '/usr' and venv ~= '' then
           local tail = vim.fn.fnamemodify(venv, ':t')
           if tail == 'miniforge3' then
             name = 'base'
