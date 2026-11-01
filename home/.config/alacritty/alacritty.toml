@@ -1,2 +1,5 @@
 [window]
 opacity = 0.95
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font" }

@@ -9,9 +9,13 @@
 .netrc
 .env
 .env.*
+**/.local/share/keyrings/
 
 # App data (logins, caches)
 **/.config/google-chrome/
 **/.config/discord/
 **/.config/Mullvad VPN/
+**/.config/Code/
+**/.config/libreoffice/
+**/.vscode/
 **/.mozilla/

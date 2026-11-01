@@ -1,0 +1,4 @@
+google-chrome
+mullvad-vpn-bin
+paru-bin
+visual-studio-code-bin

@@ -1,4 +1,6 @@
+intel-media-driver
 linux-headers
 linux-lts-headers
 nvidia-open-dkms
 nvidia-prime
+vulkan-intel
