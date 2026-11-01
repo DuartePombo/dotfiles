@@ -28,7 +28,7 @@
 | `Alt+scroll` | next / previous workspace |
 | `Alt+left drag` / `Alt+right drag` | move / resize a window |
 | `Print` | screenshot of a selected area to the clipboard |
-| `Alt+F9` | random wallpaper |
+| `Alt+F9` | random wallpaper from `~/Pictures/wallpapers` (curated list: `packages/wallpapers.txt`) |
 | Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen |
 
 ## Bar and tray

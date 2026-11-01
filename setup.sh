@@ -215,6 +215,20 @@ if command -v code >/dev/null; then
     done < "$repo/packages/vscode-extensions.txt"
 fi
 
+say "Wallpapers (curated list: packages/wallpapers.txt)"
+wall_dir="$HOME/Pictures/wallpapers"
+mapfile -t walls < <(grep -vE '^(#|[[:space:]]*$)' "$repo/packages/wallpapers.txt")
+missing=()
+for w in "${walls[@]}"; do [[ -f $wall_dir/$w ]] || missing+=("$w"); done
+if (( ${#missing[@]} )); then
+    clone=$(mktemp -d)
+    git clone --depth 1 https://github.com/D3Ext/aesthetic-wallpapers.git "$clone/repo"
+    mkdir -p "$wall_dir"
+    for w in "${missing[@]}"; do install -m644 "$clone/repo/images/$w" "$wall_dir/$w"; done
+    rm -rf "$clone"
+    note "copied ${#missing[@]} wallpapers to $wall_dir"
+fi
+
 say "Dolphin application menu"
 XDG_MENU_PREFIX=arch- kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
 

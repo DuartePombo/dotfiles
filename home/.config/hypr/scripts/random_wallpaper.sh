@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directory containing your wallpapers
-WALLPAPER_DIR="$HOME/aesthetic-wallpapers/images"
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"   # curated list: packages/wallpapers.txt in the dotfiles repo
 
 # Find all image files (png, jpg, jpeg) in the directory and its subdirectories
 # If your images are only in the top level, you can simplify the find command.

@@ -31,7 +31,7 @@ local lock        = "pidof hyprlock || hyprlock"
 -------------------
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd("swaybg -i ~/aesthetic-wallpapers/images/astronaut.jpg")
+    hl.exec_cmd("swaybg -i ~/Pictures/wallpapers/astronaut.jpg -m fill")
     -- hl.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh")
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")                                  -- notifications
