@@ -9,6 +9,9 @@ bluez-utils
 brightnessctl
 btrfs-progs
 discord
+docker
+docker-buildx
+docker-compose
 dolphin
 git
 github-cli
