@@ -61,7 +61,8 @@ function M.send(cmd)
 end
 
 -- The Python interpreter for running and debugging, in this order: the one picked with venv-selector (<leader>vs),
--- an env that was active in the shell Neovim started from, the project's .venv (uv), then the system python3.
+-- an env that was active in the shell Neovim started from, the project's .venv/venv (uv; looked up from the
+-- file's folder upwards, like uv does, then in Neovim's working folder), then the system python3.
 -- (Without this, the debugger would fall back to Mason's debugpy interpreter, which has none of your packages.)
 function M.python()
   local ok, vs = pcall(require, 'venv-selector')
@@ -69,9 +70,12 @@ function M.python()
   if python then return python end
   local prefix = vim.env.VIRTUAL_ENV or vim.env.CONDA_PREFIX
   if prefix then return prefix .. '/bin/python' end
-  for _, dir in ipairs { '.venv', 'venv' } do
-    local candidate = vim.fn.getcwd() .. '/' .. dir .. '/bin/python'
-    if vim.fn.executable(candidate) == 1 then return candidate end
+  local file_dir = vim.fn.expand '%:p:h'
+  local starts = { vim.fn.isdirectory(file_dir) == 1 and file_dir or nil, vim.fn.getcwd() }
+  for _, start in ipairs(starts) do
+    for _, venv in ipairs(vim.fs.find({ '.venv', 'venv' }, { upward = true, path = start, stop = vim.env.HOME, type = 'directory' })) do
+      if vim.fn.executable(venv .. '/bin/python') == 1 then return venv .. '/bin/python' end
+    end
   end
   return vim.fn.exepath 'python3'
 end
