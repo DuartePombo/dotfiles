@@ -15,6 +15,8 @@ return {
   },
   opts = {
     filesystem = {
+      -- hidden like dotfiles (H shows them)
+      filtered_items = { hide_by_name = { '__pycache__', '.pytest_cache', '.ruff_cache', '.mypy_cache', 'node_modules' } },
       window = {
         mappings = {
           ['\\'] = 'close_window',

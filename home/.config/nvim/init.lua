@@ -207,6 +207,16 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Terminal at the bottom (<leader>tt) and running the current file (<leader>r...): lua/custom/run.lua
 require('custom.run').setup()
 
+-- My Neovim tutorial (~/projects/nvim-tutorial): <leader>? opens its index, <leader>s? searches all of it
+local tutorial = vim.fn.expand '~/projects/nvim-tutorial'
+vim.keymap.set('n', '<leader>?', function()
+  vim.cmd "normal! m'"
+  vim.cmd.edit(vim.fn.fnameescape(tutorial .. '/index.md'))
+end, { desc = 'Open my Neovim tutorial' })
+vim.keymap.set('n', '<leader>s?', function()
+  require('telescope.builtin').live_grep { cwd = tutorial, prompt_title = 'Search the Neovim tutorial', glob_pattern = '*.md' }
+end, { desc = '[S]earch the tutorial [?]' })
+
 -- Easier window resizing
 vim.keymap.set('n', '<M-Up>', ':resize +2<CR>', { desc = 'Increase window height' })
 vim.keymap.set('n', '<M-Down>', ':resize -2<CR>', { desc = 'Decrease window height' })
@@ -453,6 +463,13 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        defaults = {
+          -- Never list caches, virtual environments or node_modules (searches skip what .gitignore lists, but only
+          -- inside git repositories). Lua patterns, matched against the path.
+          file_ignore_patterns = {
+            '__pycache__/', '%.pyc$', '%.venv/', 'node_modules/', '%.pytest_cache/', '%.ruff_cache/', '%.mypy_cache/',
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -597,6 +614,10 @@ require('lazy').setup({
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
           map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          -- gd too, as in VS Code's Vim mode (Markdown keeps its own gd: open the link under the cursor)
+          if vim.bo[event.buf].filetype ~= 'markdown' then
+            map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          end
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -1143,7 +1164,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- git keys: ]c/[c changes, <leader>h... stage/reset/preview/blame
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
