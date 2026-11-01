@@ -4,8 +4,8 @@
 #                     Apps can still use NVIDIA with prime-run.
 #   docked:           an external monitor is connected to an NVIDIA connector: NVIDIA renders, Intel is
 #                     second, with the NVIDIA env vars from the old config. DRAFT, not tested with a monitor yet.
-# Force a mode with HELIOS_GPU_MODE=mobile or HELIOS_GPU_MODE=docked.
-# The choice is logged to the journal: journalctl -t hyprland-session
+# Force a mode with an argument: hyprland-session mobile, or hyprland-session docked.
+# The chosen mode is exported as HELIOS_GPU_MODE for host.lua, and logged: journalctl -t hyprland-session
 
 intel_pci=0000:00:02.0
 nvidia_pci=0000:01:00.0
@@ -32,7 +32,7 @@ external_on_nvidia() {
 intel_card=$(card_of "$intel_pci")
 nvidia_card=$(card_of "$nvidia_pci")
 
-mode=${HELIOS_GPU_MODE:-}
+mode=${1:-}
 if [[ -z $mode ]]; then
     if [[ -e $nvidia_card ]] && external_on_nvidia; then
         mode=docked

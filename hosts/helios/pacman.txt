@@ -1,4 +1,5 @@
 intel-media-driver
+libva-nvidia-driver
 linux-headers
 linux-lts-headers
 nvidia-open-dkms

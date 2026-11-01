@@ -9,10 +9,13 @@ local mode = os.getenv("HELIOS_GPU_MODE") or "mobile"
 hl.monitor({ output = "eDP-1", mode = "1920x1080@144", position = "0x0", scale = 1 })
 
 if mode == "docked" then
-    -- From the old config, where external monitors stuttered without the NVIDIA settings.
-    -- The connector name is from the old setup; confirm it with the port mapping (it may differ under nvidia-drm).
-    hl.monitor({ output = "HDMI-A-1", mode = "1920x1080@180", position = "1920x0", scale = 1 })
+    -- The laptop's HDMI port is HDMI-A-3 on the NVIDIA GPU (checked 2026-11-01; the old config's HDMI-A-1 was
+    -- the name under the previous driver). highrr: the highest refresh rate, e.g. 165 Hz on the VG252Q.
+    hl.monitor({ output = "HDMI-A-3", mode = "highrr", position = "1920x0", scale = 1 })
+    -- Any other monitor: preferred mode, placed automatically
+    hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
+    -- From the old config, where external monitors stuttered without the NVIDIA settings.
     hl.config({
         cursor = { no_hardware_cursors = true },
         opengl = { nvidia_anti_flicker = false },

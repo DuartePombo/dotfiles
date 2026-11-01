@@ -46,7 +46,11 @@
   `prime-run <program>`.
 - Is the NVIDIA GPU asleep? `cat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status` (`suspended` = yes).
   Which program keeps it awake? `sudo lsof +c0 /dev/nvidia*`. `lspci` and `nvidia-smi` wake it up themselves.
-- Which mode did Hyprland start in? `journalctl -t hyprland-session`. Force one: `HELIOS_GPU_MODE=docked hyprland-session`.
+- Monitor on the laptop's HDMI port (it's wired to the NVIDIA GPU): Hyprland has to start in "docked" mode, which
+  it picks by itself when that monitor is plugged in at login. Plugged in later: `Alt+M`, then `hyprland-session`
+  at the tty1 prompt. The USB-C port carries no video (USB only).
+- Which mode did Hyprland start in? `journalctl -t hyprland-session`. Force one: `hyprland-session docked` or
+  `hyprland-session mobile`.
 
 ## Hyprland itself
 - Config: `~/.config/hypr/hyprland.lua` (Lua since Hyprland 0.57); helios-specific: `~/.config/hypr-host/host.lua`.
