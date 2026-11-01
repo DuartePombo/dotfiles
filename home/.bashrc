@@ -17,6 +17,10 @@ PS1='[\u@\h \W]\$ '
 
 export PATH="$HOME/.local/bin:$PATH"
 
+# Editor for git commit, sudoedit, crontab -e... (no vi/nano installed)
+export EDITOR=nvim
+export VISUAL=nvim
+
 # mise (Node and other runtimes)
 if command -v mise >/dev/null; then
     eval "$(mise activate bash)"

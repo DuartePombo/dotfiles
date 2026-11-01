@@ -2,6 +2,9 @@
 
 `Space` is the leader key. Press it and wait: which-key lists everything under it. `<leader>sk` searches all keys.
 
+The full tutorial, with exercises and mnemonics, is a local folder: `~/projects/nvim-tutorial` (not in this repo).
+`<leader>?` opens it, `<leader>s?` searches it.
+
 ## What works per language
 
 | Language | Language server (completion, errors, go to definition) | Format (`<leader>f`) | Run (`<leader>rr`) | Debug (`F5`) |
@@ -71,7 +74,8 @@ Chrome: start the dev server (`npm run dev`), then `<leader>dc` → "Chrome: ope
 
 ## Jupyter notebooks
 `nvim notebook.ipynb` opens it as Python with `# %%` lines between cells (`# %% [markdown]` for text cells), so
-completion, errors, formatting and even the debugger work. `:w` saves the `.ipynb`, including the outputs of the
+completion, errors and formatting work (the debugger needs a real .py file: plain `.py` files with `# %%` cells
+work with both F5 and the `<leader>j` keys). `:w` saves the `.ipynb`, including the outputs of the
 cells you ran. `nvim new.ipynb` creates a new notebook. The same cells work in plain `.py` files.
 
 | Keys | Action |
@@ -101,7 +105,7 @@ IPython magics (`%timeit`, `!pip install`) run normally.
 | Keys | Action |
 |---|---|
 | `K` | documentation of the symbol under the cursor |
-| `grd` / `grD` | go to definition / declaration |
+| `gd` (or `grd`) / `grD` | go to definition / declaration |
 | `grr` | references |
 | `gri` / `grt` | implementations / type definition |
 | `grn` | rename everywhere |
@@ -123,7 +127,19 @@ IPython magics (`%timeit`, `!pip install`) run normally.
 `<leader>sk` keys, `<leader>sr` resume the last search.
 
 ## Git and AI
-`<leader>gd` diff view, `<leader>gh` file history, `<leader>gc` close it. `<leader>ao` / `<leader>at` Codex.
+| Keys | Action |
+|---|---|
+| `]c` / `[c` | next / previous change (margin: `+` added, `~` changed, `_` deleted) |
+| `<leader>hp` / `<leader>hs` / `<leader>hr` | preview / stage / reset the change (hunk); `hS` / `hR` the whole file |
+| `<leader>hb` / `<leader>tb` | blame the line / show blame on every line you're on |
+| `<leader>hd` / `<leader>hD` | diff the file against the staged version / the last commit |
+| `<leader>gd` / `<leader>gh` / `<leader>gc` | diff view of all changes / file history / close it |
+| `<leader>ao` / `<leader>at` | Codex (needs the Codex CLI, not installed) |
+
+## Markdown
+Rendered in place (`<leader>tm` switches to raw). Enter (or `gd`) on a link opens it, `Ctrl+o` comes back;
+Enter on a `- [ ]` task ticks it. Link targets can be `file.md#heading`, `code.lua#text` (first line with that
+text) or `code.lua#L12`.
 
 ## Maintenance
 - `:Lazy` plugins (`:Lazy update`, then commit `lazy-lock.json`), `:Mason` language tools,
