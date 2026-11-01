@@ -140,7 +140,7 @@ Like VS Code's Source Control:
 | `<leader>hp` / `<leader>hs` / `<leader>hr` | preview / stage / reset the change (hunk); `hS` / `hR` the whole file |
 | `<leader>hb` / `<leader>tb` | blame the line / show blame on every line you're on |
 | `<leader>hd` / `<leader>hD` | diff the file against the staged version / the last commit |
-| `<leader>ac` | Claude Code in a new kitty window, in the project folder |
+| `<leader>ac` | Claude Code in a new kitty window, in the project folder. Back to Neovim: `Alt+H`/`Alt+L` (or `Alt+Shift+S` to park it in the scratchpad, `Alt+S` to show/hide). Review its edits with `<leader>gd` |
 
 ## Markdown
 Rendered in place (`<leader>tm` switches to raw). Enter (or `gd`) on a link opens it, `Ctrl+o` comes back;
