@@ -127,14 +127,20 @@ IPython magics (`%timeit`, `!pip install`) run normally.
 `<leader>sk` keys, `<leader>sr` resume the last search.
 
 ## Git and AI
+Like VS Code's Source Control:
+
 | Keys | Action |
 |---|---|
+| `<leader>gg` | Source Control screen (Neogit): `s` stage, `u` unstage, `x` discard, `Tab` inline diff, `c c` commit, `P` push, `p` pull, `b` branches, `l` log, `Z` stash, `?` help, `q` close |
+| `<leader>gd` | all changes side by side, changed files as a tree on the left, staged / unstaged (Diffview; `-` stage, `X` discard, `q` close) |
+| `<leader>gc` then `c` | commit the staged changes (message buffer: `:wq` commits, `q` cancels; `a` amends, `w` rewords) |
+| `<leader>gl` / `<leader>gh` | commit graph / history of this file |
+| `<leader>gb` | switch branch |
 | `]c` / `[c` | next / previous change (margin: `+` added, `~` changed, `_` deleted) |
 | `<leader>hp` / `<leader>hs` / `<leader>hr` | preview / stage / reset the change (hunk); `hS` / `hR` the whole file |
 | `<leader>hb` / `<leader>tb` | blame the line / show blame on every line you're on |
 | `<leader>hd` / `<leader>hD` | diff the file against the staged version / the last commit |
-| `<leader>gd` / `<leader>gh` / `<leader>gc` | diff view of all changes / file history / close it |
-| `<leader>ao` / `<leader>at` | Codex (needs the Codex CLI, not installed) |
+| `<leader>ac` | Claude Code in a new kitty window, in the project folder |
 
 ## Markdown
 Rendered in place (`<leader>tm` switches to raw). Enter (or `gd`) on a link opens it, `Ctrl+o` comes back;
