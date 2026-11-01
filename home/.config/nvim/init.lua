@@ -217,6 +217,16 @@ vim.keymap.set('n', '<leader>s?', function()
   require('telescope.builtin').live_grep { cwd = tutorial, prompt_title = 'Search the Neovim tutorial', glob_pattern = '*.md' }
 end, { desc = '[S]earch the tutorial [?]' })
 
+-- Claude Code in its own kitty window, in the folder Neovim was started in (the project); Hyprland tiles it next
+-- to Neovim. When Claude exits, a shell stays open there. It inherits Neovim's environment, so the Python env
+-- picked with <leader>vs is the one its commands use.
+vim.keymap.set('n', '<leader>ac', function()
+  if vim.fn.executable 'kitty' == 0 or not vim.env.WAYLAND_DISPLAY then
+    return vim.notify('Claude Code opens in a kitty window: needs the desktop session', vim.log.levels.WARN)
+  end
+  vim.fn.jobstart({ 'kitty', '--directory', vim.fn.getcwd(), 'bash', '-ic', 'claude; exec bash' }, { detach = true })
+end, { desc = '[A]I: [C]laude Code in a new window' })
+
 -- Easier window resizing
 vim.keymap.set('n', '<M-Up>', ':resize +2<CR>', { desc = 'Increase window height' })
 vim.keymap.set('n', '<M-Down>', ':resize -2<CR>', { desc = 'Decrease window height' })
@@ -1111,7 +1121,8 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       local parsers = {
-        'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'html', 'java', 'javascript', 'json', 'lua', 'luadoc',
+        'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'git_config', 'git_rebase', 'gitcommit', 'gitignore', 'html',
+        'java', 'javascript', 'json', 'lua', 'luadoc',
         'make', 'markdown', 'markdown_inline', 'python', 'query', 'regex', 'toml', 'tsx', 'typescript', 'vim',
         'vimdoc', 'yaml',
       }
