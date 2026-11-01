@@ -37,7 +37,7 @@
 - Tray: Wi-Fi (nm-applet), Bluetooth (blueman).
 
 ## Idle, lock, suspend
-- 2.5 min idle: dim · 5 min: lock · 5.5 min: screen off · 15 min: suspend. Video playback pauses the timers.
+- No idle timers: the screen never dims, blanks, locks or suspends by itself. Lock with `Alt+.`.
 - Closing the lid suspends; every suspend locks the screen first.
 - Settings: `~/.config/hypr/hypridle.conf`, look of the lock screen: `~/.config/hypr/hyprlock.conf`.
 
