@@ -96,6 +96,7 @@ vim.g.have_nerd_font = true
 -- Remote-plugin providers that nothing in this config uses
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
+vim.g.loaded_node_provider = 0 -- no Node remote plugins (Mason's Node tools don't need it)
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -1021,9 +1022,11 @@ require('lazy').setup({
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      --  - ci'  - [C]hange [I]nside [']quote (finds the next quotes when the cursor isn't inside any)
+      --
+      -- mini.ai's "next" variants (an/in) are off: Neovim 0.12 uses an/in to grow/shrink the selection by syntax
+      -- node (like VS Code's Expand Selection): v, then an an an... and in to go back.
+      require('mini.ai').setup { n_lines = 500, mappings = { around_next = '', inside_next = '' } }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -1089,6 +1092,7 @@ require('lazy').setup({
         'make', 'markdown', 'markdown_inline', 'python', 'query', 'regex', 'toml', 'tsx', 'typescript', 'vim',
         'vimdoc', 'yaml',
       }
+      vim.g.treesitter_parsers = parsers -- setup.sh installs these synchronously
       require('nvim-treesitter').install(parsers)
 
       local function treesitter_try_attach(buf, language)

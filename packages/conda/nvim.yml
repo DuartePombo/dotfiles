@@ -1,0 +1,19 @@
+# Neovim's Python host (vim.g.python3_host_prog, see nvim/lua/custom/plugins/jupyter.lua).
+# It runs molten-nvim (Jupyter kernels inside Neovim) and provides the jupytext command that opens .ipynb files
+# as text. Your code doesn't run here: kernels start in the environment picked with <leader>vs.
+# Kept apart from the jupyter env so experiments there can't break Neovim.
+# Create: conda env create -f ~/dotfiles/packages/conda/nvim.yml (setup.sh does this)
+name: nvim
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - pynvim           # Neovim's Python client (remote plugins)
+  - jupyter_client   # talks to the kernels
+  - nbformat         # molten: import/export outputs to .ipynb
+  - jupytext         # .ipynb <-> py:percent text
+  - cairosvg         # SVG output (e.g. some plots) as images
+  - pillow           # image output
+  - pyperclip        # copy cell output to the clipboard
+  - plotly           # plotly figures...
+  - python-kaleido   # ...rendered as static images

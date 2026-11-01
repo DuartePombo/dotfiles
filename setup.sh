@@ -232,8 +232,13 @@ fi
 say "Dolphin application menu"
 XDG_MENU_PREFIX=arch- kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
 
-say "Neovim plugins (versions from lazy-lock.json)"
+say "Neovim: plugins (versions from lazy-lock.json), parsers, language tools, Jupyter remote plugin"
 nvim --headless "+Lazy! restore" +qa
+# Mason installs some language servers with npm: mise's node must be on PATH (.bash_profile adds it from the next
+# login). molten (Jupyter) is a remote plugin of the conda env "nvim" created above: register it.
+PATH="$HOME/.local/share/mise/shims:$PATH" nvim --headless \
+    -c "lua require('nvim-treesitter').install(vim.g.treesitter_parsers):wait(300000)" \
+    +MasonToolsInstallSync +UpdateRemotePlugins +qa
 
 say "Done"
 note "Not handled here: logging in to apps (Chrome, Mullvad, Discord), wallpapers in ~/aesthetic-wallpapers,"
