@@ -1,0 +1,12 @@
+# Conda environment for Jupyter (Miniforge, conda-forge).
+# Create: conda env create -f ~/dotfiles/packages/conda/jupyter.yml
+# Update: conda env update -f ~/dotfiles/packages/conda/jupyter.yml --prune
+# Start:  conda activate jupyter && jupyter lab
+# nb_conda_kernels lists the other conda environments that have ipykernel as kernels in Jupyter.
+name: jupyter
+channels:
+  - conda-forge
+dependencies:
+  - jupyterlab
+  - ipykernel
+  - nb_conda_kernels

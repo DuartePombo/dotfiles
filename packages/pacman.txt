@@ -13,6 +13,9 @@ docker
 docker-buildx
 docker-compose
 dolphin
+fastfetch
+fd
+fzf
 git
 github-cli
 gnome-keyring
@@ -23,12 +26,14 @@ hyprland
 hyprlock
 hyprpolkitagent
 intel-ucode
+jdk-openjdk
 libreoffice-fresh
 libsecret
 linux
 linux-firmware
 linux-lts
 man-db
+mise
 neovim
 networkmanager
 network-manager-applet
@@ -44,6 +49,8 @@ playerctl
 power-profiles-daemon
 qt5-wayland
 qt6-wayland
+ripgrep
+shellcheck
 slurp
 snap-pac
 snapper
@@ -52,7 +59,11 @@ stow
 sudo
 swaybg
 swaync
+tmux
+tree-sitter-cli
 ttf-jetbrains-mono-nerd
+unzip
+uv
 waybar
 wireplumber
 wl-clipboard

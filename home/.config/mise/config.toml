@@ -1,0 +1,3 @@
+# Global tool versions for mise (replaces nvm). `mise install` installs them; `mise use -g <tool>@<version>` edits this file.
+[tools]
+node = "lts"
