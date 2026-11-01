@@ -11,7 +11,7 @@
 
 | Keys | Action |
 |---|---|
-| `Alt+Return` | terminal (Alacritty) |
+| `Alt+Return` | terminal (kitty) |
 | `Alt+D` | app launcher (wofi) |
 | `Alt+E` | file manager (Dolphin) |
 | `Alt+Q` | close window |

@@ -28,6 +28,7 @@ hyprpolkitagent
 imagemagick
 intel-ucode
 jdk-openjdk
+kitty
 libreoffice-fresh
 libsecret
 linux

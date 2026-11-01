@@ -20,7 +20,7 @@ end
 ---- MY PROGRAMS ----
 ---------------------
 
-local terminal    = "alacritty"
+local terminal    = "kitty"
 local fileManager = "dolphin"
 local menu        = "wofi --show drun"
 local lock        = "pidof hyprlock || hyprlock"

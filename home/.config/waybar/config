@@ -72,11 +72,11 @@
     "cpu": {
         "format": " {usage}%", // CPU icon and usage
         "tooltip": true,
-        "on-click": "alacritty -e htop" // Example: open htop
+        "on-click": "kitty -e htop" // Example: open htop
     },
     "memory": {
         "format": " {}%", // Memory icon and usage
-        "on-click": "alacritty -e htop" // Example: open htop
+        "on-click": "kitty -e htop" // Example: open htop
     },
     "network": {
         // "interface": "wlp2s0", // Check your network interface name with `ip addr`
@@ -86,7 +86,7 @@
         "format-disconnected": "⚠ Disconnected",
         "format-alt": " {ifname}: {ipaddr}/{cidr}",
         "tooltip-format": "{ifname} via {gwaddr} ",
-        "on-click": "alacritty -e nmtui" // Example: open network manager TUI
+        "on-click": "kitty -e nmtui" // Example: open network manager TUI
     },
     "pulseaudio": {
         // "scroll_step": 1, // % to increase/decrease volume on scroll
