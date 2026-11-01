@@ -1,0 +1,56 @@
+#!/bin/bash
+# Start Hyprland on helios, choosing which GPU renders at launch (started from ~/.bash_profile on tty1).
+#   mobile (default): Intel renders, only the Intel GPU is given to Hyprland, so the NVIDIA GPU stays asleep.
+#                     Apps can still use NVIDIA with prime-run.
+#   docked:           an external monitor is connected to an NVIDIA connector: NVIDIA renders, Intel is
+#                     second, with the NVIDIA env vars from the old config. DRAFT, not tested with a monitor yet.
+# Force a mode with HELIOS_GPU_MODE=mobile or HELIOS_GPU_MODE=docked.
+# The choice is logged to the journal: journalctl -t hyprland-session
+
+intel_pci=0000:00:02.0
+nvidia_pci=0000:01:00.0
+
+# GPUs are pinned by PCI address (/dev/dri/by-path), never by cardN, which changes between boots.
+# The by-path names contain ':', the separator in AQ_DRM_DEVICES, so pass the resolved /dev/dri/cardN instead.
+card_of() {
+    readlink -f "/dev/dri/by-path/pci-$1-card"
+}
+
+# Is an external monitor connected to one of the NVIDIA GPU's connectors?
+# Reading a connector's status can wake the NVIDIA GPU; it goes back to sleep on its own afterwards.
+external_on_nvidia() {
+    local conn card
+    for conn in /sys/class/drm/card*-*; do
+        card=${conn##*/}
+        card=${card%%-*}
+        [[ $(basename "$(readlink -f "/sys/class/drm/$card/device")") == "$nvidia_pci" ]] || continue
+        [[ $(<"$conn/status") == connected ]] && return 0
+    done
+    return 1
+}
+
+intel_card=$(card_of "$intel_pci")
+nvidia_card=$(card_of "$nvidia_pci")
+
+mode=${HELIOS_GPU_MODE:-}
+if [[ -z $mode ]]; then
+    if [[ -e $nvidia_card ]] && external_on_nvidia; then
+        mode=docked
+    else
+        mode=mobile
+    fi
+fi
+
+if [[ $mode == docked && -e $nvidia_card ]]; then
+    export AQ_DRM_DEVICES="$nvidia_card:$intel_card"
+    export GBM_BACKEND=nvidia-drm
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export LIBVA_DRIVER_NAME=nvidia
+else
+    mode=mobile
+    export AQ_DRM_DEVICES="$intel_card"
+fi
+export HELIOS_GPU_MODE=$mode
+
+logger -t hyprland-session "mode=$mode AQ_DRM_DEVICES=$AQ_DRM_DEVICES"
+start-hyprland
