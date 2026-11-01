@@ -537,6 +537,9 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
+
+      -- JSON and YAML schemas (package.json, tsconfig, docker-compose, GitHub workflows...) for jsonls/yamlls
+      'b0o/schemastore.nvim',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -660,6 +663,11 @@ require('lazy').setup({
             })
           end
 
+          -- Python: basedpyright answers hover (types, docs); Ruff only lints, fixes and formats
+          if client and client.name == 'ruff' then
+            client.server_capabilities.hoverProvider = false
+          end
+
           -- The following code creates a keymap to toggle inlay hints in your
           -- code, if the language server you are using supports them
           --
@@ -717,18 +725,59 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
+        -- Python: basedpyright for types, completion and navigation; Ruff for linting, import sorting and
+        -- quick fixes. The interpreter comes from venv-selector (<leader>vs).
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                typeCheckingMode = 'standard',
+                autoImportCompletions = true,
+                diagnosticMode = 'openFilesOnly',
+              },
+            },
+          },
+        },
+        ruff = {},
+
+        -- C and C++ (clang-tidy checks run inside clangd)
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=iwyu',
+            '--completion-style=detailed',
+            '--function-arg-placeholders',
+            '--fallback-style=llvm',
+          },
+        },
+
+        -- JavaScript and TypeScript; ESLint only acts in projects that have an ESLint config
+        vtsls = {},
+        eslint = {},
+
+        -- Web
+        html = {},
+        cssls = {},
+        emmet_language_server = {},
+        jsonls = {
+          settings = {
+            json = { schemas = require('schemastore').json.schemas(), validate = { enable = true } },
+          },
+        },
+        yamlls = {
+          settings = {
+            yaml = { schemaStore = { enable = false, url = '' }, schemas = require('schemastore').yaml.schemas() },
+          },
+        },
+
+        -- Shell (uses shellcheck for diagnostics), Markdown, Docker, TOML
+        bashls = {},
+        marksman = {},
+        dockerls = {},
+        docker_compose_language_service = {},
+        taplo = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -761,26 +810,30 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'jdtls', -- Java language server (lua/custom/plugins/java.lua)
-        'debugpy', -- Python debugger (lua/custom/plugins/debug-python.lua)
+        -- Formatters (used by conform.nvim, <leader>f)
+        'stylua',
+        'prettier',
+        'clang-format',
+        'shfmt',
+        -- Debug adapters (lua/kickstart/plugins/debug.lua)
+        'debugpy',
+        'codelldb',
+        'js-debug-adapter',
+        -- Java language server, started by nvim-jdtls (lua/custom/plugins/java.lua), not enabled below
+        'jdtls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      -- mason-lspconfig v2 only maps server names to Mason packages here. It must not auto-enable what Mason
+      -- installed: that would also start stylua as a server, and jdtls a second time next to nvim-jdtls.
+      require('mason-lspconfig').setup { ensure_installed = {}, automatic_enable = false }
+
+      -- Enable exactly the servers above, with their settings and blink.cmp's capabilities
+      for server_name, server in pairs(servers) do
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        vim.lsp.config(server_name, server)
+        vim.lsp.enable(server_name)
+      end
     end,
   },
 
@@ -815,8 +868,26 @@ require('lazy').setup({
       --     }
       --   end
       -- end,
+      -- Format on save stays off (user's choice): format with <leader>f
       formatters_by_ft = {
         lua = { 'stylua' },
+        python = { 'ruff_organize_imports', 'ruff_format' },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
+        javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        scss = { 'prettier' },
+        json = { 'prettier' },
+        jsonc = { 'prettier' },
+        yaml = { 'prettier' },
+        markdown = { 'prettier' },
+        sh = { 'shfmt' },
+        bash = { 'shfmt' },
+        toml = { 'taplo' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -997,7 +1068,11 @@ require('lazy').setup({
     lazy = false,
     build = ':TSUpdate',
     config = function()
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = {
+        'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'html', 'java', 'javascript', 'json', 'lua', 'luadoc',
+        'make', 'markdown', 'markdown_inline', 'python', 'query', 'regex', 'toml', 'tsx', 'typescript', 'vim',
+        'vimdoc', 'yaml',
+      }
       require('nvim-treesitter').install(parsers)
 
       local function treesitter_try_attach(buf, language)
