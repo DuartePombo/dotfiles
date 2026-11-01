@@ -81,4 +81,4 @@
   conda (Miniforge) for environments: `conda activate jupyter && jupyter lab`.
 - Docker: `docker ps`, `docker compose up -d`. Images and containers live on their own subvolumes and are not in
   the snapshots.
-- Neovim: `nvim`; `:Mason` for language servers, `:Lazy` for plugins, `:checkhealth` when something's off.
+- Neovim: `nvim`, set up as an IDE (Python envs, run, debug, Jupyter notebooks): keys in [neovim.md](neovim.md).

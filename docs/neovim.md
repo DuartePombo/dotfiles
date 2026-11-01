@@ -1,0 +1,133 @@
+# Neovim cheat sheet
+
+`Space` is the leader key. Press it and wait: which-key lists everything under it. `<leader>sk` searches all keys.
+
+## What works per language
+
+| Language | Language server (completion, errors, go to definition) | Format (`<leader>f`) | Run (`<leader>rr`) | Debug (`F5`) |
+|---|---|---|---|---|
+| Python | basedpyright (types) + Ruff (lint, imports) | Ruff | selected env | debugpy |
+| C, C++ | clangd (with clang-tidy) | clang-format | gcc/g++ `-g` | codelldb |
+| JavaScript, TypeScript | vtsls + ESLint (if the project has a config) | Prettier | node | js-debug (Node, Chrome) |
+| HTML, CSS | html, cssls, emmet | Prettier | HTML: opens in the browser | |
+| JSON, YAML | jsonls, yamlls (with schemas: package.json, compose...) | Prettier | | |
+| Shell | bashls + shellcheck | shfmt | bash | |
+| Markdown, Dockerfile, Compose, TOML | marksman, dockerls, compose, taplo | Prettier / taplo | | |
+| Lua | lua_ls | stylua | `nvim -l` | |
+| Java | jdtls (`<leader>c...`) | | `java File.java` | |
+
+Format on save is off: format with `<leader>f`. TypeScript runs directly with Node (no build step).
+C/C++: language standard is gnu23 / gnu++23 everywhere (clangd, run, debug). For a project with several files, use
+its build (make/CMake: `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` so clangd follows it) and "debug an executable".
+
+## Python environment (like VS Code's "Select Interpreter")
+| Keys | Action |
+|---|---|
+| `<leader>vs` | pick the environment: Miniforge conda envs, conda base, the project's `.venv` (uv) |
+| `<leader>vi` | show the active interpreter |
+| `<leader>vd` | deactivate (back to the system python) |
+
+The statusline shows the active env in Python files. The choice applies to the language server, `<leader>rr`, the
+debugger, Jupyter kernels and terminals opened from Neovim, and it's remembered per project. With nothing picked:
+an env active in the shell you started Neovim from, then `./.venv`, then the system `python3`.
+
+## Run and terminal
+| Keys | Action |
+|---|---|
+| `<leader>rr` | run the current file (in the terminal at the bottom) |
+| `<leader>ra` | run with arguments |
+| `<leader>rl` | run the last command again |
+| `<leader>tt` | show/hide the terminal (`Esc Esc` leaves terminal mode) |
+
+## Debugging
+| Keys | Action |
+|---|---|
+| `F5` / `<leader>dd` | debug the current file; continue when stopped |
+| `F9` / `<leader>db` | toggle breakpoint |
+| `<leader>dB` | conditional breakpoint (`i > 3`) |
+| `<leader>dl` | log point: prints a message (`x is {x}`) instead of stopping |
+| `F10` / `<leader>dn` | step over (next line) |
+| `F11` / `<leader>di` | step into |
+| `Shift+F11` / `<leader>do` | step out |
+| `<leader>dC` | run to the cursor |
+| `<leader>dk` / `<leader>dj` | move up / down the call stack |
+| `<leader>de` | evaluate the expression under the cursor (or the selection) |
+| `<leader>dw` | add the expression under the cursor to the watches |
+| `<leader>dr` | REPL: run code in the paused program |
+| `<leader>dE` | stop on exceptions (pick: raised / uncaught...) |
+| `<leader>dp` | pause |
+| `Shift+F5` / `<leader>dx` | stop |
+| `Ctrl+Shift+F5` / `<leader>dR` | restart |
+| `<leader>dc` | pick a configuration: with arguments, attach to a process, Chrome, a project's `.vscode/launch.json` |
+| `<leader>dL` | run the last configuration again |
+| `<leader>dt` / `<leader>dT` | Python: debug the test method / class under the cursor (pytest or unittest) |
+| `<leader>dX` | clear all breakpoints |
+| `F7` / `<leader>du` | show/hide the debugger panels |
+
+The panels open by themselves: variables, watches, call stack, breakpoints, and the program's terminal (type input
+there). Values also show next to the code. The panels stay open after the program ends; `<leader>du` closes them.
+C/C++: `F5` compiles first; compile errors land in the quickfix list. Python needs no debugpy in your env.
+Chrome: start the dev server (`npm run dev`), then `<leader>dc` → "Chrome: open a URL".
+
+## Jupyter notebooks
+`nvim notebook.ipynb` opens it as Python with `# %%` lines between cells (`# %% [markdown]` for text cells), so
+completion, errors, formatting and even the debugger work. `:w` saves the `.ipynb`, including the outputs of the
+cells you ran. `nvim new.ipynb` creates a new notebook. The same cells work in plain `.py` files.
+
+| Keys | Action |
+|---|---|
+| `<leader>ji` | start a kernel for the env picked with `<leader>vs` (the run keys do this too) |
+| `<leader>jr` | run the cell (in visual mode: the selection) |
+| `<leader>jn` | run the cell and go to the next one (adds a cell at the end) |
+| `<leader>ja` / `<leader>jA` | run all cells / all cells down to this one |
+| `<leader>jl` | run the line |
+| `]j` / `[j` | next / previous cell |
+| `<leader>jb` / `<leader>jm` | new code / markdown cell below |
+| `<leader>jo` | open the output in a window (press again to enter it and scroll) |
+| `<leader>jh` | hide the output window |
+| `<leader>jd` | delete the cell's output |
+| `<leader>jx` | interrupt the running code |
+| `<leader>jR` | restart the kernel (clears all variables) |
+| `<leader>jq` | stop the kernel |
+| `<leader>jk` | pick any Jupyter kernel from a list |
+| `<leader>je` | write the outputs into the `.ipynb` now (`:w` does it too) |
+
+Outputs show under each cell; plots show as images in kitty (also inside tmux). The env needs `ipykernel`
+(the `jupyter` env has it; otherwise `conda install -n <env> ipykernel`, or `uv add --dev ipykernel` in a uv
+project). Each env is registered as a Jupyter kernel on first use, so JupyterLab lists it too.
+IPython magics (`%timeit`, `!pip install`) run normally.
+
+## Editing and code navigation
+| Keys | Action |
+|---|---|
+| `K` | documentation of the symbol under the cursor |
+| `grd` / `grD` | go to definition / declaration |
+| `grr` | references |
+| `gri` / `grt` | implementations / type definition |
+| `grn` | rename everywhere |
+| `gra` | code actions (quick fixes, organize imports...) |
+| `gO` / `gW` | symbols in the file / in the project |
+| `[d` / `]d` | previous / next error or warning |
+| `<C-w>d` | show the error under the cursor |
+| `<leader>q` | all errors in a list |
+| `<leader>th` | inlay hints (types and parameter names inline) |
+| `v` then `an` `an`... / `in` | grow / shrink the selection by syntax node |
+| `gc` / `gcc` | comment selection / line |
+| `sa` / `sd` / `sr` | add / delete / replace surrounding quotes or brackets (`saiw"`, `sd(`, `sr"'`) |
+| `<C-h/j/k/l>` | move between windows |
+| `\` | file tree |
+
+## Search (Telescope)
+`<leader>sf` files, `<leader>sg` grep, `<leader>sw` word under the cursor, `<leader><leader>` open buffers,
+`<leader>/` in this file, `<leader>s.` recent files, `<leader>sd` diagnostics, `<leader>sh` help,
+`<leader>sk` keys, `<leader>sr` resume the last search.
+
+## Git and AI
+`<leader>gd` diff view, `<leader>gh` file history, `<leader>gc` close it. `<leader>ao` / `<leader>at` Codex.
+
+## Maintenance
+- `:Lazy` plugins (`:Lazy update`, then commit `lazy-lock.json`), `:Mason` language tools,
+  `:MasonToolsInstallSync` installs the configured ones, `:checkhealth` for problems.
+- Notebook support runs in the conda env `nvim` (`packages/conda/nvim.yml`). After updating molten, or if the
+  `<leader>j` keys say it isn't registered: `:UpdateRemotePlugins` and restart Neovim.
+- Running tmux sessions pick up the image setting after `tmux source ~/.config/tmux/tmux.conf`.
