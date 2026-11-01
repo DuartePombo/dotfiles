@@ -732,7 +732,9 @@ require('lazy').setup({
             },
           },
         },
-        ruff = {},
+        -- same position encoding as basedpyright (it only speaks UTF-16): edits on lines with non-ASCII text
+        -- would otherwise land in the wrong column when both servers work on one buffer
+        ruff = { capabilities = { general = { positionEncodings = { 'utf-16' } } } },
 
         -- C and C++ (clang-tidy checks run inside clangd)
         clangd = {
