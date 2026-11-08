@@ -159,7 +159,9 @@ stow_pkg() { # stow_pkg <stow dir> <package>
 }
 # Real folders first: otherwise stow would link a missing ~/.local or ~/.config as a whole into the repo,
 # and everything apps write there (plugins, caches, runtimes) would end up in the repo.
-mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state"
+# ~/.config/winapps too: it holds the Windows password (windows.env, winapps.conf) next to the linked compose.yaml.
+mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state" "$HOME/.config/winapps"
+chmod 700 "$HOME/.config/winapps"
 stow_pkg "$repo" home
 [[ -n $hostdir && -d $hostdir/home ]] && stow_pkg "$hostdir" home
 note "ok"

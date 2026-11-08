@@ -9,6 +9,7 @@ bluez
 bluez-utils
 brightnessctl
 btrfs-progs
+dialog
 discord
 docker
 docker-buildx
@@ -16,6 +17,7 @@ docker-compose
 dolphin
 fastfetch
 fd
+freerdp
 fzf
 git
 github-cli
@@ -50,6 +52,7 @@ noto-fonts
 noto-fonts-emoji
 obs-studio
 okular
+openbsd-netcat
 openssh
 otf-font-awesome
 pavucontrol

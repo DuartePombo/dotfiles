@@ -1,0 +1,38 @@
+# Windows VM for WinApps (Microsoft Office as normal windows on the desktop). Based on compose.yaml and oem/ from
+# github.com/winapps-org/winapps at commit 0b950dc (2026-10-29); docs: github.com/dockur/windows.
+# The Windows username and password are NOT here: they're in ~/.config/winapps/windows.env (local only, never in git),
+# and the same account is in ~/.config/winapps/winapps.conf for the Remote Desktop connection.
+# Start / stop by hand: docker compose --file ~/.config/winapps/compose.yaml start | stop  (WinApps starts it itself)
+# Web view of the whole Windows desktop: http://127.0.0.1:8006
+
+name: "winapps"
+volumes:
+  data: # Windows' C: drive, in /var/lib/docker/volumes/winapps_data (outside the snapper snapshots)
+services:
+  windows:
+    image: ghcr.io/dockur/windows:latest
+    container_name: WinApps
+    env_file:
+      - ${HOME}/.config/winapps/windows.env # USERNAME=... and PASSWORD=... for the Windows account
+    environment:
+      VERSION: "11"     # Windows 11 Pro (Home can't serve Remote Desktop apps)
+      RAM_SIZE: "4G"
+      CPU_CORES: "4"
+      DISK_SIZE: "64G"
+      HOME: "${HOME}"
+    ports:
+      - "127.0.0.1:8006:8006"     # web viewer
+      - "127.0.0.1:3389:3389/tcp" # Remote Desktop, only reachable from this laptop
+      - "127.0.0.1:3389:3389/udp"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW # dnsmasq NAT networking; without it RDP port forwarding from the host breaks
+    stop_grace_period: 120s
+    restart: on-failure
+    volumes:
+      - data:/storage
+      - ${HOME}:/shared # the Linux home folder, \\host.lan\Data in Windows
+      - ./oem:/oem      # runs oem/install.bat after the install: enables Remote Desktop apps (RDPApps.reg)
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
