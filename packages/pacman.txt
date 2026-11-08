@@ -32,6 +32,7 @@ imagemagick
 intel-ucode
 jdk-openjdk
 jq
+kdenlive
 kitty
 libreoffice-fresh
 libsecret
