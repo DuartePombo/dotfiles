@@ -81,6 +81,13 @@ tooltip label {
     /* border-radius: 5px; */ /* Optional: if you want individual modules to have rounded corners */
 }
 
+#custom-recording {
+    padding: 0 10px;
+    margin: 0 3px;
+    color: #f38ba8; /* Red while a screen recording runs */
+    font-weight: bold;
+}
+
 /* Example: Different color for specific modules */
 #clock {
     /* background-color: #1abc9c; */

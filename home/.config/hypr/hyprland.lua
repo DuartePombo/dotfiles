@@ -250,6 +250,9 @@ local screenshot = "~/.config/hypr/scripts/screenshot.sh"
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd(screenshot))
 hl.bind("Print",             hl.dsp.exec_cmd(screenshot))
 hl.bind("SHIFT + Print",     hl.dsp.exec_cmd(screenshot .. " screen"))
+-- Screen recording, like the Snipping Tool's (scripts/screenrecord.sh): press to pick an area and start,
+-- press again to stop (waybar shows ● REC meanwhile). Saved as MP4 in ~/Videos/Recordings.
+hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh"))
 
 
 --------------------------------

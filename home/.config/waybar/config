@@ -13,6 +13,7 @@
         "hyprland/window"
     ],
     "modules-right": [
+        "custom/recording",
         "tray",
         "pulseaudio",
         "network",
@@ -58,6 +59,15 @@
         "format": "🐦 {} ",
         "max-length": 50, // Max length of the window title
         "separate-outputs": true
+    },
+    "custom/recording": {
+        // ● REC while a screen recording runs (Super+Shift+R); click to stop. Hidden otherwise.
+        // screenrecord.sh refreshes it with signal 8 when recording starts and stops.
+        "exec": "pgrep -x wf-recorder >/dev/null && echo '● REC' || true",
+        "interval": "once",
+        "signal": 8,
+        "on-click": "~/.config/hypr/scripts/screenrecord.sh",
+        "tooltip": false
     },
     "tray": {
         "icon-size": 18,

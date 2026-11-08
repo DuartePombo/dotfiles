@@ -29,6 +29,7 @@
 | `Alt+left drag` / `Alt+right drag` | move / resize a window |
 | `Super+Shift+S` or `Print` | screenshot, like Windows' Snipping Tool: the screen freezes, drag an area or click a window (`Esc` cancels). It's copied to the clipboard and saved in `~/Pictures/Screenshots`; click the notification to draw on it (satty: `Enter` copies, saves and closes) |
 | `Shift+Print` | screenshot of the whole screen under the mouse (same clipboard, folder and notification) |
+| `Super+Shift+R` | screen recording: drag an area or click a window, recording starts (red `● REC` in the bar). Press again or click `● REC` to stop. MP4 in `~/Videos/Recordings`, no sound; the notification plays it (mpv) or shows it in the folder |
 | `Alt+F9` | random wallpaper from `~/Pictures/wallpapers` (curated list: `packages/wallpapers.txt`) |
 | Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen |
 

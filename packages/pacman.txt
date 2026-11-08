@@ -38,6 +38,7 @@ linux-firmware
 linux-lts
 man-db
 mise
+mpv
 neovim
 networkmanager
 network-manager-applet
@@ -71,6 +72,7 @@ unzip
 usbutils
 uv
 waybar
+wf-recorder
 wireplumber
 wl-clipboard
 wofi
