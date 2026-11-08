@@ -24,10 +24,12 @@ htop
 hypridle
 hyprland
 hyprlock
+hyprpicker
 hyprpolkitagent
 imagemagick
 intel-ucode
 jdk-openjdk
+jq
 kitty
 libreoffice-fresh
 libsecret
@@ -52,6 +54,7 @@ power-profiles-daemon
 qt5-wayland
 qt6-wayland
 ripgrep
+satty
 shellcheck
 slurp
 snap-pac

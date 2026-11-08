@@ -244,8 +244,12 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
--- Screenshot of a selected area to the clipboard (grim, slurp, wl-clipboard)
-hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'))
+-- Screenshots like Windows' Snipping Tool (scripts/screenshot.sh): the screen freezes, drag an area or click a
+-- window; it's copied and saved in ~/Pictures/Screenshots, and clicking the notification opens an editor.
+local screenshot = "~/.config/hypr/scripts/screenshot.sh"
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd(screenshot))
+hl.bind("Print",             hl.dsp.exec_cmd(screenshot))
+hl.bind("SHIFT + Print",     hl.dsp.exec_cmd(screenshot .. " screen"))
 
 
 --------------------------------
@@ -253,3 +257,11 @@ hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp -d)" - | wl-copy'))
 --------------------------------
 
 -- See https://wiki.hypr.land/configuring/core/rules/
+
+hl.window_rule({
+    -- The screenshot editor (satty) opens floating and centred, like a dialog
+    name   = "screenshot-editor",
+    match  = { class = "com.gabm.satty" },
+    float  = true,
+    center = true,
+})
