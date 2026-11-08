@@ -198,11 +198,31 @@ local mainMod = "ALT" -- Alt is the main modifier
 -- "Microsoft Word"..., "Microsoft Windows" for the full desktop), OnlyOffice and LibreOffice.
 -- Workspaces (Alt+number), lock, screenshots and recording stay the desktop's everywhere (dont_inhibit: even when
 -- Remote Desktop grabs the keyboard).
+-- Remote Desktop (WinApps) keeps an invisible 0x0 "RemoteApp Marker Window" with the app's class. It's never Office
+-- for the keys, and it must never keep the keyboard focus: typing and Alt+D would silently go to Windows.
+local function is_rdp_marker(window)
+    if not window or not window.class or not window.class:find("^Microsoft ") then return false end
+    local size = type(window.size) == "table" and window.size or {}
+    return window.title == "RemoteApp Marker Window" or (size.x or 0) < 10 or (size.y or 0) < 10
+end
 local function is_office(window)
+    if is_rdp_marker(window) then return false end
     local class = window and window.class and window.class:lower() or ""
     return class:find("^microsoft ") ~= nil or class:find("onlyoffice", 1, true) ~= nil
         or class:find("libreoffice", 1, true) ~= nil or class == "soffice"
 end
+-- When the marker gets the focus, give it back to the most recently used real window.
+hl.on("window.active", function()
+    if not is_rdp_marker(hl.get_active_window()) then return end
+    local best
+    for _, w in ipairs(hl.get_windows()) do
+        if w.mapped and not w.hidden and not is_rdp_marker(w) and (w.focus_history_id or 0) > 0
+            and (not best or w.focus_history_id < best.focus_history_id) then
+            best = w
+        end
+    end
+    if best then hl.dispatch(hl.dsp.focus({ window = best })) end
+end)
 local function desktop_or_office(key, dispatcher) -- Alt+key: the desktop's action, or the key itself in office windows
     return function()
         if is_office(hl.get_active_window()) then

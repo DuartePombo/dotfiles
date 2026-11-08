@@ -78,8 +78,11 @@
 
 ## Microsoft Office (Windows VM via WinApps)
 - `Alt+D` → Excel, Word, PowerPoint, OneNote: real Microsoft 365 apps in a Windows 11 VM (Docker container
-  `WinApps`), each in its own window. `Alt+D` → Windows: the whole Windows desktop. `.xlsx`/`.docx`/`.pptx`/`.csv`
-  open there; OnlyOffice is the second choice in Open With, LibreOffice opens `.odt`/`.ods`/`.odp`.
+  `WinApps`), each in its own window. `.xlsx`/`.docx`/`.pptx`/`.csv` open there; OnlyOffice is the second choice in
+  Open With, LibreOffice opens `.odt`/`.ods`/`.odp`.
+- `Alt+D` → Windows: the whole Windows desktop. Windows allows one session at a time: while Office windows are open
+  it asks "Another user is signed in…": **Yes** moves the open Office apps into the desktop window, **No** cancels.
+  Back to separate windows: in the Windows desktop, Start → your name → Sign out, then open Office from `Alt+D`.
 - In Office windows (also OnlyOffice and LibreOffice) `Alt` + letter goes to the app: Excel's key tips (`Alt+H`…),
   `Alt+Enter`, `Alt+Q`, `Alt+F4`. `Alt+1`…`Alt+0` (+Shift), `Alt+Shift+F`, `Alt+.`, screenshots and recording stay
   the desktop's.
