@@ -1,4 +1,5 @@
 google-chrome
 mullvad-vpn-bin
+onlyoffice-bin
 paru-bin
 visual-studio-code-bin

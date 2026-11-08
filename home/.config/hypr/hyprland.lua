@@ -193,7 +193,19 @@ hl.config({
 
 local mainMod = "ALT" -- Alt is the main modifier
 
-hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
+-- Alt+Return opens a terminal, except in office apps (OnlyOffice, LibreOffice): they get Alt+Return themselves,
+-- which in a spreadsheet is Excel's "new line inside the cell".
+local function is_office(window)
+    local class = window and window.class and window.class:lower() or ""
+    return class:find("onlyoffice", 1, true) ~= nil or class:find("libreoffice", 1, true) ~= nil or class == "soffice"
+end
+hl.bind(mainMod .. " + RETURN", function()
+    if is_office(hl.get_active_window()) then
+        hl.dispatch(hl.dsp.send_shortcut({ mods = "ALT", key = "Return" }))
+    else
+        hl.dispatch(hl.dsp.exec_cmd(terminal))
+    end
+end)
 hl.bind(mainMod .. " + Q",      hl.dsp.window.close())
 hl.bind(mainMod .. " + M",      hl.dsp.exit())
 hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd(fileManager))
