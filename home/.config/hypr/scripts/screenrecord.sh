@@ -1,7 +1,7 @@
 #!/bin/bash
 # Screen recording like the Snipping Tool's (Super+Shift+R in hyprland.lua, or click ● REC in waybar).
 #   Press once: drag over an area or click a window (Esc cancels). Recording starts; waybar shows ● REC.
-#   Press again: it stops and is saved as MP4 in ~/Videos/Recordings. The notification plays it (mpv) or
+#   Press again: it stops and is saved as MP4 in ~/Videos/Recordings. The notification plays it (Haruna) or
 #   shows it in Dolphin, ready to drag into a chat or an email.
 # No sound. H.264 at 30 fps, which plays everywhere (browsers, Discord, phones).
 set -u
