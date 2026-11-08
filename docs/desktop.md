@@ -11,7 +11,7 @@
 
 | Keys | Action |
 |---|---|
-| `Alt+Return` | terminal (kitty) |
+| `Alt+Return` | terminal (kitty); in OnlyOffice/LibreOffice it goes to the app instead (Excel's new line in a cell) |
 | `Alt+D` | app launcher (wofi) |
 | `Alt+E` | file manager (Dolphin) |
 | `Alt+Q` | close window |

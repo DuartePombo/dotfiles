@@ -2,4 +2,6 @@ google-chrome
 mullvad-vpn-bin
 onlyoffice-bin
 paru-bin
+slack-desktop
 visual-studio-code-bin
+zoom
