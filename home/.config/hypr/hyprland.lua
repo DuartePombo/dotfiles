@@ -201,6 +201,10 @@ hl.bind(mainMod .. " + V",      hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D",      hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())          -- dwindle
 hl.bind(mainMod .. " + T",      hl.dsp.layout("togglesplit"))    -- dwindle
+-- Fullscreen like F11 on Windows, for any window: Alt+F covers the whole screen (bar too),
+-- Alt+Shift+F maximizes (fills the screen, keeps the bar). Same key again to go back.
+hl.bind(mainMod .. " + F",         hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized",  action = "toggle" }))
 hl.bind(mainMod .. " + F9",     hl.dsp.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh"))
 hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(lock))
 

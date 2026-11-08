@@ -1,1 +1,2 @@
 ms-azuretools.vscode-containers
+ms-mssql.mssql

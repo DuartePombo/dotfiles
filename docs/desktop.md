@@ -23,6 +23,7 @@
 | `Alt+Shift+1` … `Alt+Shift+0` | move window to workspace 1–10 |
 | `Alt+S` | show/hide the scratchpad workspace |
 | `Alt+Shift+S` | move window to the scratchpad |
+| `Alt+F` / `Alt+Shift+F` | fullscreen, covering the bar (like F11) / maximize, keeping the bar. Again to go back |
 | `Alt+V` | float / tile the window |
 | `Alt+P` | pseudo-tile |
 | `Alt+scroll` | next / previous workspace |

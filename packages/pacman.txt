@@ -47,6 +47,7 @@ networkmanager
 network-manager-applet
 noto-fonts
 noto-fonts-emoji
+obs-studio
 openssh
 otf-font-awesome
 pavucontrol
