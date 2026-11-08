@@ -86,6 +86,9 @@
   (helios-specific: `stow -R -d hosts/helios -t ~ home`).
 
 ## Development
+- Shell (bash + fzf): `Ctrl+R` search history, `Ctrl+T` insert a file, `Alt+C` jump into a folder, `**` + `Tab`
+  fuzzy-complete a path (`nvim **<Tab>`). `Tab` completes commands too (git, pacman, systemctl...). History is
+  shared between terminals; a command started with a space isn't saved.
 - `fz`: pick a project folder and jump into a tmux session for it (`tmux-sessionizer`). It lists the folders in
   `~/pombo/projects`, plus those in each path listed in `~/.tmux-sessionizer.local` (one per line; that file stays
   on this machine, so work paths never reach the repo).

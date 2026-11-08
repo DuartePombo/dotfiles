@@ -3,6 +3,7 @@ archlinux-xdg-menu
 avahi
 base
 base-devel
+bash-completion
 blueman
 bluez
 bluez-utils
@@ -38,6 +39,7 @@ linux
 linux-firmware
 linux-lts
 man-db
+man-pages
 mise
 mpv
 neovim
