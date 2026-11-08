@@ -1,4 +1,6 @@
 intel-media-driver
+lib32-nvidia-utils
+lib32-vulkan-intel
 libva-nvidia-driver
 linux-headers
 linux-lts-headers

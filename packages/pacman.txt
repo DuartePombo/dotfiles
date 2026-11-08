@@ -73,6 +73,7 @@ slurp
 snap-pac
 snapper
 sof-firmware
+steam
 stow
 sudo
 swaybg
