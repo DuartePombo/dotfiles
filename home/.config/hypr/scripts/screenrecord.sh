@@ -3,7 +3,7 @@
 #   Press once: drag over an area or click a window (Esc cancels). Recording starts; waybar shows ● REC.
 #   Press again: it stops and is saved as MP4 in ~/Videos/Recordings. The notification plays it (Haruna) or
 #   shows it in Dolphin, ready to drag into a chat or an email.
-# No sound. H.264 at 30 fps, which plays everywhere (browsers, Discord, phones).
+# With the computer's sound, no microphone. H.264 + AAC at 30 fps, which plays everywhere (browsers, Discord, phones).
 set -u
 
 dir="$HOME/Videos/Recordings"
@@ -47,8 +47,14 @@ geometry="$position $((width / 2 * 2))x$((height / 2 * 2))"
 mkdir -p "$dir"
 file="$dir/$(date +%Y-%m-%d_%H-%M-%S).mp4"
 echo "$file" >"$state"
+# The computer's sound: the "monitor" of whatever output is in use right now (speakers, headphones, HDMI).
+# No microphone (OBS is for recordings with your voice). No output device: record without sound.
+audio=()
+if sink=$(pactl get-default-sink 2>/dev/null) && [ -n "$sink" ]; then
+    audio=(--audio="$sink.monitor" --audio-codec aac)
+fi
 wf-recorder --geometry "$geometry" --framerate 30 --codec libx264 --pixel-format yuv420p \
-    --codec-param preset=veryfast --codec-param crf=23 -f "$file" >/dev/null 2>"$state.log" &
+    --codec-param preset=veryfast --codec-param crf=23 "${audio[@]}" -f "$file" >/dev/null 2>"$state.log" &
 sleep 0.5
 if ! pgrep -x wf-recorder >/dev/null; then
     notify-send --app-name=Recording --urgency=critical "Recording didn't start" "$(tail -n 2 "$state.log")"
