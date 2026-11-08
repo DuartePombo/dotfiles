@@ -58,6 +58,17 @@
 ## Audio, Bluetooth, Wi-Fi, power
 - Audio: `wpctl status` (devices, defaults), `wpctl set-default <id>`, or pavucontrol.
 - Bluetooth: blueman (tray), or `bluetoothctl`, then `power on`, `scan on`, `pair <MAC>`, `trust <MAC>`, `connect <MAC>`.
+  `trust` makes it reconnect by itself. To forget a device: `bluetoothctl remove <MAC>`.
+- Glove80 (factory layout; hold Magic, the bottom-left key of the left half, then tap):
+  - BT slots: Magic + Backspace (0), Delete (1), the thumb key above Backspace (2), the one above Delete (3).
+    Magic + Left Alt: type over the USB cable.
+  - Tap Magic: thumb-key lights for 10 s. White = typing goes there, green = connected, red = remembers a
+    computer that isn't connected, purple = free.
+  - Pair a new computer: select a purple slot (or select one and clear it with Magic + F1; Magic + F10 clears
+    all slots), then pair "Glove80" from the computer. One computer per slot.
+  - If pairing fails, both sides must forget it: Magic + F1 on that slot, and remove it on the computer.
+  - At the disk password prompt Bluetooth isn't running: the cable is needed (Magic + Left Alt if typing goes
+    to another computer).
 - Wi-Fi: nm-applet (tray), `nmtui`, or `nmcli device wifi list` / `nmcli device wifi connect "<SSID>" --ask`.
 - Power profiles: `powerprofilesctl get`, `powerprofilesctl set power-saver|balanced|performance`.
 - VPN: Mullvad app, or `mullvad status` / `mullvad connect` / `mullvad disconnect`.
