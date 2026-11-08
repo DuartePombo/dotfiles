@@ -169,7 +169,8 @@ note "ok"
 # --- 6. Services and groups ------------------------------------------------------------------------------------
 say "Services"
 services=(NetworkManager systemd-timesyncd systemd-boot-update sshd avahi-daemon bluetooth power-profiles-daemon
-          docker.socket snapper-timeline.timer snapper-cleanup.timer)
+          docker.socket snapper-timeline.timer snapper-cleanup.timer
+          reflector.timer paccache.timer btrfs-scrub@-.timer) # weekly mirrors, weekly cache cleanup, monthly disk check
 pacman -Q nvidia-utils >/dev/null 2>&1 && services+=(nvidia-persistenced)
 pacman -Q mullvad-vpn-bin >/dev/null 2>&1 && services+=(mullvad-daemon)
 for s in "${services[@]}"; do

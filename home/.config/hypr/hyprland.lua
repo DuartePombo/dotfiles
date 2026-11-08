@@ -39,6 +39,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("blueman-applet")                          -- Bluetooth in the tray
     hl.exec_cmd("hypridle")                                -- lock and suspend when idle
     hl.exec_cmd("systemctl --user start hyprpolkitagent")  -- password dialogs for apps that need root
+    hl.exec_cmd("swayosd-server")                          -- volume/brightness popup
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")  -- clipboard history (Super+V)
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 
@@ -267,6 +270,15 @@ end
 hl.bind(mainMod .. " + S",         desktop_or_office("S", hl.dsp.workspace.toggle_special("magic")))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }), always)
 
+-- Alt+Tab like on Windows: back to the previous window (any workspace, any screen); again to return.
+-- Alt+Shift+Tab: cycle through the windows of this workspace.
+hl.bind(mainMod .. " + TAB",         hl.dsp.focus({ last = true }), always)
+hl.bind(mainMod .. " + SHIFT + TAB", hl.dsp.window.cycle_next(), always)
+
+-- Like Windows: Super+V clipboard history (pick an entry, then Ctrl+V), Super+. emoji picker (types it)
+hl.bind("SUPER + V",      hl.dsp.exec_cmd("cliphist list | wofi --dmenu --prompt 'Clipboard' | cliphist decode | wl-copy"), always)
+hl.bind("SUPER + period", hl.dsp.exec_cmd("rofimoji --selector wofi --action type --typer wtype --clipboarder wl-copy"), always)
+
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
@@ -275,13 +287,14 @@ hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- Laptop multimedia keys for volume and LCD brightness
-hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
-hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
-hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"),                  { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),                  { locked = true, repeating = true })
+-- Laptop multimedia keys for volume and LCD brightness, with an on-screen popup (swayosd)
+local media = { locked = true, repeating = true, dont_inhibit = true }
+hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("swayosd-client --output-volume raise --max-volume 100"), media)
+hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("swayosd-client --output-volume lower"),       media)
+hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"), media)
+hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"),  media)
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("~/.config/hypr/scripts/brightness.sh up"),    media)
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("~/.config/hypr/scripts/brightness.sh down"),  media)
 
 -- Media keys (playerctl)
 hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })

@@ -32,7 +32,10 @@
 | `Shift+Print` | screenshot of the whole screen under the mouse (same clipboard, folder and notification) |
 | `Super+Shift+R` | screen recording: drag an area or click a window, recording starts (red `● REC` in the bar). Press again or click `● REC` to stop. MP4 in `~/Videos/Recordings`, with the computer's sound (no microphone); the notification plays it (Haruna) or shows it in the folder |
 | `Alt+F9` | random wallpaper from `~/Pictures/wallpapers` (curated list: `packages/wallpapers.txt`) |
-| Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen |
+| `Alt+Tab` / `Alt+Shift+Tab` | back to the previous window (any workspace or screen) / cycle the windows of this workspace |
+| `Super+V` | clipboard history (cliphist): pick an entry, then `Ctrl+V`. `cliphist wipe` empties it |
+| `Super+.` | emoji picker (rofimoji): the emoji is typed where the cursor is |
+| Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen; volume and brightness show a popup (swayosd) |
 
 ## Workspace layout (every app has a home)
 Work on 1–5, personal on 6–10. Docked, each workspace lives on a fixed screen; on the laptop alone all are on its
@@ -111,6 +114,10 @@ Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.
 
 ## Packages
 - Update everything (repo + AUR): `paru -Syu` (pacman only: `sudo pacman -Syu`).
+- Automatic upkeep (timers): `reflector.timer` weekly picks the 10 fastest fresh HTTPS mirrors near Portugal
+  (`/etc/xdg/reflector/reflector.conf`, from `system/`); `paccache.timer` weekly keeps the 3 newest versions of each
+  package in the cache; `btrfs-scrub@-.timer` monthly checks the disk for silent corruption
+  (`sudo btrfs scrub status /`). `systemctl list-timers` shows when they run next.
 - Add a package: put it in `~/dotfiles/packages/pacman.txt` (AUR: `aur.txt`; helios-only: `hosts/helios/pacman.txt`)
   first, then `sudo pacman -S --needed - < ~/dotfiles/packages/pacman.txt` (AUR: `paru -S --needed - < …/aur.txt`).
 - Every pacman run takes snapshots before and after: see [snapshots.md](snapshots.md) to undo one.

@@ -9,6 +9,7 @@ bluez
 bluez-utils
 brightnessctl
 btrfs-progs
+cliphist
 dialog
 discord
 docker
@@ -56,6 +57,7 @@ okular
 openbsd-netcat
 openssh
 otf-font-awesome
+pacman-contrib
 pavucontrol
 pdfarranger
 pipewire
@@ -66,7 +68,9 @@ power-profiles-daemon
 qpdf
 qt5-wayland
 qt6-wayland
+reflector
 ripgrep
+rofimoji
 satty
 shellcheck
 slurp
@@ -78,6 +82,7 @@ stow
 sudo
 swaybg
 swaync
+swayosd
 tmux
 tree-sitter-cli
 ttf-jetbrains-mono-nerd
@@ -89,6 +94,7 @@ wf-recorder
 wireplumber
 wl-clipboard
 wofi
+wtype
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
 zram-generator
