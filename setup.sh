@@ -72,6 +72,13 @@ done
 note "ok"
 
 # --- 2. Packages -----------------------------------------------------------------------------------------------
+say "Package repositories"
+# Steam and its 32-bit graphics drivers come from multilib, so it must be enabled before the lists are installed
+if ! grep -q '^\[multilib\]' /etc/pacman.conf; then
+    sudo sed -i '/^#\[multilib\]$/{s/^#//;n;s/^#//}' /etc/pacman.conf
+    note "enabled the multilib repository"
+fi
+
 say "Packages (pacman)"
 lists=("$repo/packages/pacman.txt")
 [[ -n $hostdir && -f $hostdir/pacman.txt ]] && lists+=("$hostdir/pacman.txt")
