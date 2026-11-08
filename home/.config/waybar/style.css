@@ -49,9 +49,10 @@ tooltip label {
     text-shadow: inherit;
 }
 
-#workspaces button.focused,
-#workspaces button.active { /* .focused is for Hyprland, .active for general Wayland */
-    background-color: #89b4fa; /* Blue for active/focused workspace (Catppuccin Macchiato blue) */
+/* Each screen's bar highlights the workspace THAT screen shows (visible + on this bar's monitor), not the one
+   with the keyboard focus: with two monitors, each bar says which Alt+number brings you to that screen. */
+#workspaces button.visible.hosting-monitor {
+    background-color: #89b4fa; /* Blue (Catppuccin Macchiato blue) */
     color: #1e1e2e; /* Darker text for contrast */
 }
 
