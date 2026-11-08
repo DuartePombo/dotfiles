@@ -49,14 +49,17 @@ network-manager-applet
 noto-fonts
 noto-fonts-emoji
 obs-studio
+okular
 openssh
 otf-font-awesome
 pavucontrol
+pdfarranger
 pipewire
 pipewire-alsa
 pipewire-pulse
 playerctl
 power-profiles-daemon
+qpdf
 qt5-wayland
 qt6-wayland
 ripgrep
