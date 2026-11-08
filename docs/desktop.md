@@ -105,6 +105,9 @@ Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.
   without it the backups can't be opened). Backups live in `helios-backup/restic` on the stick, next to the ISOs
   (`.ventoyignore` keeps Ventoy's boot menu from scanning them). Skipped: `~/.config/restic/excludes.txt`
   (caches, Steam, Miniforge, Chrome data and other things that are reinstalled or re-synced).
+- Only this stick is ever written to: any stick labelled Ventoy is first mounted read-only, and the backup runs only
+  if it holds the repository whose ID is in `~/.config/restic/repository-id` (local) and that opens with the password.
+  Other pens: nothing happens (not labelled Ventoy) or a read-only look and unmount (another Ventoy stick).
 - By hand: `backup-usb` (or `systemctl --user start backup-usb`); last run's details: `~/.local/state/backup-usb/last.log`.
 - Restore (stick plugged in and mounted, e.g. click it in Dolphin):
   ```

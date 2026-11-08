@@ -7,11 +7,15 @@
 # Backups: <stick>/helios-backup/restic. Password: ~/.config/restic/password (only on this laptop: keep a copy
 # somewhere else, or the backups can't be opened after losing the laptop). Skipped paths: excludes.txt.
 # Browse or restore:  restic -r /run/media/$USER/Ventoy/helios-backup/restic -p ~/.config/restic/password snapshots
+# Only this one stick is ever written to: it's first mounted read-only, and the backup only runs if the stick holds
+# a restic repository whose ID matches ~/.config/restic/repository-id and that opens with the password. Any other
+# stick (Ventoy or not) is left untouched. New stick or repository: put its ID there (restic cat config | jq .id).
 set -u
 
 label=Ventoy
 repo_dir=helios-backup/restic
 password_file="$HOME/.config/restic/password"
+expected_id=$(cat "$HOME/.config/restic/repository-id" 2>/dev/null || true)
 excludes="$HOME/.config/restic/excludes.txt"
 state="$HOME/.local/state/backup-usb"
 remind_days=7
@@ -35,19 +39,42 @@ if [ -z "$dev" ]; then
     exit 0
 fi
 
+mount_stick() { # mount_stick [ro]: mount the stick (read-only with "ro"), set $mp
+    local opts=()
+    [ "${1:-}" = ro ] && opts=(--options ro)
+    udisksctl mount -b "$dev" "${opts[@]}" --no-user-interaction >/dev/null 2>&1 || return 1
+    mp=$(lsblk -nro MOUNTPOINTS "$dev" | head -n 1)
+    [ -n "$mp" ]
+}
+unmount_stick() { udisksctl unmount -b "$dev" --no-user-interaction >/dev/null 2>&1; }
+
+# 1. Is this our backup stick? Look read-only, so another stick is never written to.
 mounted_here=false
 mp=$(lsblk -nro MOUNTPOINTS "$dev" | head -n 1)
 if [ -z "$mp" ]; then
-    if ! udisksctl mount -b "$dev" --no-user-interaction >/dev/null 2>&1; then
-        notify --urgency=critical "Backup failed" "The USB stick couldn't be mounted."
+    mount_stick ro || exit 0
+    mounted_here=true
+fi
+found_id=""
+if [ -f "$mp/$repo_dir/config" ]; then
+    found_id=$(restic -r "$mp/$repo_dir" --password-file "$password_file" --no-lock cat config 2>/dev/null |
+        jq -r '.id // empty' 2>/dev/null)
+fi
+if [ -z "$expected_id" ] || [ "$found_id" != "$expected_id" ]; then # another stick, or not our repository
+    if $mounted_here; then unmount_stick; fi
+    exit 0
+fi
+
+# 2. It is: mount it read-write for the backup.
+if $mounted_here; then
+    unmount_stick
+    if ! mount_stick; then
+        notify --urgency=critical "Backup failed" "The USB stick couldn't be mounted for writing."
         exit 1
     fi
-    mounted_here=true
-    mp=$(lsblk -nro MOUNTPOINTS "$dev" | head -n 1)
-fi
-if [ ! -f "$mp/$repo_dir/config" ]; then # a Ventoy stick, but not the backup one
-    if $mounted_here; then udisksctl unmount -b "$dev" --no-user-interaction >/dev/null 2>&1; fi
-    exit 0
+elif findmnt -no OPTIONS "$mp" | tr ',' '\n' | grep -qx ro; then
+    notify --urgency=critical "Backup skipped" "The USB stick is mounted read-only. Eject it and plug it in again."
+    exit 1
 fi
 
 notify "Backing up…" "Home folder → USB stick. Don't unplug it until the backup says it's done."
