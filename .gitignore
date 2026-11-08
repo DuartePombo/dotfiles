@@ -13,6 +13,8 @@
 # WinApps: the Windows account (only compose.yaml and oem/ belong in the repo)
 **/.config/winapps/windows.env
 **/.config/winapps/winapps.conf
+# Backup password (restic)
+**/.config/restic/password
 **/.config/freerdp/
 
 # Machine-local files with work or personal paths (they live in ~, never in the repo)

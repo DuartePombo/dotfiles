@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily backup check: back up if the USB stick is plugged in, else remind when overdue
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/backup-usb check
+Nice=10
+IOSchedulingClass=idle

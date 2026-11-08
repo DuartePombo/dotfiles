@@ -1,0 +1,10 @@
+[Unit]
+Description=Back up the home folder to the USB stick (restic)
+# Started by udev when the "Ventoy" stick is plugged in (system/etc/udev/rules.d/90-backup-usb.rules)
+# and by backup-usb-check.timer; the script itself checks that the stick holds the backups.
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/backup-usb
+Nice=10
+IOSchedulingClass=idle

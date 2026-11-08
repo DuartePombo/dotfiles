@@ -160,8 +160,11 @@ stow_pkg() { # stow_pkg <stow dir> <package>
 # Real folders first: otherwise stow would link a missing ~/.local or ~/.config as a whole into the repo,
 # and everything apps write there (plugins, caches, runtimes) would end up in the repo.
 # ~/.config/winapps too: it holds the Windows password (windows.env, winapps.conf) next to the linked compose.yaml.
-mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state" "$HOME/.config/winapps"
-chmod 700 "$HOME/.config/winapps"
+# Same for ~/.config/restic (the backup password next to the linked excludes.txt) and ~/.config/systemd/user
+# (systemctl --user enable writes its links there).
+mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/state" "$HOME/.config/winapps" \
+    "$HOME/.config/restic" "$HOME/.config/systemd/user"
+chmod 700 "$HOME/.config/winapps" "$HOME/.config/restic"
 stow_pkg "$repo" home
 [[ -n $hostdir && -d $hostdir/home ]] && stow_pkg "$hostdir" home
 note "ok"
@@ -177,6 +180,10 @@ for s in "${services[@]}"; do
     systemctl is-enabled --quiet "$s" 2>/dev/null || { sudo systemctl enable --now "$s"; note "enabled $s"; }
 done
 # PipeWire, WirePlumber and gnome-keyring are enabled for every user by their packages.
+# Backups to the USB stick: the daily check (the stick itself starts a backup through udev when plugged in).
+# The backup password (~/.config/restic/password) and the stick's repository are set up by hand: docs/desktop.md.
+systemctl --user is-enabled --quiet backup-usb-check.timer 2>/dev/null ||
+    { systemctl --user enable --now backup-usb-check.timer; note "enabled backup-usb-check.timer (user)"; }
 
 say "Groups"
 if ! id -nG "$me" | tr ' ' '\n' | grep -qx docker; then

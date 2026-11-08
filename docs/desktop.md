@@ -97,6 +97,25 @@ Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.
 - Power profiles: `powerprofilesctl get`, `powerprofilesctl set power-saver|balanced|performance`.
 - VPN: Mullvad app, or `mullvad status` / `mullvad connect` / `mullvad disconnect`.
 
+## Backups (home folder → USB stick)
+- Plug in the USB stick labelled "Ventoy": a backup starts by itself ("Backing up…", then "Backup done … You can
+  unplug the stick"). A daily check at 12:00 backs up if the stick stays plugged in, and reminds you when the last
+  backup is older than 7 days. Only changes are copied; versions kept: 7 daily, 4 weekly, 12 monthly.
+- restic, encrypted with the password in `~/.config/restic/password` (only on this laptop; **keep a copy elsewhere**,
+  without it the backups can't be opened). Backups live in `helios-backup/restic` on the stick, next to the ISOs
+  (`.ventoyignore` keeps Ventoy's boot menu from scanning them). Skipped: `~/.config/restic/excludes.txt`
+  (caches, Steam, Miniforge, Chrome data and other things that are reinstalled or re-synced).
+- By hand: `backup-usb` (or `systemctl --user start backup-usb`); last run's details: `~/.local/state/backup-usb/last.log`.
+- Restore (stick plugged in and mounted, e.g. click it in Dolphin):
+  ```
+  export RESTIC_REPOSITORY=/run/media/$USER/Ventoy/helios-backup/restic RESTIC_PASSWORD_FILE=~/.config/restic/password
+  restic snapshots                                  # list the backups
+  restic find notes.md                              # which backups have a file
+  restic restore latest --target ~/restored --include ~/notes   # put a folder back (into ~/restored)
+  ```
+- Pieces: `~/.local/bin/backup-usb`, `~/.config/systemd/user/backup-usb*.{service,timer}`,
+  `/etc/udev/rules.d/90-backup-usb.rules` (from `system/`).
+
 ## Microsoft Office (Windows VM via WinApps)
 - `Alt+D` → Excel, Word, PowerPoint, OneNote: real Microsoft 365 apps in a Windows 11 VM (Docker container
   `WinApps`), each in its own window. `.xlsx`/`.docx`/`.pptx`/`.csv` open there; OnlyOffice is the second choice in

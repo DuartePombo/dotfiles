@@ -1,0 +1,75 @@
+#!/bin/bash
+# Back up the home folder to the USB stick (the "Ventoy" stick) with restic: encrypted, versioned, incremental.
+# Starts by itself when the stick is plugged in (udev → backup-usb.service), daily while it stays plugged in
+# (backup-usb-check.timer), and reminds you when the last backup is older than 7 days.
+#   backup-usb          back up now, if the stick is there
+#   backup-usb check    the daily check: back up if the stick is there, otherwise remind if overdue
+# Backups: <stick>/helios-backup/restic. Password: ~/.config/restic/password (only on this laptop: keep a copy
+# somewhere else, or the backups can't be opened after losing the laptop). Skipped paths: excludes.txt.
+# Browse or restore:  restic -r /run/media/$USER/Ventoy/helios-backup/restic -p ~/.config/restic/password snapshots
+set -u
+
+label=Ventoy
+repo_dir=helios-backup/restic
+password_file="$HOME/.config/restic/password"
+excludes="$HOME/.config/restic/excludes.txt"
+state="$HOME/.local/state/backup-usb"
+remind_days=7
+
+mkdir -p "$state"
+notify() { notify-send --app-name=Backup "$@" 2>/dev/null || true; }
+
+exec 9>"$state/lock"
+flock -n 9 || exit 0 # a backup is already running
+
+dev=$(lsblk -nrpo NAME,LABEL | awk -v l="$label" '$2 == l { print $1; exit }')
+if [ -z "$dev" ]; then
+    if [ "${1:-}" = check ]; then
+        last=$(cat "$state/last-success" 2>/dev/null || echo 0)
+        age_days=$((($(date +%s) - last) / 86400))
+        if [ "$age_days" -ge "$remind_days" ]; then
+            if [ "$last" -eq 0 ]; then msg="No backup yet."; else msg="The last backup is $age_days days old."; fi
+            notify "Backup reminder" "$msg Plug in the USB stick to back up."
+        fi
+    fi
+    exit 0
+fi
+
+mounted_here=false
+mp=$(lsblk -nro MOUNTPOINTS "$dev" | head -n 1)
+if [ -z "$mp" ]; then
+    if ! udisksctl mount -b "$dev" --no-user-interaction >/dev/null 2>&1; then
+        notify --urgency=critical "Backup failed" "The USB stick couldn't be mounted."
+        exit 1
+    fi
+    mounted_here=true
+    mp=$(lsblk -nro MOUNTPOINTS "$dev" | head -n 1)
+fi
+if [ ! -f "$mp/$repo_dir/config" ]; then # a Ventoy stick, but not the backup one
+    if $mounted_here; then udisksctl unmount -b "$dev" --no-user-interaction >/dev/null 2>&1; fi
+    exit 0
+fi
+
+notify "Backing up…" "Home folder → USB stick. Don't unplug it until the backup says it's done."
+export RESTIC_REPOSITORY="$mp/$repo_dir" RESTIC_PASSWORD_FILE="$password_file"
+result=failed
+if restic backup "$HOME" --exclude-file="$excludes" --exclude-caches --one-file-system --tag auto \
+        >"$state/last.log" 2>&1 &&
+    restic forget --keep-daily 7 --keep-weekly 4 --keep-monthly 12 --prune >>"$state/last.log" 2>&1; then
+    date +%s >"$state/last-success"
+    result=ok
+fi
+sync
+if $mounted_here; then
+    udisksctl unmount -b "$dev" --no-user-interaction >/dev/null 2>&1 && unplug="You can unplug the stick." ||
+        unplug="Eject it in Dolphin before unplugging."
+else
+    unplug="Eject it in Dolphin before unplugging."
+fi
+if [ "$result" = ok ]; then
+    added=$(grep -m1 "^Added to the repository" "$state/last.log" | sed 's/^Added to the repository: //')
+    notify "Backup done" "Added ${added:-nothing new}. $unplug"
+else
+    notify --urgency=critical "Backup failed" "Details: ~/.local/state/backup-usb/last.log. $unplug"
+    exit 1
+fi

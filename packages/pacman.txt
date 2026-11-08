@@ -69,6 +69,7 @@ qpdf
 qt5-wayland
 qt6-wayland
 reflector
+restic
 ripgrep
 rofimoji
 satty

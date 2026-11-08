@@ -1,0 +1,31 @@
+# What backup-usb leaves out of the home folder backup: caches, and things that are reinstalled or re-synced.
+# (restic patterns: a path without a leading / matches anywhere under the home folder.)
+.cache
+.local/share/Trash
+.local/state/nvim
+.local/share/nvim
+.local/share/mise
+.local/share/Steam
+.steam
+.local/share/winapps
+.local/bin/winapps-src
+miniforge3
+.vscode
+node_modules
+.venv
+__pycache__
+.pytest_cache
+.ruff_cache
+.mypy_cache
+Pictures/wallpapers
+# Browsers and chat apps: their data is synced with the account; sign in again after a restore
+.config/google-chrome
+.config/google-chrome-work
+.config/whatsapp-web
+.config/Slack
+.config/discord
+.zoom
+.config/Code/Cache
+.config/Code/CachedData
+.config/Code/CachedExtensionVSIXs
+.config/Code/logs
