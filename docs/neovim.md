@@ -146,6 +146,8 @@ Like VS Code's Source Control:
 Rendered in place (`<leader>tm` switches to raw). Enter (or `gd`) on a link opens it, `Ctrl+o` comes back;
 Enter on a `- [ ]` task ticks it. Link targets can be `file.md#heading`, `code.lua#text` (first line with that
 text) or `code.lua#L12`.
+Notes with screenshots: `Super+Shift+S` copies a screenshot, `<leader>pi` pastes it (img-clip: saved as a PNG in
+`./assets` next to the note, link inserted); images show inline in kitty (image.nvim's Markdown integration).
 
 ## Maintenance
 - `:Lazy` plugins (`:Lazy update`, then commit `lazy-lock.json`), `:Mason` language tools,

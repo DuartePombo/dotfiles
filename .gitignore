@@ -21,6 +21,8 @@
 
 # App data (logins, caches)
 **/.config/google-chrome/
+**/.config/google-chrome-work/
+**/.config/whatsapp-web/
 **/.config/discord/
 **/.config/Mullvad VPN/
 **/.config/Code/

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Work notes
+Comment=Neovim in ~/notes/work, Space p i pastes a screenshot (workspace 4)
+Exec=app-launch work-notes
+Icon=accessories-text-editor
+Categories=Office;TextEditor;
+StartupWMClass=work-notes

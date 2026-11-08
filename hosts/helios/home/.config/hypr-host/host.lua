@@ -15,6 +15,15 @@ if mode == "docked" then
     -- Any other monitor: preferred mode, placed automatically
     hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
+    -- Which screen each workspace lives on (apps' homes are in hyprland.lua): the main task on the front monitor,
+    -- side things (Slack, work notes, WhatsApp) on the laptop screen. Mobile: everything on the laptop screen.
+    for _, ws in ipairs({ "1", "2", "5", "6", "8" }) do
+        hl.workspace_rule({ workspace = ws, monitor = "HDMI-A-3", default = (ws == "1") })
+    end
+    for _, ws in ipairs({ "3", "4", "7", "9", "10" }) do
+        hl.workspace_rule({ workspace = ws, monitor = "eDP-1", default = (ws == "3") })
+    end
+
     -- From the old config, where external monitors stuttered without the NVIDIA settings.
     hl.config({
         cursor = { no_hardware_cursors = true },

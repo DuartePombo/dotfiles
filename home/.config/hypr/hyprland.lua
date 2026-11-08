@@ -313,3 +313,18 @@ hl.window_rule({
     float  = true,
     center = true,
 })
+
+-- Fixed homes for apps (muscle memory): work on 1-5, personal on 6-10. Which screen each workspace lives on is in
+-- host.lua. The windows get these names from ~/.local/bin/app-launch (menu entries "Work projects", "Work notes",
+-- "Chrome (work)", "Chrome (personal)", "WhatsApp"). Workspaces 5 (terminal), 8, 9 and 10 are free.
+local app_homes = {
+    { name = "home-work-projects",   class = "^work-projects$",                   workspace = "1" },
+    { name = "home-chrome-work",     class = "^chrome-work$",                     workspace = "2" },
+    { name = "home-slack",           class = "^[Ss]lack$",                        workspace = "3" },
+    { name = "home-work-notes",      class = "^work-notes$",                      workspace = "4" },
+    { name = "home-chrome-personal", class = "^(chrome-personal|google-chrome)$", workspace = "6" },
+    { name = "home-whatsapp",        class = "^whatsapp$",                        workspace = "7" },
+}
+for _, home in ipairs(app_homes) do
+    hl.window_rule({ name = home.name, match = { class = home.class }, workspace = home.workspace })
+end

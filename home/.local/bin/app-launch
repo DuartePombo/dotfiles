@@ -1,0 +1,30 @@
+#!/bin/bash
+# Starts apps under fixed window names, so Hyprland opens each on its home workspace (hyprland.lua, "Fixed homes
+# for apps"). Used by the menu entries in ~/.local/share/applications.
+#   app-launch work-projects          kitty + the tmux session "work" (fz / Ctrl+b f switch projects inside)  → 1
+#   app-launch chrome-work [url]      work Chrome, its own data folder ~/.config/google-chrome-work            → 2
+#   app-launch work-notes             kitty + Neovim in ~/notes/work (Space p i pastes a screenshot)            → 4
+#   app-launch chrome-personal [url]  personal Chrome (the usual ~/.config/google-chrome)                      → 6
+#   app-launch whatsapp               WhatsApp Web in its own app window, data in ~/.config/whatsapp-web        → 7
+set -u
+
+case "${1:-}" in
+    work-projects)
+        exec kitty --class work-projects tmux new-session -A -s work ;;
+    chrome-work)
+        shift
+        exec google-chrome-stable --user-data-dir="$HOME/.config/google-chrome-work" --class=chrome-work "$@" ;;
+    work-notes)
+        mkdir -p "$HOME/notes/work"
+        cd "$HOME/notes/work" || exit 1
+        exec kitty --class work-notes nvim index.md ;;
+    chrome-personal)
+        shift
+        exec google-chrome-stable --class=chrome-personal "$@" ;;
+    whatsapp)
+        exec google-chrome-stable --user-data-dir="$HOME/.config/whatsapp-web" --class=whatsapp \
+            --app=https://web.whatsapp.com ;;
+    *)
+        echo "usage: app-launch work-projects|chrome-work|work-notes|chrome-personal|whatsapp" >&2
+        exit 2 ;;
+esac

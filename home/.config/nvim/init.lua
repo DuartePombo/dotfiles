@@ -398,6 +398,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>a', group = '[A]I' },
+        { '<leader>p', group = '[P]aste (Markdown)' },
         { '<leader>g', group = '[G]it' },
         { '<leader>v', group = '[V]env (Python interpreter)' },
         { '<leader>d', group = '[D]ebug', mode = { 'n', 'v' } },

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Work projects
+Comment=Terminal with the tmux session "work" (workspace 1)
+Exec=app-launch work-projects
+Icon=utilities-terminal
+Categories=System;TerminalEmulator;
+StartupWMClass=work-projects

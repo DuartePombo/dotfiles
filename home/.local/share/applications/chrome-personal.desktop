@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Chrome (personal)
+GenericName=Web Browser
+Comment=Personal Chrome (workspace 6)
+Exec=app-launch chrome-personal %U
+Icon=google-chrome
+Categories=Network;WebBrowser;
+MimeType=text/html;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/about;x-scheme-handler/unknown;
+StartupWMClass=chrome-personal

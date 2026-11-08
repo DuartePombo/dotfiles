@@ -34,6 +34,24 @@
 | `Alt+F9` | random wallpaper from `~/Pictures/wallpapers` (curated list: `packages/wallpapers.txt`) |
 | Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen |
 
+## Workspace layout (every app has a home)
+Work on 1–5, personal on 6–10. Docked, each workspace lives on a fixed screen; on the laptop alone all are on its
+screen. Start the apps from `Alt+D` by these names and they open on their workspace by themselves.
+
+| # | App (`Alt+D` name) | Screen when docked |
+|---|---|---|
+| 1 | Work projects: kitty + tmux session `work` (`fz` / `Ctrl+b f` switch projects, `claude` in a tmux window) | front monitor |
+| 2 | Chrome (work): its own data folder, sign in with the work account | front monitor |
+| 3 | Slack | laptop |
+| 4 | Work notes: Neovim in `~/notes/work`; `Super+Shift+S`, then `Space p i` pastes the screenshot | laptop |
+| 5 | Terminal (free) | front monitor |
+| 6 | Chrome (personal): also opens links | front monitor |
+| 7 | WhatsApp (WhatsApp Web in its own window; scan the QR code once) | laptop |
+| 8 / 9 / 10 | free | front / laptop / laptop |
+
+Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.lua`, launchers:
+`~/.local/bin/app-launch`. A second window of the same app also goes home; `Alt+Shift+number` moves it.
+
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **clock** for the
   notification centre, **power profile** to switch profiles.

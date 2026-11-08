@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Chrome (work)
+GenericName=Web Browser
+Comment=Work Chrome with its own data folder (workspace 2)
+Exec=app-launch chrome-work %U
+Icon=google-chrome
+Categories=Network;WebBrowser;
+StartupWMClass=chrome-work

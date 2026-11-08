@@ -362,15 +362,22 @@ return {
       backend = 'kitty',
       processor = 'magick_cli', -- ImageMagick's command line tools (packages/pacman.txt), no Lua rock needed
       integrations = {
-        markdown = { enabled = false },
+        -- Images in Markdown notes (pasted with <leader>pi, see markdown.lua), shown under their link
+        markdown = {
+          enabled = true,
+          filetypes = { 'markdown' },
+          only_render_image_at_cursor = false,
+          clear_in_insert_mode = false,
+          download_remote_images = false,
+        },
         neorg = { enabled = false },
         typst = { enabled = false },
         html = { enabled = false },
         css = { enabled = false },
       },
-      -- Sizes recommended by molten
+      -- Sizes: molten recommends max_height 12; 30 rows lets screenshots in notes be readable too
       max_width = 100,
-      max_height = 12,
+      max_height = 30,
       max_height_window_percentage = math.huge,
       max_width_window_percentage = math.huge,
       window_overlap_clear_enabled = true,
