@@ -193,50 +193,59 @@ hl.config({
 
 local mainMod = "ALT" -- Alt is the main modifier
 
--- Alt+Return opens a terminal, except in office apps (OnlyOffice, LibreOffice): they get Alt+Return themselves,
--- which in a spreadsheet is Excel's "new line inside the cell".
+-- Office windows get Alt + letter themselves, like on Windows: Excel's key tips (Alt+H, Alt+M, Alt+F...), Alt+Enter
+-- (new line in a cell), Alt+Q (search). Office = Microsoft Office through WinApps (window classes "Microsoft Excel",
+-- "Microsoft Word"..., "Microsoft Windows" for the full desktop), OnlyOffice and LibreOffice.
+-- Workspaces (Alt+number), lock, screenshots and recording stay the desktop's everywhere (dont_inhibit: even when
+-- Remote Desktop grabs the keyboard).
 local function is_office(window)
     local class = window and window.class and window.class:lower() or ""
-    return class:find("onlyoffice", 1, true) ~= nil or class:find("libreoffice", 1, true) ~= nil or class == "soffice"
+    return class:find("^microsoft ") ~= nil or class:find("onlyoffice", 1, true) ~= nil
+        or class:find("libreoffice", 1, true) ~= nil or class == "soffice"
 end
-hl.bind(mainMod .. " + RETURN", function()
-    if is_office(hl.get_active_window()) then
-        hl.dispatch(hl.dsp.send_shortcut({ mods = "ALT", key = "Return" }))
-    else
-        hl.dispatch(hl.dsp.exec_cmd(terminal))
+local function desktop_or_office(key, dispatcher) -- Alt+key: the desktop's action, or the key itself in office windows
+    return function()
+        if is_office(hl.get_active_window()) then
+            hl.dispatch(hl.dsp.send_shortcut({ mods = "ALT", key = key }))
+        else
+            hl.dispatch(dispatcher)
+        end
     end
-end)
-hl.bind(mainMod .. " + Q",      hl.dsp.window.close())
-hl.bind(mainMod .. " + M",      hl.dsp.exit())
-hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + V",      hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + D",      hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())          -- dwindle
-hl.bind(mainMod .. " + T",      hl.dsp.layout("togglesplit"))    -- dwindle
+end
+local always = { dont_inhibit = true }
+
+hl.bind(mainMod .. " + RETURN", desktop_or_office("Return", hl.dsp.exec_cmd(terminal)))
+hl.bind(mainMod .. " + Q",      desktop_or_office("Q", hl.dsp.window.close()))
+hl.bind(mainMod .. " + M",      desktop_or_office("M", hl.dsp.exit()))
+hl.bind(mainMod .. " + E",      desktop_or_office("E", hl.dsp.exec_cmd(fileManager)))
+hl.bind(mainMod .. " + V",      desktop_or_office("V", hl.dsp.window.float({ action = "toggle" })))
+hl.bind(mainMod .. " + D",      desktop_or_office("D", hl.dsp.exec_cmd(menu)))
+hl.bind(mainMod .. " + P",      desktop_or_office("P", hl.dsp.window.pseudo()))          -- dwindle
+hl.bind(mainMod .. " + T",      desktop_or_office("T", hl.dsp.layout("togglesplit")))    -- dwindle
 -- Fullscreen like F11 on Windows, for any window: Alt+F covers the whole screen (bar too),
 -- Alt+Shift+F maximizes (fills the screen, keeps the bar). Same key again to go back.
-hl.bind(mainMod .. " + F",         hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
-hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized",  action = "toggle" }))
+hl.bind(mainMod .. " + F",         desktop_or_office("F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })))
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized",  action = "toggle" }), always)
 hl.bind(mainMod .. " + F9",     hl.dsp.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh"))
-hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(lock))
+hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(lock), always)
 
 -- Move focus with mainMod + h/j/k/l
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + H", desktop_or_office("H", hl.dsp.focus({ direction = "left" })))
+hl.bind(mainMod .. " + L", desktop_or_office("L", hl.dsp.focus({ direction = "right" })))
+hl.bind(mainMod .. " + K", desktop_or_office("K", hl.dsp.focus({ direction = "up" })))
+hl.bind(mainMod .. " + J", desktop_or_office("J", hl.dsp.focus({ direction = "down" })))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
     local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }), always)
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), always)
 end
 
 -- Special workspace (scratchpad)
-hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + S",         desktop_or_office("S", hl.dsp.workspace.toggle_special("magic")))
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }), always)
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -263,12 +272,12 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- Screenshots like Windows' Snipping Tool (scripts/screenshot.sh): the screen freezes, drag an area or click a
 -- window; it's copied and saved in ~/Pictures/Screenshots, and clicking the notification opens an editor.
 local screenshot = "~/.config/hypr/scripts/screenshot.sh"
-hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd(screenshot))
-hl.bind("Print",             hl.dsp.exec_cmd(screenshot))
-hl.bind("SHIFT + Print",     hl.dsp.exec_cmd(screenshot .. " screen"))
+hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd(screenshot), always)
+hl.bind("Print",             hl.dsp.exec_cmd(screenshot), always)
+hl.bind("SHIFT + Print",     hl.dsp.exec_cmd(screenshot .. " screen"), always)
 -- Screen recording, like the Snipping Tool's (scripts/screenrecord.sh): press to pick an area and start,
 -- press again to stop (waybar shows ● REC meanwhile). Saved as MP4 in ~/Videos/Recordings.
-hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh"))
+hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecord.sh"), always)
 
 
 --------------------------------
@@ -283,4 +292,13 @@ hl.window_rule({
     match  = { class = "com.gabm.satty" },
     float  = true,
     center = true,
+})
+
+hl.window_rule({
+    -- WinApps' clock-sync helper inside Windows (TimeSync task, runs at every login) shows up as an
+    -- "Administrator: ...powershell.exe" window in Office sessions. Park it on a workspace that's never shown.
+    name             = "winapps-timesync-hidden",
+    match            = { class = "^Microsoft ", title = "^Administrator: .*powershell\\.exe$" },
+    workspace        = "special:winapps-hidden silent",
+    no_initial_focus = true,
 })

@@ -11,7 +11,7 @@
 
 | Keys | Action |
 |---|---|
-| `Alt+Return` | terminal (kitty); in OnlyOffice/LibreOffice it goes to the app instead (Excel's new line in a cell) |
+| `Alt+Return` | terminal (kitty); in Office windows it goes to the app instead (Excel's new line in a cell, see below) |
 | `Alt+D` | app launcher (wofi) |
 | `Alt+E` | file manager (Dolphin) |
 | `Alt+Q` | close window |
@@ -75,6 +75,18 @@
 - Wi-Fi: nm-applet (tray), `nmtui`, or `nmcli device wifi list` / `nmcli device wifi connect "<SSID>" --ask`.
 - Power profiles: `powerprofilesctl get`, `powerprofilesctl set power-saver|balanced|performance`.
 - VPN: Mullvad app, or `mullvad status` / `mullvad connect` / `mullvad disconnect`.
+
+## Microsoft Office (Windows VM via WinApps)
+- `Alt+D` → Excel, Word, PowerPoint, OneNote: real Microsoft 365 apps in a Windows 11 VM (Docker container
+  `WinApps`), each in its own window. `Alt+D` → Windows: the whole Windows desktop. `.xlsx`/`.docx`/`.pptx`/`.csv`
+  open there; OnlyOffice is the second choice in Open With, LibreOffice opens `.odt`/`.ods`/`.odp`.
+- In Office windows (also OnlyOffice and LibreOffice) `Alt` + letter goes to the app: Excel's key tips (`Alt+H`…),
+  `Alt+Enter`, `Alt+Q`, `Alt+F4`. `Alt+1`…`Alt+0` (+Shift), `Alt+Shift+F`, `Alt+.`, screenshots and recording stay
+  the desktop's.
+- The VM starts by itself when an Office app opens (about 30 s). It uses 4 GB of RAM while running; stop it with
+  `docker stop -t 120 WinApps` (plain `docker stop` cuts Windows off after 10 s).
+- Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`
+  (local only). Linux home inside Windows: `\\tsclient\home`. Web view of the VM: http://127.0.0.1:8006.
 
 ## Packages
 - Update everything (repo + AUR): `paru -Syu` (pacman only: `sudo pacman -Syu`).
