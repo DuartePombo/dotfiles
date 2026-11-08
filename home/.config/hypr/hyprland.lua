@@ -293,12 +293,3 @@ hl.window_rule({
     float  = true,
     center = true,
 })
-
-hl.window_rule({
-    -- WinApps' clock-sync helper inside Windows (TimeSync task, runs at every login) shows up as an
-    -- "Administrator: ...powershell.exe" window in Office sessions. Park it on a workspace that's never shown.
-    name             = "winapps-timesync-hidden",
-    match            = { class = "^Microsoft ", title = "^Administrator: .*powershell\\.exe$" },
-    workspace        = "special:winapps-hidden silent",
-    no_initial_focus = true,
-})

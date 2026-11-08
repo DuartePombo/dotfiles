@@ -78,6 +78,12 @@ if %ERRORLEVEL% neq 0 (
     )
 )
 
+REM [dotfiles] Console programs use the classic console host instead of Windows Terminal, so the hidden
+REM TimeSync task below really stays hidden (Windows Terminal ignores -WindowStyle Hidden and showed a window
+REM next to every Office app).
+reg add "HKCU\Console\%%%%Startup" /v DelegationConsole /t REG_SZ /d {B23D10C0-E52E-411E-9D5B-C09FDF709C7D} /f >nul 2>&1
+reg add "HKCU\Console\%%%%Startup" /v DelegationTerminal /t REG_SZ /d {B23D10C0-E52E-411E-9D5B-C09FDF709C7D} /f >nul 2>&1
+
 REM Create time sync task to be run by the user at login
 copy %~dp0\TimeSync.ps1 %windir%
 set "taskname2=TimeSync"
