@@ -64,6 +64,12 @@ Chrome (personal), and that Chrome comes to the front. More work apps: its `work
 `--no-default-browser-check` (chrome-flags.conf), so it doesn't offer to replace this.
 Which Chrome each link went to, and why: `~/.local/state/open-link.log`.
 
+Zoom (screen sharing): in `~/.config/zoomus.conf` (Zoom's own file, `[General]`) `xwayland=false` and
+`enableWaylandShare=true`: Zoom then runs as a native Wayland app and shares through the desktop's picker. Through
+XWayland (`xwayland=true`, the default) the share was black and the sharing bar ignored clicks. Set them while Zoom
+is closed (it rewrites the file on exit, keeping both). In Zoom's own share dialog just press Share: the desktop's
+picker (Monitors / Windows / Workspaces / Region) is where you choose.
+
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **clock** for the
   notification centre, **power profile** to switch profiles.
