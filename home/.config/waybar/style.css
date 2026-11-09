@@ -42,13 +42,13 @@ tooltip label {
     margin: 3px 3px;
 }
 
-/* Each workspace is a faint "pill", so its number and icon read as one: warm for work (1-5), green for personal
+/* Each workspace is a "pill", so its number and icon read as one: purple for work (1-5), light gray for personal
    (6-10), with a gap between the two groups. The workspace a screen shows stays solid blue (below). */
 #workspaces button:nth-child(-n+5) {
-    background-color: rgba(250, 179, 135, 0.14); /* Catppuccin peach */
+    background-color: rgba(203, 166, 247, 0.32); /* Catppuccin mauve */
 }
 #workspaces button:nth-child(n+6) {
-    background-color: rgba(166, 227, 161, 0.11); /* Catppuccin green */
+    background-color: rgba(205, 214, 244, 0.16); /* light gray */
 }
 #workspaces button:nth-child(6) {
     margin-left: 14px;
