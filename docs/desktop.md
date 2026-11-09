@@ -46,7 +46,7 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | 1 | Work projects: kitty + tmux session `work` (`fz` / `Ctrl+b f` switch projects, `claude` in a tmux window) | front monitor |
 | 2 | Chrome (work): its own data folder, sign in with the work account; links from Slack open here | front monitor |
 | 3 | Slack | laptop |
-| 4 | Work notes: Neovim in `~/notes/work`; `Super+Shift+S`, then `Space p i` pastes the screenshot | laptop |
+| 4 | Work notes: Neovim in `~/notes/work`; `Super+Shift+S`, then `p` (or `Space p i`) pastes the screenshot | laptop |
 | 5 | Terminal (free) | front monitor |
 | 6 | Chrome (personal): opens links from all other apps | front monitor |
 | 7 | WhatsApp (WhatsApp Web in its own window; scan the QR code once) | laptop |

@@ -122,6 +122,24 @@ vim.o.showmode = false
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
+-- Neovim's own Wayland clipboard, except that pasting asks for text only: with just a screenshot on the clipboard,
+-- p used to insert the PNG's raw bytes. Now it says "No suitable type of content copied" instead, and in Markdown
+-- notes p pastes the screenshot as an image (lua/custom/paste.lua).
+require('custom.paste').setup()
+if vim.env.WAYLAND_DISPLAY then
+  vim.g.clipboard = {
+    name = 'wl-clipboard (text only)',
+    copy = {
+      ['+'] = { 'wl-copy', '--type', 'text/plain' },
+      ['*'] = { 'wl-copy', '--primary', '--type', 'text/plain' },
+    },
+    paste = {
+      ['+'] = { 'wl-paste', '--no-newline', '--type', 'text' },
+      ['*'] = { 'wl-paste', '--no-newline', '--primary', '--type', 'text' },
+    },
+    cache_enabled = 1,
+  }
+end
 
 -- Enable break indent
 vim.o.breakindent = true

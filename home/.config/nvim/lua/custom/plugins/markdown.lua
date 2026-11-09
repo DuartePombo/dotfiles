@@ -28,6 +28,7 @@ return {
   {
     'HakonHarnes/img-clip.nvim',
     ft = { 'markdown' },
+    -- p / P with a screenshot on the clipboard also paste it as an image in notes: lua/custom/paste.lua
     keys = {
       { '<leader>pi', '<cmd>PasteImage<cr>', desc = '[P]aste [I]mage from the clipboard', ft = 'markdown' },
     },
