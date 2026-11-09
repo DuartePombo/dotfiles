@@ -138,11 +138,17 @@ Chrome (personal), and that Chrome comes to the front. More work apps: its `work
 - Leaving an Office window with `Alt+1`…`Alt+0`, `Alt+Tab` or `Alt+.` first sends it a harmless `F24`. Otherwise
   Windows reads the lone Alt as "show the key tips", and Excel draws letter boxes over the next workspace and waits
   for a letter. If they ever appear: click into Excel, `Esc`.
-- Excel only half drawn when it first starts: close it (`Alt+F4`) and open it again.
+- Move an Office window to another workspace with `Alt+Shift+number`. `Alt`+drag also works, but Windows sees the
+  lone Alt and Excel shows its key tips (`Esc`).
+- Windows must know both screens, or Office windows on the laptop screen never get their size (half drawn, clicks
+  miss): XWayland puts the front monitor at x=0 and the laptop at x=1920, and without `/multimon` FreeRDP reports only
+  the first one. After plugging a monitor in or out, close the Office windows and open them again.
 - The VM starts by itself when an Office app opens (about 30 s). It uses 4 GB of RAM while running; stop it with
   `docker stop -t 120 WinApps` (plain `docker stop` cuts Windows off after 10 s).
 - Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`
   (local only). Linux home inside Windows: `\\tsclient\home`. Web view of the VM: http://127.0.0.1:8006.
+  Non-secret settings in `winapps.conf` (keep them when recreating it):
+  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive /multimon"`, `RDP_TIMEOUT="120"`.
 
 ## Packages
 - Update everything (repo + AUR): `paru -Syu` (pacman only: `sudo pacman -Syu`).
