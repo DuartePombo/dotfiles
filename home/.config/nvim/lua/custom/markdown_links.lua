@@ -1,4 +1,4 @@
--- Markdown as a little help system (used by ~/projects/nvim-tutorial, works in any .md file):
+-- Markdown as a little help system (used by ~/pombo/projects/nvim-tutorial, works in any .md file):
 --   Enter (or gd) on a link   opens it: another file, a heading in it, or a web page; Ctrl+o comes back
 --   Enter on a task "- [ ]"   ticks it ("- [x]") or unticks it; :w keeps the ticks
 -- Link targets: path relative to this file (or ~/...), optional #anchor:

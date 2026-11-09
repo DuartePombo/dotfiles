@@ -20,6 +20,7 @@
 # Machine-local files with work or personal paths (they live in ~, never in the repo)
 **/.bashrc.local
 **/.tmux-sessionizer.local
+**/.work-notes.local
 
 # App data (logins, caches)
 **/.config/google-chrome/

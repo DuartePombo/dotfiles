@@ -3,7 +3,8 @@
 # for apps"). Used by the menu entries in ~/.local/share/applications.
 #   app-launch work-projects          kitty + the tmux session "work" (fz / Ctrl+b f switch projects inside)  → 1
 #   app-launch chrome-work [url]      work Chrome, its own data folder ~/.config/google-chrome-work            → 2
-#   app-launch work-notes             kitty + Neovim in ~/notes/work (Space p i pastes a screenshot)            → 4
+#   app-launch work-notes             kitty + Neovim in the work notes folder (p pastes a screenshot)            → 4
+#                                     (the folder: first line of ~/.work-notes.local, local only; else ~/notes/work)
 #   app-launch chrome-personal [url]  personal Chrome (the usual ~/.config/google-chrome)                      → 6
 #   app-launch whatsapp               WhatsApp Web in its own app window, data in ~/.config/whatsapp-web        → 7
 set -u
@@ -15,8 +16,13 @@ case "${1:-}" in
         shift
         exec google-chrome-stable --user-data-dir="$HOME/.config/google-chrome-work" --class=chrome-work "$@" ;;
     work-notes)
-        mkdir -p "$HOME/notes/work"
-        cd "$HOME/notes/work" || exit 1
+        notes="$HOME/notes/work"
+        if [[ -f $HOME/.work-notes.local ]]; then
+            line=$(grep -v -E '^[[:space:]]*(#|$)' "$HOME/.work-notes.local" | head -n 1)
+            [[ -n $line ]] && notes=${line/#\~/$HOME}
+        fi
+        mkdir -p "$notes"
+        cd "$notes" || exit 1
         exec kitty --class work-notes nvim index.md ;;
     chrome-personal)
         shift

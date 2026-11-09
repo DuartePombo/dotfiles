@@ -2,7 +2,7 @@
 
 `Space` is the leader key. Press it and wait: which-key lists everything under it. `<leader>sk` searches all keys.
 
-The full tutorial, with exercises and mnemonics, is a local folder: `~/projects/nvim-tutorial` (not in this repo).
+The full tutorial, with exercises and mnemonics, is a local folder: `~/pombo/projects/nvim-tutorial` (not in this repo).
 `<leader>?` opens it, `<leader>s?` searches it.
 
 ## What works per language

@@ -1,4 +1,4 @@
--- Reading Markdown in Neovim (docs, READMEs, ~/projects/nvim-tutorial):
+-- Reading Markdown in Neovim (docs, READMEs, ~/pombo/projects/nvim-tutorial):
 -- render-markdown draws headings, tables, code blocks, checkboxes and "> [!TIP]" boxes in the buffer (the line
 -- under the cursor shows the raw text, for editing). <leader>tm switches between rendered and raw.
 -- Enter / gd on a link opens it, Enter on a "- [ ]" task ticks it: lua/custom/markdown_links.lua

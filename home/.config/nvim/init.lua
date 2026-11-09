@@ -225,8 +225,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Terminal at the bottom (<leader>tt) and running the current file (<leader>r...): lua/custom/run.lua
 require('custom.run').setup()
 
--- My Neovim tutorial (~/projects/nvim-tutorial): <leader>? opens its index, <leader>s? searches all of it
-local tutorial = vim.fn.expand '~/projects/nvim-tutorial'
+-- My Neovim tutorial (~/pombo/projects/nvim-tutorial): <leader>? opens its index, <leader>s? searches all of it
+local tutorial = vim.fn.expand '~/pombo/projects/nvim-tutorial'
 vim.keymap.set('n', '<leader>?', function()
   vim.cmd "normal! m'"
   vim.cmd.edit(vim.fn.fnameescape(tutorial .. '/index.md'))
