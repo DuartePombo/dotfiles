@@ -9,6 +9,7 @@ bluez
 bluez-utils
 brightnessctl
 btrfs-progs
+bubblewrap
 cliphist
 dialog
 discord
@@ -77,6 +78,7 @@ shellcheck
 slurp
 snap-pac
 snapper
+socat
 sof-firmware
 steam
 stow
