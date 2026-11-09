@@ -90,6 +90,8 @@ Which Chrome each link went to, and why: `~/.local/state/open-link.log`.
 
 ## Audio, Bluetooth, Wi-Fi, power
 - Audio: `wpctl status` (devices, defaults), `wpctl set-default <id>`, or pavucontrol.
+  The UGREEN dock's sound card ("SMI USB Display") is switched off: nothing plays through it, but apps kept picking
+  it (`hosts/helios/home/.config/wireplumber/`).
 - Bluetooth: blueman (tray), or `bluetoothctl`, then `power on`, `scan on`, `pair <MAC>`, `trust <MAC>`, `connect <MAC>`.
   `trust` makes it reconnect by itself. To forget a device: `bluetoothctl remove <MAC>`.
 - Glove80 (factory layout; hold Magic, the bottom-left key of the left half, then tap):
