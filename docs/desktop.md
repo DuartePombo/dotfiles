@@ -69,6 +69,8 @@ Zoom (screen sharing): in `~/.config/zoomus.conf` (Zoom's own file, `[General]`)
 XWayland (`xwayland=true`, the default) the share was black and the sharing bar ignored clicks. Set them while Zoom
 is closed (it rewrites the file on exit, keeping both). In Zoom's own share dialog just press Share: the desktop's
 picker (Monitors / Windows / Workspaces / Region) is where you choose.
+Zoom starts through `~/.local/bin/zoom` (also its menu entry, `~/.local/share/applications/Zoom.desktop`, which
+replaces the package's): it draws Zoom's interface in software, since natively on the NVIDIA GPU many icons were black.
 
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **clock** for the

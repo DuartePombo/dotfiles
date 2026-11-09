@@ -1,0 +1,14 @@
+[Desktop Entry]
+# Replaces the zoom package's /usr/share/applications/Zoom.desktop (same name): starts ~/.local/bin/zoom, which draws
+# Zoom's interface in software (black icons otherwise). Keep MimeType in sync with the package's entry: meeting links
+# (zoommtg) and Zoom's sign-in hand-off come through here.
+Name=Zoom Workplace
+Comment=Zoom Video Conference
+Exec=zoom %U
+Icon=Zoom
+Terminal=false
+Type=Application
+Categories=Network;
+StartupWMClass=Zoom
+MimeType=x-scheme-handler/zoommtg;x-scheme-handler/zoomus;x-scheme-handler/tel;x-scheme-handler/callto;x-scheme-handler/zoomphonecall;x-scheme-handler/zoomphonesms;x-scheme-handler/zoomcontactcentercall;application/x-zoom
+X-KDE-Protocols=zoommtg;zoomus;tel;callto;zoomphonecall;zoomphonesms;zoomcontactcentercall;

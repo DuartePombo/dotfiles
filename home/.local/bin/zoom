@@ -1,0 +1,7 @@
+#!/bin/bash
+# Zoom, with its interface (buttons, icons) drawn in software. Zoom runs as a native Wayland app here (zoomus.conf:
+# xwayland=false, enableWaylandShare=true; through XWayland screen sharing was black), and in that mode Qt Quick's
+# OpenGL path on the NVIDIA GPU drew many icons as black squares. Video and screen sharing aren't affected.
+# Comes before /usr/bin/zoom on PATH; the menu entry (~/.local/share/applications/Zoom.desktop) uses it too.
+export QT_QUICK_BACKEND=software
+exec /usr/bin/zoom "$@"
