@@ -26,30 +26,25 @@
 
     // Module Specific Configurations
     "hyprland/workspaces": {
-        // MODIFICATION: Changed format to display ID (number)
-        "format": "{id}",
-        // MODIFICATION: format-icons can be simplified or removed if you only want numbers and rely on CSS for active state.
-        // Kept for flexibility if you want specific icons for urgent or a different active look beyond CSS.
+        // Number + what the workspace is for (hyprland.lua, "Fixed homes for apps"): work on 1-5, personal on 6-10
+        // (style.css leaves a gap between them). Free workspaces show just the number; urgent ones turn red.
+        "format": "{icon}",
         "format-icons": {
-            "urgent": "", // Exclamation mark for urgent workspace
-            "active": "{id}"  // Can just be "{id}" and styled with CSS, or an icon like "" if preferred alongside CSS
-            // You no longer need to define icons for "1", "2", etc., here if "format": "{id}" is used
-            // and persistent_workspaces handles showing them.
+            "1": "1 ",  // Work projects (kitty + tmux)
+            "2": "2 ",  // Chrome (work)
+            "3": "3 ",  // Slack
+            "4": "4 ",  // Work notes
+            "5": "5 ",  // free terminal
+            "6": "6 ",  // Chrome (personal)
+            "7": "7 ",  // WhatsApp
+            "8": "8",
+            "9": "9",
+            "10": "10"
         },
         "on-click": "activate",
-        // "all-outputs": true, // Uncomment if you want to see workspaces from all monitors merged
-        // MODIFICATION: Added persistent_workspaces to show 1-10
+        // Always show 1-10
         "persistent-workspaces": {
-            "1": [], // Makes workspace "1" always visible
-            "2": [], // Makes workspace "2" always visible
-            "3": [], // Makes workspace "3" always visible
-            "4": [], // Makes workspace "4" always visible
-            "5": [], // Makes workspace "5" always visible
-            "6": [], // Makes workspace "6" always visible
-            "7": [], // Makes workspace "7" always visible
-            "8": [], // Makes workspace "8" always visible
-            "9": [], // Makes workspace "9" always visible
-            "10": [] // Makes workspace "10" always visible
+            "1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []
         }
     },
     "hyprland/submap": {

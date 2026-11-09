@@ -43,6 +43,11 @@ tooltip label {
     margin: 2px 3px;
 }
 
+/* Work (1-5) | personal (6-10): a gap before workspace 6 */
+#workspaces button:nth-child(6) {
+    margin-left: 14px;
+}
+
 #workspaces button:hover {
     background: rgba(0, 0, 0, 0.2);
     box-shadow: inherit;
