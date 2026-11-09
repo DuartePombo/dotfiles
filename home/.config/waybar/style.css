@@ -36,14 +36,20 @@ tooltip label {
 }
 
 #workspaces button {
-    padding: 0 5px;
-    background-color: transparent;
+    padding: 0 7px;
     color: #cdd6f4; /* Default workspace button color */
     border-radius: 5px; /* Rounded corners for workspace buttons */
-    margin: 2px 3px;
+    margin: 3px 3px;
 }
 
-/* Work (1-5) | personal (6-10): a gap before workspace 6 */
+/* Each workspace is a faint "pill", so its number and icon read as one: warm for work (1-5), green for personal
+   (6-10), with a gap between the two groups. The workspace a screen shows stays solid blue (below). */
+#workspaces button:nth-child(-n+5) {
+    background-color: rgba(250, 179, 135, 0.14); /* Catppuccin peach */
+}
+#workspaces button:nth-child(n+6) {
+    background-color: rgba(166, 227, 161, 0.11); /* Catppuccin green */
+}
 #workspaces button:nth-child(6) {
     margin-left: 14px;
 }
