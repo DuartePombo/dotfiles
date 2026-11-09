@@ -62,6 +62,7 @@ Links: the default browser is `~/.local/bin/open-link`. Links from Slack and Zoo
 Google") open in Chrome (work), all others in
 Chrome (personal), and that Chrome comes to the front. More work apps: its `work_apps` list. Chrome runs with
 `--no-default-browser-check` (chrome-flags.conf), so it doesn't offer to replace this.
+Which Chrome each link went to, and why: `~/.local/state/open-link.log`.
 
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **clock** for the

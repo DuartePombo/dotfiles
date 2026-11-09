@@ -1,35 +1,56 @@
 #!/bin/bash
 # The default browser (mimeapps.list → open-link.desktop): opens each link in the right Chrome and brings it to the
 # front. Links from work apps (Slack, Zoom) go to the work Chrome (workspace 2), everything else to the personal Chrome
-# (workspace 6). A work app is recognised by walking up the processes that asked for the link
-# (Slack → xdg-open → open-link). To add one, put its process name (cat /proc/<pid>/comm) in work_apps.
+# (workspace 6). A work app is recognised in one of two ways:
+#   - it's among the processes that asked for the link (Slack → xdg-open → open-link): its name is in work_apps
+#     (cat /proc/<pid>/comm);
+#   - it starts the browser detached, so it isn't among them (Zoom: Qt's startDetached), but the environment it passes
+#     on gives it away: work_env (its library path, which Zoom's launcher always sets).
+# Each decision is logged (time, Chrome, reason, website only) in ~/.local/state/open-link.log (last 200 lines).
 #   open-link URL                        open it
-#   OPEN_LINK_DRY_RUN=1 open-link URL    only print which Chrome it would use
+#   OPEN_LINK_DRY_RUN=1 open-link URL    only print which Chrome it would use, and why
 set -u
 
 work_apps=(slack zoom)
+work_env=('LD_LIBRARY_PATH=*/opt/zoom*' 'GIO_LAUNCHED_DESKTOP_FILE=*/Zoom.desktop')
 
 profile=personal
+reason=default
 pid=$PPID
 for _ in $(seq 20); do
     [ "$pid" -gt 1 ] 2>/dev/null || break
     comm=$(cat "/proc/$pid/comm" 2>/dev/null) || break
     for app in "${work_apps[@]}"; do
-        if [ "$comm" = "$app" ]; then profile=work; break 2; fi
+        if [ "$comm" = "$app" ]; then profile=work reason="process $comm"; break 2; fi
     done
     pid=$(awk '/^PPid:/ { print $2 }' "/proc/$pid/status" 2>/dev/null)
 done
+if [ "$profile" = personal ]; then
+    for pattern in "${work_env[@]}"; do
+        name=${pattern%%=*}
+        value=$(printenv "$name" || true)
+        # shellcheck disable=SC2053 # the right side is a glob on purpose
+        if [ -n "$value" ] && [[ $value == ${pattern#*=} ]]; then profile=work reason="environment $name"; break; fi
+    done
+fi
 
+site=$(printf '%s' "${1:-}" | sed -E 's#^[a-zA-Z][a-zA-Z0-9+.-]*://([^/?#]*).*#\1#')
 if [ -n "${OPEN_LINK_DRY_RUN:-}" ]; then
-    echo "$profile $*"
+    echo "$profile ($reason) $site"
     exit 0
 fi
+log="$HOME/.local/state/open-link.log"
+mkdir -p "${log%/*}"
+printf '%s %s (%s) %s\n' "$(date '+%F %T')" "$profile" "$reason" "$site" >>"$log"
+tail -n 200 "$log" >"$log.tmp" && mv "$log.tmp" "$log"
 
 case $profile in
     work) class='^chrome-work$' ;;
     *)    class='^(chrome-personal|google-chrome)$' ;;
 esac
 
+# Chrome mustn't inherit the app's own libraries (Zoom passes its LD_LIBRARY_PATH on)
+unset LD_LIBRARY_PATH GIO_LAUNCHED_DESKTOP_FILE GIO_LAUNCHED_DESKTOP_FILE_PID
 "${0%/*}/app-launch" "chrome-$profile" "$@" >/dev/null 2>&1 &
 
 # A Chrome that's already running opens the link in a new tab without coming forward: focus its window.
