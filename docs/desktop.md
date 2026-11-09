@@ -108,7 +108,8 @@ Chrome (personal), and that Chrome comes to the front. More work apps: its `work
 - restic, encrypted with the password in `~/.config/restic/password` (only on this laptop; **keep a copy elsewhere**,
   without it the backups can't be opened). Backups live in `helios-backup/restic` on the stick, next to the ISOs
   (`.ventoyignore` keeps Ventoy's boot menu from scanning them). Skipped: `~/.config/restic/excludes.txt`
-  (caches, Steam, Miniforge, Chrome data and other things that are reinstalled or re-synced).
+  (caches, Steam, Miniforge, Chrome data, VS Code's server, the Claude Code program and other things that are
+  reinstalled or re-synced). No size limit: only the stick's free space; each backup adds just the changes.
 - Only this stick is ever written to: any stick labelled Ventoy is first mounted read-only, and the backup runs only
   if it holds the repository whose ID is in `~/.config/restic/repository-id` (local) and that opens with the password.
   Other pens: nothing happens (not labelled Ventoy) or a read-only look and unmount (another Ventoy stick).

@@ -18,6 +18,15 @@ __pycache__
 .ruff_cache
 .mypy_cache
 Pictures/wallpapers
+# Programs that install themselves again: VS Code's server (set up when another computer connects over SSH), the
+# Claude Code program (its history and settings in ~/.claude stay in the backup), Codex, npm's download cache,
+# OnlyOffice's font previews and cache
+.vscode-server
+.local/share/claude
+.codex
+.npm
+.local/share/onlyoffice/desktopeditors/data/fonts
+.local/share/onlyoffice/desktopeditors/data/cache
 # Browsers and chat apps: their data is synced with the account; sign in again after a restore
 .config/google-chrome
 .config/google-chrome-work
