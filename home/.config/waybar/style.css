@@ -42,13 +42,21 @@ tooltip label {
     margin: 3px 3px;
 }
 
-/* Each workspace is a "pill", so its number and icon read as one: purple for work (1-5), light gray for personal
-   (6-10), with a gap between the two groups. The workspace a screen shows stays solid blue (below). */
+/* Each workspace is a "pill", so its number and icon read as one: Slack-like aubergine for work (1-5), gray for
+   personal (6-10), with a gap between the two groups. Hover lights a pill up; the workspace a screen shows stays
+   solid blue (below). Solid colors, not transparent ones, so the wallpaper doesn't change them. */
 #workspaces button:nth-child(-n+5) {
-    background-color: rgba(203, 166, 247, 0.32); /* Catppuccin mauve */
+    background-color: #5e2b66; /* dark aubergine */
+    color: #f2e6f5;
+}
+#workspaces button:nth-child(-n+5):hover {
+    background: #7d3986; /* Slack's highlighted channel */
 }
 #workspaces button:nth-child(n+6) {
-    background-color: rgba(205, 214, 244, 0.16); /* light gray */
+    background-color: #3a3c47; /* gray */
+}
+#workspaces button:nth-child(n+6):hover {
+    background: #4d4f5c;
 }
 #workspaces button:nth-child(6) {
     margin-left: 14px;

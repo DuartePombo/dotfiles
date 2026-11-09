@@ -30,13 +30,13 @@
         // (style.css leaves a gap between them). Free workspaces show just the number; urgent ones turn red.
         "format": "{icon}",
         "format-icons": {
-            "1": "1 ",  // Work projects (kitty + tmux)
-            "2": "2 ",  // Chrome (work)
-            "3": "3 ",  // Slack
-            "4": "4 ",  // Work notes
-            "5": "5 ",  // free terminal
-            "6": "6 ",  // Chrome (personal)
-            "7": "7 ",  // WhatsApp
+            "1": "1 <span size='4pt'> </span>",  // Work projects (kitty + tmux)
+            "2": "2 <span size='4pt'> </span>",  // Chrome (work)
+            "3": "3 <span size='4pt'> </span>",  // Slack
+            "4": "4 <span size='4pt'> </span>",  // Work notes
+            "5": "5 <span size='4pt'> </span>",  // free terminal
+            "6": "6 <span size='4pt'> </span>",  // Chrome (personal)
+            "7": "7 <span size='4pt'> </span>",  // WhatsApp
             "8": "8",
             "9": "9",
             "10": "10"
