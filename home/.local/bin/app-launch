@@ -22,8 +22,8 @@ case "${1:-}" in
         shift
         exec google-chrome-stable --class=chrome-personal "$@" ;;
     whatsapp)
-        exec google-chrome-stable --user-data-dir="$HOME/.config/whatsapp-web" --class=whatsapp \
-            --app=https://web.whatsapp.com ;;
+        # No --class: Chrome ignores it for --app windows (the window is "chrome-web.whatsapp.com__-Default")
+        exec google-chrome-stable --user-data-dir="$HOME/.config/whatsapp-web" --app=https://web.whatsapp.com ;;
     *)
         echo "usage: app-launch work-projects|chrome-work|work-notes|chrome-personal|whatsapp" >&2
         exit 2 ;;

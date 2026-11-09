@@ -44,16 +44,20 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | # | App (`Alt+D` name) | Screen when docked |
 |---|---|---|
 | 1 | Work projects: kitty + tmux session `work` (`fz` / `Ctrl+b f` switch projects, `claude` in a tmux window) | front monitor |
-| 2 | Chrome (work): its own data folder, sign in with the work account | front monitor |
+| 2 | Chrome (work): its own data folder, sign in with the work account; links from Slack open here | front monitor |
 | 3 | Slack | laptop |
 | 4 | Work notes: Neovim in `~/notes/work`; `Super+Shift+S`, then `Space p i` pastes the screenshot | laptop |
 | 5 | Terminal (free) | front monitor |
-| 6 | Chrome (personal): also opens links | front monitor |
+| 6 | Chrome (personal): opens links from all other apps | front monitor |
 | 7 | WhatsApp (WhatsApp Web in its own window; scan the QR code once) | laptop |
 | 8 / 9 / 10 | free | front / laptop / laptop |
 
 Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.lua`, launchers:
 `~/.local/bin/app-launch`. A second window of the same app also goes home; `Alt+Shift+number` moves it.
+
+Links: the default browser is `~/.local/bin/open-link`. Links from Slack open in Chrome (work), all others in
+Chrome (personal), and that Chrome comes to the front. More work apps: its `work_apps` list. Chrome runs with
+`--no-default-browser-check` (chrome-flags.conf), so it doesn't offer to replace this.
 
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **clock** for the
@@ -129,6 +133,11 @@ Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.
 - In Office windows (also OnlyOffice and LibreOffice) `Alt` + letter goes to the app: Excel's key tips (`Alt+H`…),
   `Alt+Enter`, `Alt+Q`, `Alt+F4`. `Alt+1`…`Alt+0` (+Shift), `Alt+Shift+F`, `Alt+.`, screenshots and recording stay
   the desktop's.
+- Close an Office app with `Alt+F4` or its ✕ (`Alt+Q` is Office's search box there).
+- Leaving an Office window with `Alt+1`…`Alt+0`, `Alt+Tab` or `Alt+.` first sends it a harmless `F24`. Otherwise
+  Windows reads the lone Alt as "show the key tips", and Excel draws letter boxes over the next workspace and waits
+  for a letter. If they ever appear: click into Excel, `Esc`.
+- Excel only half drawn when it first starts: close it (`Alt+F4`) and open it again.
 - The VM starts by itself when an Office app opens (about 30 s). It uses 4 GB of RAM while running; stop it with
   `docker stop -t 120 WinApps` (plain `docker stop` cuts Windows off after 10 s).
 - Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`

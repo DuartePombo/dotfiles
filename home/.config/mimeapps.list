@@ -1,10 +1,10 @@
 
 [Default Applications]
-text/html=chrome-personal.desktop;google-chrome.desktop
-x-scheme-handler/http=chrome-personal.desktop;google-chrome.desktop
-x-scheme-handler/https=chrome-personal.desktop;google-chrome.desktop
-x-scheme-handler/about=chrome-personal.desktop;google-chrome.desktop
-x-scheme-handler/unknown=chrome-personal.desktop;google-chrome.desktop
+text/html=open-link.desktop;chrome-personal.desktop;google-chrome.desktop
+x-scheme-handler/http=open-link.desktop;chrome-personal.desktop;google-chrome.desktop
+x-scheme-handler/https=open-link.desktop;chrome-personal.desktop;google-chrome.desktop
+x-scheme-handler/about=open-link.desktop;chrome-personal.desktop;google-chrome.desktop
+x-scheme-handler/unknown=open-link.desktop;chrome-personal.desktop;google-chrome.desktop
 inode/directory=org.kde.dolphin.desktop
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 video/mp4=org.kde.haruna.desktop

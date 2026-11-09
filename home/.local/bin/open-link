@@ -1,0 +1,43 @@
+#!/bin/bash
+# The default browser (mimeapps.list → open-link.desktop): opens each link in the right Chrome and brings it to the
+# front. Links from work apps (Slack) go to the work Chrome (workspace 2), everything else to the personal Chrome
+# (workspace 6). A work app is recognised by walking up the processes that asked for the link
+# (Slack → xdg-open → open-link). To add one, put its process name (cat /proc/<pid>/comm) in work_apps.
+#   open-link URL                        open it
+#   OPEN_LINK_DRY_RUN=1 open-link URL    only print which Chrome it would use
+set -u
+
+work_apps=(slack)
+
+profile=personal
+pid=$PPID
+for _ in $(seq 20); do
+    [ "$pid" -gt 1 ] 2>/dev/null || break
+    comm=$(cat "/proc/$pid/comm" 2>/dev/null) || break
+    for app in "${work_apps[@]}"; do
+        if [ "$comm" = "$app" ]; then profile=work; break 2; fi
+    done
+    pid=$(awk '/^PPid:/ { print $2 }' "/proc/$pid/status" 2>/dev/null)
+done
+
+if [ -n "${OPEN_LINK_DRY_RUN:-}" ]; then
+    echo "$profile $*"
+    exit 0
+fi
+
+case $profile in
+    work) class='^chrome-work$' ;;
+    *)    class='^(chrome-personal|google-chrome)$' ;;
+esac
+
+"${0%/*}/app-launch" "chrome-$profile" "$@" >/dev/null 2>&1 &
+
+# A Chrome that's already running opens the link in a new tab without coming forward: focus its window.
+# (A Chrome that starts now is taken to its workspace by the window rule.)
+for _ in $(seq 20); do
+    if hyprctl clients -j 2>/dev/null | jq -e --arg c "$class" 'any(.[]; .class | test($c))' >/dev/null; then
+        hyprctl eval "hl.dispatch(hl.dsp.focus({ window = \"class:$class\" }))" >/dev/null 2>&1
+        break
+    fi
+    sleep 0.5
+done

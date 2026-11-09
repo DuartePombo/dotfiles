@@ -236,6 +236,18 @@ local function desktop_or_office(key, dispatcher) -- Alt+key: the desktop's acti
     end
 end
 local always = { dont_inhibit = true }
+-- Alt shortcuts that leave an office window (Alt+1..0, Alt+Tab, Alt+.): Remote Desktop releases Alt when the focus
+-- moves away, and Windows reads Alt pressed and released alone as "show the key tips". Excel then waits for a letter
+-- and draws each tip as a tiny window on the workspace you went to. An F24 tap first (a key Windows doesn't use)
+-- turns it into Alt+F24, which does nothing. With Shift held, Shift already counts as the other key.
+local function leave_office(dispatcher)
+    return function()
+        if is_office(hl.get_active_window()) then
+            pcall(hl.dispatch, hl.dsp.send_shortcut({ mods = "ALT", key = "F24" }))
+        end
+        hl.dispatch(dispatcher)
+    end
+end
 
 hl.bind(mainMod .. " + RETURN", desktop_or_office("Return", hl.dsp.exec_cmd(terminal)))
 hl.bind(mainMod .. " + Q",      desktop_or_office("Q", hl.dsp.window.close()))
@@ -250,7 +262,7 @@ hl.bind(mainMod .. " + T",      desktop_or_office("T", hl.dsp.layout("togglespli
 hl.bind(mainMod .. " + F",         desktop_or_office("F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized",  action = "toggle" }), always)
 hl.bind(mainMod .. " + F9",     hl.dsp.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh"))
-hl.bind(mainMod .. " + period", hl.dsp.exec_cmd(lock), always)
+hl.bind(mainMod .. " + period", leave_office(hl.dsp.exec_cmd(lock)), always)
 
 -- Move focus with mainMod + h/j/k/l
 hl.bind(mainMod .. " + H", desktop_or_office("H", hl.dsp.focus({ direction = "left" })))
@@ -262,7 +274,7 @@ hl.bind(mainMod .. " + J", desktop_or_office("J", hl.dsp.focus({ direction = "do
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
     local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }), always)
+    hl.bind(mainMod .. " + " .. key,         leave_office(hl.dsp.focus({ workspace = i })), always)
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), always)
 end
 
@@ -272,7 +284,7 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:mag
 
 -- Alt+Tab like on Windows: back to the previous window (any workspace, any screen); again to return.
 -- Alt+Shift+Tab: cycle through the windows of this workspace.
-hl.bind(mainMod .. " + TAB",         hl.dsp.focus({ last = true }), always)
+hl.bind(mainMod .. " + TAB",         leave_office(hl.dsp.focus({ last = true })), always)
 hl.bind(mainMod .. " + SHIFT + TAB", hl.dsp.window.cycle_next(), always)
 
 -- Like Windows: Super+V clipboard history (pick an entry, then Ctrl+V), Super+. emoji picker (types it)
@@ -330,13 +342,14 @@ hl.window_rule({
 -- Fixed homes for apps (muscle memory): work on 1-5, personal on 6-10. Which screen each workspace lives on is in
 -- host.lua. The windows get these names from ~/.local/bin/app-launch (menu entries "Work projects", "Work notes",
 -- "Chrome (work)", "Chrome (personal)", "WhatsApp"). Workspaces 5 (terminal), 8, 9 and 10 are free.
+-- Chrome ignores --class for --app windows: WhatsApp's window is named after the site (chrome-web.whatsapp.com__-Default).
 local app_homes = {
     { name = "home-work-projects",   class = "^work-projects$",                   workspace = "1" },
     { name = "home-chrome-work",     class = "^chrome-work$",                     workspace = "2" },
     { name = "home-slack",           class = "^[Ss]lack$",                        workspace = "3" },
     { name = "home-work-notes",      class = "^work-notes$",                      workspace = "4" },
     { name = "home-chrome-personal", class = "^(chrome-personal|google-chrome)$", workspace = "6" },
-    { name = "home-whatsapp",        class = "^whatsapp$",                        workspace = "7" },
+    { name = "home-whatsapp",        class = "^chrome-web\\.whatsapp\\.com__-",    workspace = "7" },
 }
 for _, home in ipairs(app_homes) do
     hl.window_rule({ name = home.name, match = { class = home.class }, workspace = home.workspace })

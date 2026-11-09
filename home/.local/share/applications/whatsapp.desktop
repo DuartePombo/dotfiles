@@ -5,4 +5,4 @@ Comment=WhatsApp Web in its own window (workspace 7)
 Exec=app-launch whatsapp
 Icon=internet-chat
 Categories=Network;InstantMessaging;
-StartupWMClass=whatsapp
+StartupWMClass=chrome-web.whatsapp.com__-Default
