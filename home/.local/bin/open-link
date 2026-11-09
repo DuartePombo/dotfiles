@@ -1,13 +1,13 @@
 #!/bin/bash
 # The default browser (mimeapps.list → open-link.desktop): opens each link in the right Chrome and brings it to the
-# front. Links from work apps (Slack) go to the work Chrome (workspace 2), everything else to the personal Chrome
+# front. Links from work apps (Slack, Zoom) go to the work Chrome (workspace 2), everything else to the personal Chrome
 # (workspace 6). A work app is recognised by walking up the processes that asked for the link
 # (Slack → xdg-open → open-link). To add one, put its process name (cat /proc/<pid>/comm) in work_apps.
 #   open-link URL                        open it
 #   OPEN_LINK_DRY_RUN=1 open-link URL    only print which Chrome it would use
 set -u
 
-work_apps=(slack)
+work_apps=(slack zoom)
 
 profile=personal
 pid=$PPID

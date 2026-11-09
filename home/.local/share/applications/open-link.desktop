@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Open link (work or personal Chrome)
-Comment=Default browser: links from Slack open in the work Chrome, everything else in the personal Chrome
+Comment=Default browser: links from Slack and Zoom open in the work Chrome, everything else in the personal Chrome
 Exec=open-link %u
 Icon=google-chrome
 NoDisplay=true

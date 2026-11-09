@@ -44,7 +44,7 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | # | App (`Alt+D` name) | Screen when docked |
 |---|---|---|
 | 1 | Work projects: kitty + tmux session `work` (`fz` / `Ctrl+b f` switch projects, `claude` in a tmux window) | front monitor |
-| 2 | Chrome (work): its own data folder, sign in with the work account; links from Slack open here | front monitor |
+| 2 | Chrome (work): its own data folder, sign in with the work account; links from Slack and Zoom open here | front monitor |
 | 3 | Slack | laptop |
 | 4 | Work notes: Neovim in `~/notes/work`; `Super+Shift+S`, then `p` (or `Space p i`) pastes the screenshot | laptop |
 | 5 | Terminal (free) | front monitor |
@@ -58,7 +58,8 @@ The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; fr
 Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.lua`, launchers:
 `~/.local/bin/app-launch`. A second window of the same app also goes home; `Alt+Shift+number` moves it.
 
-Links: the default browser is `~/.local/bin/open-link`. Links from Slack open in Chrome (work), all others in
+Links: the default browser is `~/.local/bin/open-link`. Links from Slack and Zoom (also Zoom's "Sign in with
+Google") open in Chrome (work), all others in
 Chrome (personal), and that Chrome comes to the front. More work apps: its `work_apps` list. Chrome runs with
 `--no-default-browser-check` (chrome-flags.conf), so it doesn't offer to replace this.
 
