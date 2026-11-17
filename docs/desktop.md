@@ -52,6 +52,9 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | 7 | WhatsApp (WhatsApp Web in its own window; scan the QR code once) | laptop |
 | 8 / 9 / 10 | free | front / laptop / laptop |
 
+At login, Chrome (work), Slack, Work notes, Chrome (personal) and WhatsApp open in their homes silently (the screens
+don't switch to them); workspace 1 stays empty. The list: `hyprland.lua`, autostart.
+
 The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number): waybar
 `config` ("format-icons") and `style.css`.
 
