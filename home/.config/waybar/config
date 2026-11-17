@@ -40,7 +40,7 @@
             "7": "7 <span size='4pt'> </span>",  // WhatsApp
             "8": "8",
             "9": "9",
-            "10": "10"
+            "10": "10 <span size='4pt'> </span>"   // the full Windows desktop (Office)
         },
         "on-click": "activate",
         // Always show 1-10

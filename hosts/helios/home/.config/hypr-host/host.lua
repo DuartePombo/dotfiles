@@ -19,10 +19,10 @@ if mode == "docked" then
     -- side things (Slack, work notes, WhatsApp) on the laptop screen. Mobile: everything on the laptop screen.
     -- Each screen starts on an empty workspace, 8 in front and 9 on the laptop; the apps opened at login wait in
     -- their homes (hyprland.lua, autostart).
-    for _, ws in ipairs({ "1", "2", "5", "6", "8" }) do
+    for _, ws in ipairs({ "1", "2", "5", "6", "8", "10" }) do
         hl.workspace_rule({ workspace = ws, monitor = "HDMI-A-3", default = (ws == "8") })
     end
-    for _, ws in ipairs({ "3", "4", "7", "9", "10" }) do
+    for _, ws in ipairs({ "3", "4", "7", "9" }) do
         hl.workspace_rule({ workspace = ws, monitor = "eDP-1", default = (ws == "9") })
     end
 

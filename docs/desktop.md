@@ -50,13 +50,14 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | 5 | Terminal (free) | front monitor |
 | 6 | Chrome (personal): opens links from all other apps | front monitor |
 | 7 | WhatsApp (WhatsApp Web in its own window; scan the QR code once) | laptop |
-| 8 / 9 / 10 | free | front / laptop / laptop |
+| 8 / 9 | free | front / laptop |
+| 10 | Windows: the whole Windows desktop in fullscreen, where Office lives (see Microsoft Office below) | front monitor |
 
 At login, Work projects, Chrome (work), Slack, Work notes, Chrome (personal) and WhatsApp open in their homes
 silently, while the screens start on empty workspaces: 8 in front and 9 on the laptop (the laptop alone: 9). The list:
 `hyprland.lua`, autostart; the starting workspaces: `host.lua`.
 
-The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number): waybar
+The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number; 10, Windows, glows orange): waybar
 `config` ("format-icons") and `style.css`.
 
 Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.lua`, launchers:
@@ -147,11 +148,18 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   `/etc/udev/rules.d/90-backup-usb.rules` (from `system/`).
 
 ## Microsoft Office (Windows VM via WinApps)
-- `Alt+D` → Excel, Word, PowerPoint, OneNote: real Microsoft 365 apps in a Windows 11 VM (Docker container
-  `WinApps`), each in its own window. `.xlsx`/`.docx`/`.pptx`/`.csv` open there; OnlyOffice is the second choice in
+- **Main way (since 2026-11-17): the whole Windows desktop on workspace 10.** `Alt+D` → Windows (or `Alt+0`, then
+  `Alt+D` → Windows) opens it on the front monitor in fullscreen, like a Windows screen. Open Excel, Word... from
+  its Start menu or taskbar. Inside, Windows handles everything: `Alt` + letters (Excel's key tips), `Alt+Tab`
+  between Office windows, resizing. `Alt+1`…`Alt+9` take you back to Linux, `Alt+0` returns. Linux home inside
+  Windows: `\\tsclient\home`. It's one window as far as Linux knows (native Wayland client `sdl-freerdp3`), so
+  none of the separate windows' troubles: hangs, half-drawn windows, key tips leaking onto other workspaces.
+- Separate Office windows (fragile, kept for now): `Alt+D` → Excel, Word, PowerPoint, OneNote: real Microsoft 365
+  apps in a Windows 11 VM (Docker container `WinApps`), each in its own window (RemoteApp through XWayland). A
+  hung one ignores its ✕ and a normal kill: `kill -9` its `xfreerdp3` (Excel keeps running inside Windows). `.xlsx`/`.docx`/`.pptx`/`.csv` open there; OnlyOffice is the second choice in
   Open With, LibreOffice opens `.odt`/`.ods`/`.odp`.
-- `Alt+D` → Windows: the whole Windows desktop. Windows allows one session at a time: while Office windows are open
-  it asks "Another user is signed in…": **Yes** moves the open Office apps into the desktop window, **No** cancels.
+- Windows allows one session at a time: the desktop and separate Office windows can't be open together. Opening
+  the desktop while Office windows are open asks "Another user is signed in…": **Yes** moves the open Office apps into the desktop window, **No** cancels.
   Back to separate windows: in the Windows desktop, Start → your name → Sign out, then open Office from `Alt+D`.
 - In Office windows (also OnlyOffice and LibreOffice) `Alt` + letter goes to the app: Excel's key tips (`Alt+H`…),
   `Alt+Enter`, `Alt+Q`, `Alt+F4`. `Alt+1`…`Alt+0` (+Shift), `Alt+Shift+F`, `Alt+.`, screenshots and recording stay
@@ -162,7 +170,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   for a letter. If they ever appear: click into Excel, `Esc`.
 - Move an Office window to another workspace with `Alt+Shift+number`. `Alt`+drag also works, but Windows sees the
   lone Alt and Excel shows its key tips (`Esc`).
-- Windows must know both screens, or Office windows on the laptop screen never get their size (half drawn, clicks
+- Separate windows only: Windows must know both screens, or Office windows on the laptop screen never get their size (half drawn, clicks
   miss): XWayland puts the front monitor at x=0 and the laptop at x=1920, and without `/multimon` FreeRDP reports only
   the first one. After plugging a monitor in or out, close the Office windows and open them again.
 - The VM starts by itself when an Office app opens (about 30 s). It uses 4 GB of RAM while running; stop it with
@@ -170,7 +178,9 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`
   (local only). Linux home inside Windows: `\\tsclient\home`. Web view of the VM: http://127.0.0.1:8006.
   Non-secret settings in `winapps.conf` (keep them when recreating it):
-  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive /multimon"`, `RDP_TIMEOUT="120"`.
+  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_NON_WINDOWS="/multimon"` (separate
+  windows only), `RDP_FLAGS_WINDOWS="/size:1920x1080"` (the desktop only: the SDL client's own `/f` fails here, it
+  reads the monitor as 64x64; Hyprland makes the window fullscreen, `hyprland.lua`), `RDP_TIMEOUT="120"`.
 
 ## Packages
 - Update everything (repo + AUR): `paru -Syu` (pacman only: `sudo pacman -Syu`).

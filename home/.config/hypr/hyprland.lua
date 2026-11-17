@@ -298,8 +298,17 @@ hl.bind(mainMod .. " + S",         desktop_or_office("S", hl.dsp.workspace.toggl
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }), always)
 
 -- Alt+Tab like on Windows: back to the previous window (any workspace, any screen); again to return.
+-- On the full Windows desktop (workspace 10) it's Windows' own Alt+Tab instead (Excel ↔ Word...); Alt+number leaves.
 -- Alt+Shift+Tab: cycle through the windows of this workspace.
-hl.bind(mainMod .. " + TAB",         leave_office(hl.dsp.focus({ last = true })), always)
+local back_to_last = leave_office(hl.dsp.focus({ last = true }))
+hl.bind(mainMod .. " + TAB", function()
+    local w = hl.get_active_window()
+    if w and w.class == "Microsoft Windows" then
+        hl.dispatch(hl.dsp.send_shortcut({ mods = "ALT", key = "Tab" }))
+    else
+        back_to_last()
+    end
+end, always)
 hl.bind(mainMod .. " + SHIFT + TAB", hl.dsp.window.cycle_next(), always)
 
 -- Like Windows: Super+V clipboard history (pick an entry, then Ctrl+V), Super+. emoji picker (types it)
@@ -365,7 +374,19 @@ local app_homes = {
     { name = "home-work-notes",      class = "^work-notes$",                      workspace = "4" },
     { name = "home-chrome-personal", class = "^(chrome-personal|google-chrome)$", workspace = "6" },
     { name = "home-whatsapp",        class = "^chrome-web\\.whatsapp\\.com__-",    workspace = "7" },
+    { name = "home-windows-desktop", class = "^Microsoft Windows$",              workspace = "10" },
 }
 for _, home in ipairs(app_homes) do
     hl.window_rule({ name = home.name, match = { class = home.class }, workspace = home.workspace })
 end
+
+-- The full Windows desktop (Alt+D → Windows: WinApps through the native Wayland Remote Desktop client) gets
+-- workspace 10 on the front monitor, in fullscreen like a real Windows screen (Alt+number still leaves). The client
+-- connects at a fixed 1920x1080 (winapps.conf RDP_FLAGS_WINDOWS, local): it doesn't resize Windows afterwards, and
+-- its own /f fullscreen fails here. Static rules (float = false, tile = true, fullscreen) didn't take effect on
+-- its window, so this makes it fullscreen as soon as it opens.
+hl.on("window.open", function(w)
+    if w and w.class == "Microsoft Windows" and (w.fullscreen or 0) == 0 then
+        hl.dispatch(hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle", window = w }))
+    end
+end)
