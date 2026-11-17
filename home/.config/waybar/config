@@ -21,7 +21,8 @@
         "memory",
         "power-profiles-daemon",
         "battery",
-        "clock"
+        "clock",
+        "custom/notification"
     ],
 
     // Module Specific Configurations
@@ -69,10 +70,50 @@
         "spacing": 10
     },
     "clock": {
-        "format": " {:%H:%M}", // Icon and HH:MM format
-        "format-alt": " {:%A, %B %d, %Y}", // Icon and full date on hover/alt click
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "on-click": "swaync-client -t -sw" // Example: toggle notification center
+        // Always the time. Hover: today's date and this month's calendar (mouse wheel: other months, right click:
+        // whole year, middle click: back to today). Notifications have their own bell (custom/notification).
+        "format": " {:%H:%M}",
+        "tooltip-format": "<big>{:%A, %d %B %Y}</big>\n<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "weeks-pos": "left",
+            "on-scroll": 1,
+            "format": {
+                "months": "<span color='#cba6f7'><b>{}</b></span>",
+                "weekdays": "<span color='#f9e2af'><b>{}</b></span>",
+                "weeks": "<span color='#6c7086'>{}</span>",
+                "days": "<span color='#cdd6f4'>{}</span>",
+                "today": "<span color='#1e1e2e' background='#a6e3a1'><b>{}</b></span>"
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-click-middle": "shift_reset",
+            "on-scroll-up": "shift_down",
+            "on-scroll-down": "shift_up"
+        }
+    },
+    "custom/notification": {
+        // Notifications (swaync): a dot when some are waiting; click opens the panel, right click: do not disturb
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span foreground='#f38ba8'><sup></sup></span>",
+            "none": "",
+            "dnd-notification": "<span foreground='#f38ba8'><sup></sup></span>",
+            "dnd-none": "",
+            "inhibited-notification": "<span foreground='#f38ba8'><sup></sup></span>",
+            "inhibited-none": "",
+            "dnd-inhibited-notification": "<span foreground='#f38ba8'><sup></sup></span>",
+            "dnd-inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
     },
     "cpu": {
         "format": " {usage}%", // CPU icon and usage

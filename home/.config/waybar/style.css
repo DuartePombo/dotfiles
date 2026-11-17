@@ -94,6 +94,7 @@ tooltip label {
 #network,
 #pulseaudio,
 #tray,
+#custom-notification,
 #custom-weather {
     padding: 0 10px; /* Horizontal padding for modules */
     margin: 0 3px; /* Horizontal margin between modules */
