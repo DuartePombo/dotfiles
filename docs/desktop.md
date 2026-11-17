@@ -79,8 +79,8 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **power profile** to
-  switch profiles. The **clock** always shows the time; hover it for today's date and a calendar (mouse wheel: other
-  months, right click: whole year, middle click: back to today). The **bell** (top right, red dot = notifications
+  switch profiles. The **clock** always shows the time; hover it for today's date and a calendar (weeks start on Monday,
+  ISO week numbers; mouse wheel: other months, right click: whole year, middle click: back to today). The **bell** (top right, red dot = notifications
   waiting): click for the notification centre, right click for do not disturb (bell crossed out).
 - Tray: Wi-Fi (nm-applet), Bluetooth (blueman).
 
