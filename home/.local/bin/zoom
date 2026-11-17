@@ -1,7 +1,10 @@
 #!/bin/bash
-# Zoom, with its interface (buttons, icons) drawn in software. Zoom runs as a native Wayland app here (zoomus.conf:
-# xwayland=false, enableWaylandShare=true; through XWayland screen sharing was black), and in that mode Qt Quick's
-# OpenGL path on the NVIDIA GPU drew many icons as black squares. Video and screen sharing aren't affected.
+# Zoom, with Qt's texture atlas switched off. Zoom runs as a native Wayland app here (zoomus.conf: xwayland=false,
+# enableWaylandShare=true; through XWayland screen sharing was black). Natively on the NVIDIA GPU, the small images
+# Qt packs into one shared "atlas" texture (icons) came out as black squares. QSG_ATLAS_SIZE_LIMIT=1 keeps every
+# image in its own texture: icons draw, and video (own camera, others, screen share) still draws on the GPU.
+# (QT_QUICK_BACKEND=software also fixed the icons, but made all video black on this screen. Drawing Zoom with the
+# Intel GPU while docked made the whole window black.)
 # Comes before /usr/bin/zoom on PATH; the menu entry (~/.local/share/applications/Zoom.desktop) uses it too.
-export QT_QUICK_BACKEND=software
+export QSG_ATLAS_SIZE_LIMIT=1
 exec /usr/bin/zoom "$@"

@@ -74,7 +74,8 @@ XWayland (`xwayland=true`, the default) the share was black and the sharing bar 
 is closed (it rewrites the file on exit, keeping both). In Zoom's own share dialog just press Share: the desktop's
 picker (Monitors / Windows / Workspaces / Region) is where you choose.
 Zoom starts through `~/.local/bin/zoom` (also its menu entry, `~/.local/share/applications/Zoom.desktop`, which
-replaces the package's): it draws Zoom's interface in software, since natively on the NVIDIA GPU many icons were black.
+replaces the package's): it switches off Qt's texture atlas (`QSG_ATLAS_SIZE_LIMIT=1`); natively on the NVIDIA GPU
+the icons were black. Drawing Zoom in software also fixed the icons but made all video black.
 
 ## Bar and tray
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **clock** for the
