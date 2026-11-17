@@ -57,6 +57,10 @@ At login, Work projects, Chrome (work), Slack, Work notes, Chrome (personal) and
 silently, while the screens start on empty workspaces: 8 in front and 9 on the laptop (the laptop alone: 9). The list:
 `hyprland.lua`, autostart; the starting workspaces: `host.lua`.
 
+If the bar ever disappears from one screen with its space still reserved: it was (re)started while that screen showed
+a fullscreen window (Windows on 10), and Hyprland 0.57 never shows it again there. Restart it from a normal
+workspace: `pkill -x waybar; setsid -f waybar`.
+
 The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number; 10, Windows, is blue; the workspace each screen shows glows orange): waybar
 `config` ("format-icons") and `style.css`.
 
