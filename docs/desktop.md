@@ -57,7 +57,7 @@ At login, Work projects, Chrome (work), Slack, Work notes, Chrome (personal) and
 silently, while the screens start on empty workspaces: 8 in front and 9 on the laptop (the laptop alone: 9). The list:
 `hyprland.lua`, autostart; the starting workspaces: `host.lua`.
 
-The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number; 10, Windows, glows orange): waybar
+The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number; 10, Windows, is blue; the workspace each screen shows glows orange): waybar
 `config` ("format-icons") and `style.css`.
 
 Rules: `hyprland.lua` ("Fixed homes for apps"), screens: `hosts/helios/.../host.lua`, launchers:
