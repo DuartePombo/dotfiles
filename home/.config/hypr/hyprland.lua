@@ -383,7 +383,7 @@ end
 -- The full Windows desktop (Alt+D → Windows: WinApps through the native Wayland Remote Desktop client) gets
 -- workspace 10 on the front monitor, in fullscreen like a real Windows screen (Alt+number still leaves). The client
 -- connects at a fixed 1920x1080 (winapps.conf RDP_FLAGS_WINDOWS, local): it doesn't resize Windows afterwards, and
--- its own /f fullscreen fails here. Static rules (float = false, tile = true, fullscreen) didn't take effect on
+-- its own /f fullscreen fails here. Static rules (float = false, tile = true) didn't take effect on
 -- its window, so this makes it fullscreen as soon as it opens.
 hl.on("window.open", function(w)
     if w and w.class == "Microsoft Windows" and (w.fullscreen or 0) == 0 then
