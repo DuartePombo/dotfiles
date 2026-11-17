@@ -152,39 +152,36 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   `/etc/udev/rules.d/90-backup-usb.rules` (from `system/`).
 
 ## Microsoft Office (Windows VM via WinApps)
-- **Main way (since 2026-11-17): the whole Windows desktop on workspace 10.** `Alt+D` → Windows (or `Alt+0`, then
-  `Alt+D` → Windows) opens it on the front monitor in fullscreen, like a Windows screen. Open Excel, Word... from
-  its Start menu or taskbar. Inside, Windows handles everything: `Alt` + letters (Excel's key tips), `Alt+Tab`
-  between Office windows, resizing. `Alt+1`…`Alt+9` take you back to Linux, `Alt+0` returns. Linux home inside
-  Windows: `\\tsclient\home`. It's one window as far as Linux knows (native Wayland client `sdl-freerdp3`), so
-  none of the separate windows' troubles: hangs, half-drawn windows, key tips leaking onto other workspaces.
-- Separate Office windows (fragile, kept for now): `Alt+D` → Excel, Word, PowerPoint, OneNote: real Microsoft 365
-  apps in a Windows 11 VM (Docker container `WinApps`), each in its own window (RemoteApp through XWayland). A
-  hung one ignores its ✕ and a normal kill: `kill -9` its `xfreerdp3` (Excel keeps running inside Windows). `.xlsx`/`.docx`/`.pptx`/`.csv` open there; OnlyOffice is the second choice in
-  Open With, LibreOffice opens `.odt`/`.ods`/`.odp`.
-- Windows allows one session at a time: the desktop and separate Office windows can't be open together. Opening
-  the desktop while Office windows are open asks "Another user is signed in…": **Yes** moves the open Office apps into the desktop window, **No** cancels.
-  Back to separate windows: in the Windows desktop, Start → your name → Sign out, then open Office from `Alt+D`.
-- In Office windows (also OnlyOffice and LibreOffice) `Alt` + letter goes to the app: Excel's key tips (`Alt+H`…),
-  `Alt+Enter`, `Alt+Q`, `Alt+F4`. `Alt+1`…`Alt+0` (+Shift), `Alt+Shift+F`, `Alt+.`, screenshots and recording stay
-  the desktop's.
-- Close an Office app with `Alt+F4` or its ✕ (`Alt+Q` is Office's search box there).
-- Leaving an Office window with `Alt+1`…`Alt+0`, `Alt+Tab` or `Alt+.` first sends it a harmless `F24`. Otherwise
-  Windows reads the lone Alt as "show the key tips", and Excel draws letter boxes over the next workspace and waits
-  for a letter. If they ever appear: click into Excel, `Esc`.
-- Move an Office window to another workspace with `Alt+Shift+number`. `Alt`+drag also works, but Windows sees the
-  lone Alt and Excel shows its key tips (`Esc`).
-- Separate windows only: Windows must know both screens, or Office windows on the laptop screen never get their size (half drawn, clicks
-  miss): XWayland puts the front monitor at x=0 and the laptop at x=1920, and without `/multimon` FreeRDP reports only
-  the first one. After plugging a monitor in or out, close the Office windows and open them again.
-- The VM starts by itself when an Office app opens (about 30 s). It uses 4 GB of RAM while running; stop it with
-  `docker stop -t 120 WinApps` (plain `docker stop` cuts Windows off after 10 s).
+- Office lives on **workspace 10, the whole Windows desktop** (since 2026-11-17): a Windows 11 VM (Docker container
+  `WinApps`) shown through Remote Desktop (`sdl-freerdp3`, native Wayland). `Alt+D` → Windows opens it on the front
+  monitor in fullscreen; open Excel, Word... from its Start menu or taskbar. Inside, Windows handles everything: `Alt`
+  + letters (Excel's key tips), `Alt+Enter`, `Alt+Q` (Office's search), `Alt+F4`, `Alt+Tab` between Windows apps.
+  Linux keeps `Alt+1`…`Alt+0` (`Alt+9`: back to Linux, `Alt+0`: back to Windows), `Alt+.` and `Super+L` (Linux's lock;
+  `Win+L` never reaches Windows), `Alt+Shift+F`, screenshots and recording.
+- Leaving 10 changes nothing: Windows keeps running with its files open. Leaving with an Alt key first sends Windows a
+  harmless `Alt+F24`, or it would read the lone Alt as "show the key tips".
+- Files: the Linux home is `\\tsclient\home` inside Windows (pin it in Explorer's Quick access). Double-clicking an
+  `.xlsx`/`.docx`/`.pptx`/`.csv` in Linux opens OnlyOffice for a quick look; edit in Excel via File → Open on 10.
+  LibreOffice opens `.odt`/`.ods`/`.odp`.
+- WinApps' separate app windows (Excel, Word..., cmd, PowerShell, Explorer as their own windows, RemoteApp through
+  XWayland) were removed from the menu: Windows allows one session, so each one kicked the desktop off ("Another user
+  is signed in…"), and they often hung. After reinstalling WinApps (`winapps-setup --user
+  --setupAllOfficiallySupportedApps`), keep only `windows.desktop` in `~/.local/share/applications` and run
+  `update-desktop-database ~/.local/share/applications`.
+- Windows locks itself when idle unless switched off once inside (Windows Terminal: `powercfg /change
+  monitor-timeout-ac 0`, `powercfg /change standby-timeout-ac 0`, `powercfg /setacvalueindex scheme_current sub_none
+  consolelock 0`, `powercfg /setactive scheme_current`). Its account password: `RDP_PASS` in `winapps.conf`.
+- Safety: Windows' only doors (Remote Desktop, web viewer) open on 127.0.0.1, this laptop only. It keeps its internet
+  for Office's licence check and security updates; browse in Linux Chrome, not in Edge.
+- The VM starts when the desktop opens (about 30 s); nothing of it starts at boot or login. About 4 GB of RAM while
+  it runs; stop it with `docker stop WinApps` (compose gives Windows 120 s to shut down properly).
 - Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`
-  (local only). Linux home inside Windows: `\\tsclient\home`. Web view of the VM: http://127.0.0.1:8006.
+  (local only). Web view of the VM: http://127.0.0.1:8006.
   Non-secret settings in `winapps.conf` (keep them when recreating it):
-  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_NON_WINDOWS="/multimon"` (separate
-  windows only), `RDP_FLAGS_WINDOWS="/size:1920x1080"` (the desktop only: the SDL client's own `/f` fails here, it
-  reads the monitor as 64x64; Hyprland makes the window fullscreen, `hyprland.lua`), `RDP_TIMEOUT="120"`.
+  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_WINDOWS="/size:1920x1080"` (the desktop: the SDL
+  client's own `/f` fails here, it reads the monitor as 64x64; Hyprland makes the window fullscreen, `hyprland.lua`),
+  `RDP_FLAGS_NON_WINDOWS="/multimon"` (only for separate app windows, unused now: XWayland swaps the monitors, and
+  without it Windows never resized windows on the laptop screen), `RDP_TIMEOUT="120"`.
 
 ## Packages
 - Update everything (repo + AUR): `paru -Syu` (pacman only: `sudo pacman -Syu`).
