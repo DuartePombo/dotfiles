@@ -43,10 +43,11 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type text --watch cliphist store")  -- clipboard history (Super+V)
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
 
-    -- The apps with a home open there at login, silently: each goes to its workspace in the background and the
-    -- screens stay where they start. Workspace 1 (Work projects) stays empty for a clean start. Opened later from
-    -- Alt+D, the same apps still switch to their workspace (the home rules further down).
+    -- The apps with a home open there at login, silently: each goes to its workspace in the background, while the
+    -- screens start on empty workspaces (8 in front, 9 on the laptop: host.lua). Opened later from Alt+D, the same
+    -- apps still switch to their workspace (the home rules further down).
     local login_apps = {
+        { cmd = "app-launch work-projects",   workspace = 1 },
         { cmd = "app-launch chrome-work",     workspace = 2 },
         { cmd = "slack --gtk-version=3 -s",   workspace = 3 },
         { cmd = "app-launch work-notes",      workspace = 4 },

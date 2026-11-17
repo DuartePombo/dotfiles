@@ -17,11 +17,13 @@ if mode == "docked" then
 
     -- Which screen each workspace lives on (apps' homes are in hyprland.lua): the main task on the front monitor,
     -- side things (Slack, work notes, WhatsApp) on the laptop screen. Mobile: everything on the laptop screen.
+    -- Each screen starts on an empty workspace, 8 in front and 9 on the laptop; the apps opened at login wait in
+    -- their homes (hyprland.lua, autostart).
     for _, ws in ipairs({ "1", "2", "5", "6", "8" }) do
-        hl.workspace_rule({ workspace = ws, monitor = "HDMI-A-3", default = (ws == "1") })
+        hl.workspace_rule({ workspace = ws, monitor = "HDMI-A-3", default = (ws == "8") })
     end
     for _, ws in ipairs({ "3", "4", "7", "9", "10" }) do
-        hl.workspace_rule({ workspace = ws, monitor = "eDP-1", default = (ws == "3") })
+        hl.workspace_rule({ workspace = ws, monitor = "eDP-1", default = (ws == "9") })
     end
 
     -- From the old config, where external monitors stuttered without the NVIDIA settings.
@@ -32,4 +34,6 @@ if mode == "docked" then
 else
     -- Anything else that shows up while mobile: use it, to the right of the panel
     hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
+    -- Start on an empty workspace, as when docked (1 holds Work projects from login on)
+    hl.workspace_rule({ workspace = "9", monitor = "eDP-1", default = true })
 end
