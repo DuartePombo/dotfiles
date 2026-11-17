@@ -16,7 +16,7 @@
 | `Alt+E` | file manager (Dolphin) |
 | `Alt+Q` | close window |
 | `Alt+M` | quit Hyprland |
-| `Alt+.` | lock the screen (hyprlock) |
+| `Alt+.` or `Super+L` | lock the screen (hyprlock; `Super+L` like Windows, also from the Windows desktop) |
 | `Alt+H` / `J` / `K` / `L` | move focus left / down / up / right (vim keys) |
 | `Alt+T` | toggle the split direction (side by side / stacked) |
 | `Alt+1` … `Alt+0` | go to workspace 1–10 |
@@ -86,7 +86,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - Tray: Wi-Fi (nm-applet), Bluetooth (blueman).
 
 ## Idle, lock, suspend
-- No idle timers: the screen never dims, blanks, locks or suspends by itself. Lock with `Alt+.`.
+- No idle timers: the screen never dims, blanks, locks or suspends by itself. Lock with `Alt+.` or `Super+L`.
 - Closing the lid suspends; every suspend locks the screen first.
 - Settings: `~/.config/hypr/hypridle.conf`, look of the lock screen: `~/.config/hypr/hyprlock.conf`.
 

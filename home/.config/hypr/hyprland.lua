@@ -314,6 +314,16 @@ hl.bind(mainMod .. " + SHIFT + TAB", hl.dsp.window.cycle_next(), always)
 -- Like Windows: Super+V clipboard history (pick an entry, then Ctrl+V), Super+. emoji picker (types it)
 hl.bind("SUPER + V",      hl.dsp.exec_cmd("cliphist list | wofi --dmenu --prompt 'Clipboard' | cliphist decode | wl-copy"), always)
 hl.bind("SUPER + period", hl.dsp.exec_cmd("rofimoji --selector wofi --action type --typer wtype --clipboarder wl-copy"), always)
+-- Super+L locks the laptop, like Windows+L (Alt+. does the same). Also on the Windows desktop (workspace 10): Windows
+-- never sees it, so it doesn't lock itself and ask for its own password. In an office window a Super+F24 tap goes
+-- first: Remote Desktop releases Super when the lock screen takes the keyboard, and Windows would read the lone
+-- Super as "open the Start menu".
+hl.bind("SUPER + L", function()
+    if is_office(hl.get_active_window()) then
+        pcall(hl.dispatch, hl.dsp.send_shortcut({ mods = "SUPER", key = "F24" }))
+    end
+    hl.dispatch(hl.dsp.exec_cmd(lock))
+end, always)
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
