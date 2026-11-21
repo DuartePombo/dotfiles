@@ -407,10 +407,9 @@ for _, home in ipairs(app_homes) do
 end
 
 -- The full Windows desktop (Alt+D → Windows: WinApps through the native Wayland Remote Desktop client) gets
--- workspace 10 on the front monitor, in fullscreen like a real Windows screen (Alt+number still leaves). The client
--- connects at a fixed size, the front monitor's (winapps.conf RDP_FLAGS_WINDOWS /size:, local): it doesn't resize
--- Windows afterwards, and
--- its own /f fullscreen fails here. Static rules (float = false, tile = true) didn't take effect on
+-- workspace 10 (on the right monitor when docked), in fullscreen like a real Windows screen (Alt+number still
+-- leaves). The client connects at a fixed size, that screen's (winapps.conf RDP_FLAGS_WINDOWS /size:1920x1080,
+-- local): it doesn't resize Windows afterwards, and its own /f fullscreen fails here. Static rules (float = false, tile = true) didn't take effect on
 -- its window, so this makes it fullscreen as soon as it opens.
 hl.on("window.open", function(w)
     if w and w.class == "Microsoft Windows" and (w.fullscreen or 0) == 0 then

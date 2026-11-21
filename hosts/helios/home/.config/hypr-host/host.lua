@@ -26,16 +26,21 @@ if mode == "docked" then
     -- The bars (~/.local/bin/bar): the front monitor is an OLED (burn-in), so its bar hides itself (Super+B)
     hl.env("BAR_FRONT_MONITOR", front)
 
-    -- Which screen each workspace lives on (apps' homes are in hyprland.lua): the main task on the front monitor,
-    -- side things (Slack, work notes, WhatsApp) on the laptop screen. Mobile: everything on the laptop screen.
-    -- Each screen starts on an empty workspace, 8 in front and 9 on the laptop; the apps opened at login wait in
-    -- their homes (hyprland.lua, autostart). The right monitor has no workspaces of its own yet: it shows the next
-    -- free number (11).
-    for _, ws in ipairs({ "1", "2", "5", "6", "8", "10" }) do
-        hl.workspace_rule({ workspace = ws, monitor = "desc:" .. front, default = (ws == "8") })
-    end
-    for _, ws in ipairs({ "3", "4", "7", "9" }) do
-        hl.workspace_rule({ workspace = ws, monitor = "eDP-1", default = (ws == "9") })
+    -- Which screen each workspace lives on (apps' homes are in hyprland.lua): the main task on the front monitor
+    -- (projects, both Chromes), side things (Slack, work notes, WhatsApp) on the laptop screen, extras on the right
+    -- monitor: a terminal next to the projects, and the Windows desktop (Excel's bright ribbon stays off the OLED).
+    -- Mobile: everything on the laptop screen.
+    -- Each screen starts on an empty workspace, 8 in front, 5 on the right and 9 on the laptop; the apps opened at
+    -- login wait in their homes (hyprland.lua, autostart).
+    local homes = {
+        { monitor = "desc:" .. front, default = "8", workspaces = { "1", "2", "6", "8" } },
+        { monitor = "desc:" .. right, default = "5", workspaces = { "5", "10" } },
+        { monitor = "eDP-1",          default = "9", workspaces = { "3", "4", "7", "9" } },
+    }
+    for _, screen in ipairs(homes) do
+        for _, ws in ipairs(screen.workspaces) do
+            hl.workspace_rule({ workspace = ws, monitor = screen.monitor, default = (ws == screen.default) })
+        end
     end
 
     -- From the old config, where external monitors stuttered without the NVIDIA settings.

@@ -48,14 +48,15 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | 2 | Chrome (work): its own data folder, sign in with the work account; links from Slack and Zoom open here | front monitor |
 | 3 | Slack | laptop |
 | 4 | Work notes: Neovim in the work notes folder (named in `~/.work-notes.local`, local only; default `~/notes/work`); `Super+Shift+S`, then `p` (or `Space p i`) pastes the screenshot | laptop |
-| 5 | Terminal (free) | front monitor |
+| 5 | Terminal (free), next to the projects | right monitor |
 | 6 | Chrome (personal): opens links from all other apps | front monitor |
 | 7 | WhatsApp (WhatsApp Web in its own window; scan the QR code once) | laptop |
-| 8 / 9 | free | front / laptop |
-| 10 | Windows: the whole Windows desktop in fullscreen, where Office lives (see Microsoft Office below) | front monitor |
+| 8 / 9 | free | front monitor / laptop |
+| 10 | Windows: the whole Windows desktop in fullscreen, where Office lives (see Microsoft Office below) | right monitor |
 
 At login, Work projects, Chrome (work), Slack, Work notes, Chrome (personal) and WhatsApp open in their homes
-silently, while the screens start on empty workspaces: 8 in front and 9 on the laptop (the laptop alone: 9). The list:
+silently, while the screens start on empty workspaces: 8 in front, 5 on the right and 9 on the laptop (the laptop
+alone: 9). The list:
 `hyprland.lua`, autostart; the starting workspaces: `host.lua`.
 
 If the bar ever disappears from one screen with its space still reserved: it was (re)started while that screen showed
@@ -117,7 +118,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   `host.lua` knows them by model, not by port, so cables can be swapped. Speeds: the front monitor does 240 Hz
   over DisplayPort, 144 over HDMI; the right one 165 over HDMI, 60 through the mini-DP→HDMI adapter (its limit). Both
   at full speed: the front monitor on the mini-DP port with a mini-DP→DP cable (DP 1.4), the right one on HDMI.
-  Check: `hyprctl monitors`. The right monitor has no workspaces of its own yet (it shows the next free number, 11).
+  Check: `hyprctl monitors`. Without the right monitor, its workspaces (5, 10) go to the other screens.
 - Which mode did Hyprland start in? `journalctl -t hyprland-session`. Force one: `hyprland-session docked` or
   `hyprland-session mobile`.
 
@@ -176,7 +177,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 
 ## Microsoft Office (Windows VM via WinApps)
 - Office lives on **workspace 10, the whole Windows desktop** (since 2026-11-17): a Windows 11 VM (Docker container
-  `WinApps`) shown through Remote Desktop (`sdl-freerdp3`, native Wayland). `Alt+D` → Windows opens it on the front
+  `WinApps`) shown through Remote Desktop (`sdl-freerdp3`, native Wayland). `Alt+D` → Windows opens it on the right
   monitor in fullscreen; open Excel, Word... from its Start menu or taskbar. Inside, Windows handles everything: `Alt`
   + letters (Excel's key tips), `Alt+Enter`, `Alt+Q` (Office's search), `Alt+F4`, `Alt+Tab` between Windows apps.
   Linux keeps `Alt+1`…`Alt+0` (`Alt+9`: back to Linux, `Alt+0`: back to Windows), `Alt+.` and `Super+L` (Linux's lock;
@@ -201,7 +202,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`
   (local only). Web view of the VM: http://127.0.0.1:8006.
   Non-secret settings in `winapps.conf` (keep them when recreating it):
-  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_WINDOWS="/size:2560x1440"` (the desktop, the front monitor's size: the SDL
+  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_WINDOWS="/size:1920x1080"` (the desktop, the right monitor's size: the SDL
   client's own `/f` fails here, it reads the monitor as 64x64; Hyprland makes the window fullscreen, `hyprland.lua`),
   `RDP_FLAGS_NON_WINDOWS="/multimon"` (only for separate app windows, unused now: XWayland swaps the monitors, and
   without it Windows never resized windows on the laptop screen), `RDP_TIMEOUT="120"`.
