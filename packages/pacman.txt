@@ -39,6 +39,7 @@ jdk-openjdk
 jq
 kdenlive
 kitty
+libratbag
 libreoffice-fresh
 libsecret
 linux
@@ -49,8 +50,8 @@ man-pages
 mise
 mpv
 neovim
-networkmanager
 network-manager-applet
+networkmanager
 noto-fonts
 noto-fonts-emoji
 obs-studio
@@ -61,6 +62,7 @@ otf-font-awesome
 pacman-contrib
 pavucontrol
 pdfarranger
+piper
 pipewire
 pipewire-alsa
 pipewire-pulse
