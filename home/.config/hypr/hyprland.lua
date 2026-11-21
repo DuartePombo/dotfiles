@@ -45,8 +45,8 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("mouse-dpi")  -- the G502 wakes up at its last DPI level: back to 1600 (~/.local/bin/mouse-dpi)
 
     -- The apps with a home open there at login, silently: each goes to its workspace in the background, while the
-    -- screens start on empty workspaces (8 in front, 9 on the laptop: host.lua). Opened later from Alt+D, the same
-    -- apps still switch to their workspace (the home rules further down).
+    -- screens start on empty workspaces (8 in front, 5 on the right, 9 on the laptop: host.lua). Opened later from
+    -- Alt+D, the same apps still switch to their workspace (the home rules further down).
     local login_apps = {
         { cmd = "app-launch work-projects",   workspace = 1 },
         { cmd = "app-launch chrome-work",     workspace = 2 },
