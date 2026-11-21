@@ -42,6 +42,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("swayosd-server")                          -- volume/brightness popup
     hl.exec_cmd("wl-paste --type text --watch cliphist store")  -- clipboard history (Super+V)
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
+    hl.exec_cmd("mouse-dpi")  -- the G502 wakes up at its last DPI level: back to 1600 (~/.local/bin/mouse-dpi)
 
     -- The apps with a home open there at login, silently: each goes to its workspace in the background, while the
     -- screens start on empty workspaces (8 in front, 9 on the laptop: host.lua). Opened later from Alt+D, the same

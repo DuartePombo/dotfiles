@@ -124,6 +124,11 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   - If pairing fails, both sides must forget it: Magic + F1 on that slot, and remove it on the computer.
   - At the disk password prompt Bluetooth isn't running: the cable is needed (Magic + Left Alt if typing goes
     to another computer).
+- Logitech G502 mouse: always 1600 DPI at login (`mouse-dpi`, from the autostart). The DPI buttons next to the left
+  click (rear: slower, front: faster) change it until the next login; the mouse itself wakes up at its last level
+  (host mode: a startup default stored in it isn't used, and libratbag can't make its stored profile stick).
+  After switching it off and on: `mouse-dpi` (or `mouse-dpi 800` for another level). Levels 400/800/1600/3200/6400:
+  `ratbagctl list`, `ratbagctl <name> info`, or the Piper app.
 - Wi-Fi: nm-applet (tray), `nmtui`, or `nmcli device wifi list` / `nmcli device wifi connect "<SSID>" --ask`.
 - Power profiles: `powerprofilesctl get`, `powerprofilesctl set power-saver|balanced|performance`.
 - VPN: Mullvad app, or `mullvad status` / `mullvad connect` / `mullvad disconnect`.

@@ -1,0 +1,32 @@
+#!/bin/bash
+# mouse-dpi: put the Logitech G502 LIGHTSPEED back on its usual speed: 1600 DPI, or the DPI given (`mouse-dpi 800`).
+#
+# The mouse always wakes up in "host mode" with whatever level it had when it went off (its DPI buttons change it).
+# A startup default stored in its memory isn't used in that mode, and libratbag can't make the stored profile
+# stick, so Hyprland runs this at every login (hyprland.lua, autostart). Run it by hand after switching the mouse
+# off and on. Uses libratbag's ratbagctl (its daemon, ratbagd, starts on demand). Levels: `ratbagctl list`, then
+# `ratbagctl <name> info`; piper shows the same in a window.
+want="${1:-1600}"
+
+# At login the mouse (or ratbagd) may need a moment to show up
+dev=""
+for _ in $(seq 15); do
+    dev=$(ratbagctl list 2>/dev/null | awk -F: '/G502/ {print $1; exit}')
+    [ -n "$dev" ] && break
+    sleep 1
+done
+if [ -z "$dev" ]; then
+    echo "mouse-dpi: no G502 connected" >&2
+    exit 0
+fi
+
+# Find the level with that DPI in the active profile and switch to it
+for i in $(seq 0 9); do
+    line=$(ratbagctl "$dev" resolution "$i" get 2>/dev/null) || break
+    if [[ $line == "$i: ${want}dpi"* ]]; then
+        ratbagctl "$dev" resolution active set "$i"
+        exit $?
+    fi
+done
+echo "mouse-dpi: ${want} DPI isn't one of the mouse's levels (see: ratbagctl $dev info)" >&2
+exit 1
