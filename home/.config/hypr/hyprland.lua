@@ -337,7 +337,7 @@ end
 hl.bind("SUPER + L", super_cmd(lock), always)
 -- Super+B: the bars (~/.local/bin/bar). If any bar is hidden, show them all; if all show, hide them all (the windows
 -- take the space). The front monitor is an OLED: its bar hides itself again 5 minutes after Super+B, unless pinned
--- with Super+Shift+B (the pigeon in the bar gets handcuffs; again, or a click on the pigeon, unpins).
+-- with Super+Shift+B (the pigeon in the bar gets a ball and chain; again, or a click on the pigeon, unpins).
 hl.bind("SUPER + B",         super_cmd("bar toggle"), always)
 hl.bind("SUPER + SHIFT + B", super_cmd("bar pin"),    always)
 

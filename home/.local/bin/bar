@@ -5,7 +5,7 @@
 #   bar toggle   Super+B: if any bar is hidden, show them all; if all are shown, hide them all
 #   bar pin      Super+Shift+B or a click on the pigeon: the front bar stays; again: unpinned, it hides 5 min later
 #   bar sync     a monitor was plugged in (hyprland.lua): restart the bars if the front screen changed
-#   bar pigeon   for waybar's image#pigeon: the pigeon to show (in handcuffs while pinned) and its tooltip
+#   bar pigeon   for waybar's image#pigeon: the pigeon to show (ball and chain while pinned) and its tooltip
 #
 # The front screen is an OLED (burn-in), so its bar is a separate waybar: hidden at login, and hidden again 5 minutes
 # after Super+B shows it, unless pinned. The other screens are LCDs: their bars stay until Super+B hides them.

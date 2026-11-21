@@ -89,7 +89,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   the screen); `Super+B` again brings them back (if any bar is hidden, it shows them all).
 - The front monitor is an OLED, which can burn in when something sits still on it for hours: its bar is hidden at
   login and hides itself again 5 minutes after `Super+B` shows it. `Super+Shift+B` (or a click on the pigeon) pins it:
-  it stays, and the pigeon in the middle of the bar turns orange, in handcuffs. Again: unpinned, it hides 5 minutes
+  it stays, and the pigeon in the middle of the bar turns orange, with a ball and chain on its leg. Again: unpinned, it hides 5 minutes
   later. The laptop's and the right monitor's bars (LCDs) stay until `Super+B` hides them. On the laptop alone there's
   one bar and `Super+B` simply toggles it.
 - How: `~/.local/bin/bar` (`bar start` restarts the bars) runs the front monitor's bar as a second waybar; which

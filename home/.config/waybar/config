@@ -53,10 +53,10 @@
         "format": "<span style=\"italic\">{}</span>"
     },
     "image#pigeon": {
-        // The pigeon (pigeon.svg); in handcuffs while the front bar is pinned (pigeon-pinned.svg). ~/.local/bin/bar
+        // The pigeon (pigeon.svg); with a ball and chain while the front bar is pinned (pigeon-pinned.svg). ~/.local/bin/bar
         // picks the picture and the tooltip, and refreshes it with signal 9. Click: pin/unpin, like Super+Shift+B.
         "exec": "bar pigeon",
-        "size": 22,
+        "size": 24,
         "signal": 9,
         "on-click": "bar pin"
     },
