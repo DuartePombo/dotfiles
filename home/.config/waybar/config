@@ -10,6 +10,7 @@
         "hyprland/submap"
     ],
     "modules-center": [
+        "image#pigeon",
         "hyprland/window"
     ],
     "modules-right": [
@@ -51,8 +52,16 @@
     "hyprland/submap": {
         "format": "<span style=\"italic\">{}</span>"
     },
+    "image#pigeon": {
+        // The pigeon (pigeon.svg); in handcuffs while the front bar is pinned (pigeon-pinned.svg). ~/.local/bin/bar
+        // picks the picture and the tooltip, and refreshes it with signal 9. Click: pin/unpin, like Super+Shift+B.
+        "exec": "bar pigeon",
+        "size": 22,
+        "signal": 9,
+        "on-click": "bar pin"
+    },
     "hyprland/window": {
-        "format": "🐦 {} ",
+        "format": "{}",
         "max-length": 50, // Max length of the window title
         "separate-outputs": true
     },

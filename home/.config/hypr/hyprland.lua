@@ -33,7 +33,7 @@ local lock        = "pidof hyprlock || hyprlock"
 hl.on("hyprland.start", function()
     hl.exec_cmd("swaybg -i ~/Pictures/wallpapers/astronaut.jpg -m fill")
     -- hl.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh")
-    hl.exec_cmd("waybar")
+    hl.exec_cmd("bar start")                               -- the bars (waybar, via ~/.local/bin/bar; Super+B)
     hl.exec_cmd("swaync")                                  -- notifications
     hl.exec_cmd("nm-applet --indicator")                   -- Wi-Fi in the tray
     hl.exec_cmd("blueman-applet")                          -- Bluetooth in the tray
@@ -58,6 +58,12 @@ hl.on("hyprland.start", function()
     for _, app in ipairs(login_apps) do
         hl.exec_cmd(app.cmd, { workspace = app.workspace .. " silent" })
     end
+end)
+
+-- A monitor plugged in later: the front monitor's bar is a separate waybar (~/.local/bin/bar), so the bars are
+-- restarted when the front monitor appears or moves to another port (bar sync does nothing otherwise).
+hl.on("monitor.added", function()
+    hl.exec_cmd("bar sync")
 end)
 
 
@@ -315,16 +321,25 @@ hl.bind(mainMod .. " + SHIFT + TAB", hl.dsp.window.cycle_next(), always)
 -- Like Windows: Super+V clipboard history (pick an entry, then Ctrl+V), Super+. emoji picker (types it)
 hl.bind("SUPER + V",      hl.dsp.exec_cmd("cliphist list | wofi --dmenu --prompt 'Clipboard' | cliphist decode | wl-copy"), always)
 hl.bind("SUPER + period", hl.dsp.exec_cmd("rofimoji --selector wofi --action type --typer wtype --clipboarder wl-copy"), always)
--- Super+L locks the laptop, like Windows+L (Alt+. does the same). Also on the Windows desktop (workspace 10): Windows
--- never sees it, so it doesn't lock itself and ask for its own password. In an office window a Super+F24 tap goes
--- first: Remote Desktop releases Super when the lock screen takes the keyboard, and Windows would read the lone
--- Super as "open the Start menu".
-hl.bind("SUPER + L", function()
-    if is_office(hl.get_active_window()) then
-        pcall(hl.dispatch, hl.dsp.send_shortcut({ mods = "SUPER", key = "F24" }))
+-- Super+key commands that also work on the Windows desktop (workspace 10): Windows never sees the key. In an office
+-- window a Super+F24 tap goes first: Remote Desktop sees Super go down and up without the key, and Windows would read
+-- that lone Super as "open the Start menu".
+local function super_cmd(cmd)
+    return function()
+        if is_office(hl.get_active_window()) then
+            pcall(hl.dispatch, hl.dsp.send_shortcut({ mods = "SUPER", key = "F24" }))
+        end
+        hl.dispatch(hl.dsp.exec_cmd(cmd))
     end
-    hl.dispatch(hl.dsp.exec_cmd(lock))
-end, always)
+end
+-- Super+L locks the laptop, like Windows+L (Alt+. does the same). On the Windows desktop too, so Windows doesn't lock
+-- itself and ask for its own password.
+hl.bind("SUPER + L", super_cmd(lock), always)
+-- Super+B: the bars (~/.local/bin/bar). If any bar is hidden, show them all; if all show, hide them all (the windows
+-- take the space). The front monitor is an OLED: its bar hides itself again 5 minutes after Super+B, unless pinned
+-- with Super+Shift+B (the pigeon in the bar gets handcuffs; again, or a click on the pigeon, unpins).
+hl.bind("SUPER + B",         super_cmd("bar toggle"), always)
+hl.bind("SUPER + SHIFT + B", super_cmd("bar pin"),    always)
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -393,7 +408,8 @@ end
 
 -- The full Windows desktop (Alt+D → Windows: WinApps through the native Wayland Remote Desktop client) gets
 -- workspace 10 on the front monitor, in fullscreen like a real Windows screen (Alt+number still leaves). The client
--- connects at a fixed 1920x1080 (winapps.conf RDP_FLAGS_WINDOWS, local): it doesn't resize Windows afterwards, and
+-- connects at a fixed size, the front monitor's (winapps.conf RDP_FLAGS_WINDOWS /size:, local): it doesn't resize
+-- Windows afterwards, and
 -- its own /f fullscreen fails here. Static rules (float = false, tile = true) didn't take effect on
 -- its window, so this makes it fullscreen as soon as it opens.
 hl.on("window.open", function(w)

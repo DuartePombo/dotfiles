@@ -119,6 +119,11 @@ tooltip label {
     font-weight: bold;
 }
 
+/* The pigeon in the middle (image#pigeon), a little space before the window title */
+#image.pigeon {
+    margin-right: 8px;
+}
+
 /* Example: Different color for specific modules */
 #clock {
     /* background-color: #1abc9c; */

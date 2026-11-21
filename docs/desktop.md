@@ -34,6 +34,7 @@
 | `Alt+F9` | random wallpaper from `~/Pictures/wallpapers` (curated list: `packages/wallpapers.txt`) |
 | `Alt+Tab` / `Alt+Shift+Tab` | back to the previous window (any workspace or screen) / cycle the windows of this workspace |
 | `Super+V` | clipboard history (cliphist): pick an entry, then `Ctrl+V`. `cliphist wipe` empties it |
+| `Super+B` / `Super+Shift+B` | the **b**ars: hide them all (the windows take the space) or bring them back / pin the front monitor's bar (see Bar and tray) |
 | `Super+.` | emoji picker (rofimoji): the emoji is typed where the cursor is |
 | Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen; volume and brightness show a popup (swayosd) |
 
@@ -58,8 +59,8 @@ silently, while the screens start on empty workspaces: 8 in front and 9 on the l
 `hyprland.lua`, autostart; the starting workspaces: `host.lua`.
 
 If the bar ever disappears from one screen with its space still reserved: it was (re)started while that screen showed
-a fullscreen window (Windows on 10), and Hyprland 0.57 never shows it again there. Restart it from a normal
-workspace: `pkill -x waybar; setsid -f waybar`.
+a fullscreen window (Windows on 10), and Hyprland 0.57 never shows it again there. Restart the bars from a normal
+workspace: `bar start`.
 
 The bar shows each home as number + icon (work 1–5, a gap, personal 6–10; free ones just the number; 10, Windows, is blue; the workspace each screen shows glows orange): waybar
 `config` ("format-icons") and `style.css`.
@@ -83,6 +84,15 @@ replaces the package's): it switches off Qt's texture atlas (`QSG_ATLAS_SIZE_LIM
 the icons were black. Drawing Zoom in software also fixed the icons but made all video black.
 
 ## Bar and tray
+- Hiding the bars: `Super+B` hides every bar and the windows grow into the strip (unlike `Alt+F`, they keep sharing
+  the screen); `Super+B` again brings them back (if any bar is hidden, it shows them all).
+- The front monitor is an OLED, which can burn in when something sits still on it for hours: its bar is hidden at
+  login and hides itself again 5 minutes after `Super+B` shows it. `Super+Shift+B` (or a click on the pigeon) pins it:
+  it stays, and the pigeon in the middle of the bar turns orange, in handcuffs. Again: unpinned, it hides 5 minutes
+  later. The laptop's and the right monitor's bars (LCDs) stay until `Super+B` hides them. On the laptop alone there's
+  one bar and `Super+B` simply toggles it.
+- How: `~/.local/bin/bar` (`bar start` restarts the bars) runs the front monitor's bar as a second waybar; which
+  monitor that is: `BAR_FRONT_MONITOR` in `host.lua`. The pigeons: `pigeon.svg`, `pigeon-pinned.svg` in waybar's folder.
 - Waybar: click **network** for `nmtui`, **volume** for pavucontrol, **CPU/memory** for htop, **power profile** to
   switch profiles. The **clock** always shows the time; hover it for today's date and a calendar (weeks start on Monday,
   ISO week numbers; mouse wheel: other months, right click: whole year, middle click: back to today). The **bell** (top right, red dot = notifications
@@ -90,16 +100,24 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - Tray: Wi-Fi (nm-applet), Bluetooth (blueman).
 
 ## Idle, lock, suspend
-- No idle timers: the screen never dims, blanks, locks or suspends by itself. Lock with `Alt+.` or `Super+L`.
+- After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does
+  its panel care in standby). Nothing locks or suspends: a key or the mouse brings them back. Playing videos keep
+  them on. Lock with `Alt+.` or `Super+L`.
 - Closing the lid suspends; every suspend locks the screen first.
 - Settings: `~/.config/hypr/hypridle.conf`, look of the lock screen: `~/.config/hypr/hyprlock.conf`.
 
 ## Graphics (NVIDIA + Intel)
 - Default ("mobile"): Intel draws the desktop. Run a program on NVIDIA with `prime-run <program>`.
 - The NVIDIA GPU stays powered on all the time (its power saving broke external monitors with this driver).
-- Monitor on the laptop's HDMI port (it's wired to the NVIDIA GPU): Hyprland has to start in "docked" mode, which
-  it picks by itself when that monitor is plugged in at login. Plugged in later: `Alt+M`, then `hyprland-session`
-  at the tty1 prompt. The USB-C port carries no video (USB only).
+- Monitors on the laptop's HDMI and mini-DisplayPort ports (both wired to the NVIDIA GPU): Hyprland has to start in
+  "docked" mode, which it picks by itself when a monitor is plugged in at login. Docked, monitors can be plugged in
+  and out freely; plugged in while on the laptop alone: `Alt+M`, then `hyprland-session` at the tty1 prompt. The
+  USB-C port carries no video (USB only).
+- The desk, left to right: laptop | front: AOC Q27G41ZDF (27" OLED, 2560x1440) | right: Acer VG252Q (1920x1080).
+  `host.lua` knows them by model, not by port, so cables can be swapped. Speeds: the front monitor does 240 Hz
+  over DisplayPort, 144 over HDMI; the right one 165 over HDMI, 60 through the mini-DP→HDMI adapter (its limit). Both
+  at full speed: the front monitor on the mini-DP port with a mini-DP→DP cable (DP 1.4), the right one on HDMI.
+  Check: `hyprctl monitors`. The right monitor has no workspaces of its own yet (it shows the next free number, 11).
 - Which mode did Hyprland start in? `journalctl -t hyprland-session`. Force one: `hyprland-session docked` or
   `hyprland-session mobile`.
 
@@ -183,7 +201,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - Settings: `~/.config/winapps/compose.yaml` (repo), account in `~/.config/winapps/windows.env` and `winapps.conf`
   (local only). Web view of the VM: http://127.0.0.1:8006.
   Non-secret settings in `winapps.conf` (keep them when recreating it):
-  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_WINDOWS="/size:1920x1080"` (the desktop: the SDL
+  `RDP_FLAGS="/cert:tofu /sound /microphone +home-drive"`, `RDP_FLAGS_WINDOWS="/size:2560x1440"` (the desktop, the front monitor's size: the SDL
   client's own `/f` fails here, it reads the monitor as 64x64; Hyprland makes the window fullscreen, `hyprland.lua`),
   `RDP_FLAGS_NON_WINDOWS="/multimon"` (only for separate app windows, unused now: XWayland swaps the monitors, and
   without it Windows never resized windows on the laptop screen), `RDP_TIMEOUT="120"`.

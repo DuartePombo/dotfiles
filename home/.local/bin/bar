@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# bar: the bars at the top of the screens (waybar) and their keys.
+#
+#   bar start    (re)start the bars: at login (hyprland.lua), or by hand when a bar is missing
+#   bar toggle   Super+B: if any bar is hidden, show them all; if all are shown, hide them all
+#   bar pin      Super+Shift+B or a click on the pigeon: the front bar stays; again: unpinned, it hides 5 min later
+#   bar sync     a monitor was plugged in (hyprland.lua): restart the bars if the front screen changed
+#   bar pigeon   for waybar's image#pigeon: the pigeon to show (in handcuffs while pinned) and its tooltip
+#
+# The front screen is an OLED (burn-in), so its bar is a separate waybar: hidden at login, and hidden again 5 minutes
+# after Super+B shows it, unless pinned. The other screens are LCDs: their bars stay until Super+B hides them.
+# BAR_FRONT_MONITOR names the front screen (host.lua sets it): the start of its description in `hyprctl monitors`.
+# Unset, or that screen not connected (laptop alone): one waybar on every screen, and Super+B simply toggles it.
+#
+# Shown or hidden is read from Hyprland each time (a shown bar reserves its strip at the top of its screen), never
+# remembered, so the keys can't get out of step with what's on screen.
+
+set -u
+dir=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/bar
+mkdir -p "$dir"
+config=$HOME/.config/waybar/config
+style=$HOME/.config/waybar/style.css
+autohide=300      # seconds the front bar stays after Super+B
+pigeon_signal=9   # image#pigeon's "signal" in waybar/config
+
+# Connector of the front screen (e.g. HDMI-A-3), or nothing when it isn't connected
+front_output() {
+    [[ -n ${BAR_FRONT_MONITOR:-} ]] || return 0
+    hyprctl monitors -j | jq -r --arg d "$BAR_FRONT_MONITOR" \
+        'first(.[] | select(.description | startswith($d)) | .name) // empty'
+}
+
+# Does the front bar / do the other bars show? 1 or 0, or "none" when there's no such screen
+shown() {
+    hyprctl monitors -j | jq -r --arg f "$(front_output)" --arg which "$1" '
+        [.[] | select(if $which == "front" then .name == $f else .name != $f end) | .reserved[1] > 0]
+        | if length == 0 then "none" elif any then "1" else "0" end'
+}
+
+# Show (1) or hide (0) the front bar or the other bars. SIGUSR1 makes a waybar toggle its bars.
+set_bar() {
+    local now pid
+    now=$(shown "$1")
+    [[ $now == none || $now == "$2" ]] && return 0
+    pid=$(cat "$dir/$1.pid" 2>/dev/null) || return 0
+    [[ $(cat "/proc/$pid/comm" 2>/dev/null) == waybar ]] && kill -USR1 "$pid"
+}
+
+# The 5-minute timer: every arm/disarm bumps a token, and a waiting timer only acts if its token is still current
+bump() { echo $(( $(cat "$dir/token" 2>/dev/null || echo 0) + 1 )) > "$dir/token"; }
+arm() { bump; setsid "$0" _expire "$(cat "$dir/token")" >/dev/null 2>&1 9>&- & }
+
+refresh_pigeon() { pkill -RTMIN+"$pigeon_signal" -x waybar; }
+osd() { swayosd-client --custom-message "$1" >/dev/null 2>&1 & }
+
+launch() {  # $1 front|side, $2 config file
+    setsid waybar -c "$2" -s "$style" >"$dir/$1.log" 2>&1 9>&- &
+    echo $! > "$dir/$1.pid"
+}
+
+start() {
+    pkill -x waybar
+    for _ in {1..20}; do pgrep -x waybar >/dev/null || break; sleep 0.1; done
+    rm -f "$dir/front.pid" "$dir/side.pid" "$dir/pinned"
+    bump
+    local front
+    front=$(front_output)
+    if [[ -n $front ]]; then
+        printf '{ "include": ["%s"], "output": "%s", "start_hidden": true }\n' "$config" "$front" > "$dir/front.jsonc"
+        printf '{ "include": ["%s"], "output": "!%s" }\n' "$config" "$front" > "$dir/side.jsonc"
+        launch front "$dir/front.jsonc"
+        launch side "$dir/side.jsonc"
+    else
+        launch side "$config"
+    fi
+    echo "$front" > "$dir/front-output"
+}
+
+case ${1:-} in
+    start)
+        exec 9>"$dir/lock"; flock 9
+        start ;;
+    sync)
+        exec 9>"$dir/lock"; flock 9
+        # not started yet (monitors appearing at login, before the autostart's bar start): nothing to do
+        [[ -e $dir/front-output ]] || exit 0
+        [[ $(front_output) == "$(cat "$dir/front-output")" ]] || start ;;
+    toggle)
+        if [[ -z $(front_output) ]]; then
+            # one waybar on every screen
+            if [[ $(shown side) == 1 ]]; then set_bar side 0; else set_bar side 1; fi
+        elif [[ $(shown front) == 1 && $(shown side) != 0 ]]; then
+            rm -f "$dir/pinned"; bump
+            set_bar front 0; set_bar side 0
+            refresh_pigeon
+        else
+            set_bar front 1; set_bar side 1
+            [[ -e $dir/pinned ]] || arm
+        fi ;;
+    pin)
+        if [[ -z $(front_output) ]]; then
+            osd "Pinning is for the front screen's bar"
+        elif [[ -e $dir/pinned ]]; then
+            rm -f "$dir/pinned"; arm
+            osd "Bar unpinned: it hides in 5 minutes"
+        else
+            touch "$dir/pinned"; bump
+            set_bar front 1; set_bar side 1
+            osd "Bar pinned"
+        fi
+        refresh_pigeon ;;
+    _expire)
+        sleep "$autohide"
+        [[ $(cat "$dir/token" 2>/dev/null) == "${2:-}" && ! -e $dir/pinned ]] && set_bar front 0 ;;
+    pigeon)
+        if [[ -e $dir/pinned ]]; then
+            printf '%s\n%s\n' "$HOME/.config/waybar/pigeon-pinned.svg" \
+                "Bar pinned: it stays. Click or Super+Shift+B to unpin."
+        else
+            printf '%s\n%s\n' "$HOME/.config/waybar/pigeon.svg" \
+                "Super+B: show/hide the bars. Click or Super+Shift+B: pin the front bar."
+        fi ;;
+    *)
+        echo "usage: bar start|toggle|pin|sync|pigeon" >&2; exit 2 ;;
+esac
