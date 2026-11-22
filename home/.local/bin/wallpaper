@@ -10,7 +10,8 @@
 #
 # The ocean videos and stills: ~/Pictures/wallpapers/ocean/<scene>.mp4 and .png, made by the dotfiles'
 # hosts/helios/wallpapers/render.sh. -p asks mpvpaper to pause while Hyprland reports the wallpaper hidden (rare: the
-# terminals are slightly see-through and window gaps show it). hwdec=auto = nvdec on the NVIDIA card: least CPU.
+# terminals are slightly see-through and window gaps show it). hwdec=auto = nvdec on the NVIDIA card: least CPU;
+# hwdec-extra-frames=2 (mpv keeps 6): ~170 MiB less video memory for the three screens, playback unchanged.
 
 set -u
 dir=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/wallpaper
@@ -47,7 +48,7 @@ ocean() {
     while IFS=$'\t' read -r name desc; do
         scene=$(scene_for "$name" "$desc")
         if command -v mpvpaper >/dev/null && [[ -f $ocean/$scene.mp4 ]]; then
-            setsid mpvpaper -p -o "no-audio loop hwdec=auto" "$name" "$ocean/$scene.mp4" \
+            setsid mpvpaper -p -o "no-audio loop hwdec=auto hwdec-extra-frames=2" "$name" "$ocean/$scene.mp4" \
                 >"$dir/$name.log" 2>&1 9>&- &
         elif [[ -f $ocean/$scene.png ]]; then
             setsid swaybg -o "$name" -i "$ocean/$scene.png" -m fill >/dev/null 2>&1 9>&- &
