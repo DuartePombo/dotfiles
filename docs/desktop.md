@@ -104,8 +104,10 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - The ocean: a gently moving wallpaper on each screen, one continuous fog across the desk. Laptop: a jellyfish with a
   whale far away; front: five jellyfish, one of them a moon jellyfish; right: a whale under soft light rays.
   Neon line art in the Catppuccin colours, seamless 12-second loops.
-- Played by mpvpaper (AUR), one per screen; it pauses a screen's video while windows cover it, so a hidden wallpaper
-  costs nothing. Without mpvpaper the same scenes show as stills (swaybg).
+- Played by mpvpaper (AUR), one per screen, decoded on the NVIDIA card (nvdec: less CPU than vaapi or software).
+  Without mpvpaper the same scenes show as stills (swaybg). Cost, measured 2026-11-22 with all three playing: about
+  930 MB of RAM, 17% of one CPU core (1.4% of the processor), +8.5 W on the NVIDIA card. mpvpaper's auto-pause (`-p`)
+  rarely triggers: the terminals are slightly see-through and the gaps between windows show the wallpaper.
 - `wallpaper start` (at login, `Alt+Shift+F9`), `wallpaper random` (`Alt+F9`): `~/.local/bin/wallpaper`. Which screen
   shows which scene: `~/.config/hypr-host/wallpapers.conf` (by model, like the monitors).
 - The pictures are drawn by a program, not downloaded: `hosts/helios/wallpapers/ocean.py` (the scenes, the fog, the

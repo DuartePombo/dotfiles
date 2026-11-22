@@ -9,8 +9,8 @@
 #   wallpaper sync     a monitor was plugged in (hyprland.lua): show the current wallpaper on it too
 #
 # The ocean videos and stills: ~/Pictures/wallpapers/ocean/<scene>.mp4 and .png, made by the dotfiles'
-# hosts/helios/wallpapers/render.sh. mpvpaper pauses a screen's video while windows cover it (-p), so a covered
-# wallpaper costs nothing.
+# hosts/helios/wallpapers/render.sh. -p asks mpvpaper to pause while Hyprland reports the wallpaper hidden (rare: the
+# terminals are slightly see-through and window gaps show it). hwdec=auto = nvdec on the NVIDIA card: least CPU.
 
 set -u
 dir=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/wallpaper
