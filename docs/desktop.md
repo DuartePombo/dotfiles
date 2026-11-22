@@ -31,7 +31,7 @@
 | `Super+Shift+S` or `Print` | screenshot, like Windows' Snipping Tool: the screen freezes, drag an area or click a window (`Esc` cancels). It's copied to the clipboard and saved in `~/Pictures/Screenshots`; click the notification to draw on it (satty: `Enter` copies, saves and closes) |
 | `Shift+Print` | screenshot of the whole screen under the mouse (same clipboard, folder and notification) |
 | `Super+Shift+R` | screen recording: drag an area or click a window, recording starts (red `● REC` in the bar). Press again or click `● REC` to stop. MP4 in `~/Videos/Recordings`, with the computer's sound (no microphone); the notification plays it (Haruna) or shows it in the folder |
-| `Alt+F9` | random wallpaper from `~/Pictures/wallpapers` (curated list: `packages/wallpapers.txt`) |
+| `Alt+F9` / `Alt+Shift+F9` | a random still wallpaper from `~/Pictures/wallpapers` on all screens (curated list: `packages/wallpapers.txt`) / back to the moving ocean (see Wallpaper) |
 | `Alt+Tab` / `Alt+Shift+Tab` | back to the previous window (any workspace or screen) / cycle the windows of this workspace |
 | `Super+V` | clipboard history (cliphist): pick an entry, then `Ctrl+V`. `cliphist wipe` empties it |
 | `Super+B` / `Super+Shift+B` | the **b**ars: hide them all (the windows take the space) or bring them back / pin the front monitor's bar (see Bar and tray) |
@@ -99,6 +99,18 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
   ISO week numbers; mouse wheel: other months, right click: whole year, middle click: back to today). The **bell** (top right, red dot = notifications
   waiting): click for the notification centre, right click for do not disturb (bell crossed out).
 - Tray: Wi-Fi (nm-applet), Bluetooth (blueman).
+
+## Wallpaper
+- The ocean: a gently moving wallpaper on each screen, one continuous fog across the desk. Laptop: a jellyfish with a
+  whale far away; front: five jellyfish, one of them a moon jellyfish; right: a whale under soft light rays.
+  Neon line art in the Catppuccin colours, seamless 12-second loops.
+- Played by mpvpaper (AUR), one per screen; it pauses a screen's video while windows cover it, so a hidden wallpaper
+  costs nothing. Without mpvpaper the same scenes show as stills (swaybg).
+- `wallpaper start` (at login, `Alt+Shift+F9`), `wallpaper random` (`Alt+F9`): `~/.local/bin/wallpaper`. Which screen
+  shows which scene: `~/.config/hypr-host/wallpapers.conf` (by model, like the monitors).
+- The pictures are drawn by a program, not downloaded: `hosts/helios/wallpapers/ocean.py` (the scenes, the fog, the
+  creatures), `render.sh` turns them into `~/Pictures/wallpapers/ocean/{laptop,front,right}.mp4` + `.png` (about 10
+  minutes; setup.sh does it on a new install). Change a scene: edit ocean.py, run render.sh, then `wallpaper start`.
 
 ## Idle, lock, suspend
 - After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does

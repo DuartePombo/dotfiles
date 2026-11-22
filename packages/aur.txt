@@ -1,4 +1,5 @@
 google-chrome
+mpvpaper
 mullvad-vpn-bin
 onlyoffice-bin
 paru-bin

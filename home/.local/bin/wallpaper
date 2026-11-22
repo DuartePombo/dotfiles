@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# wallpaper: the background on every screen.
+#
+#   wallpaper start    the ocean set: a gently moving loop on each screen (mpvpaper), the scene picked per screen in
+#                      ~/.config/hypr-host/wallpapers.conf. Stills (swaybg) if mpvpaper or the videos are missing.
+#                      At login (hyprland.lua) and Alt+Shift+F9.
+#   wallpaper random   one random image from ~/Pictures/wallpapers on every screen (Alt+F9); the ocean folder is
+#                      left out (its pictures are cut to one screen each)
+#   wallpaper sync     a monitor was plugged in (hyprland.lua): show the current wallpaper on it too
+#
+# The ocean videos and stills: ~/Pictures/wallpapers/ocean/<scene>.mp4 and .png, made by the dotfiles'
+# hosts/helios/wallpapers/render.sh. mpvpaper pauses a screen's video while windows cover it (-p), so a covered
+# wallpaper costs nothing.
+
+set -u
+dir=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/wallpaper
+mkdir -p "$dir"
+walls=$HOME/Pictures/wallpapers
+ocean=$walls/ocean
+conf=$HOME/.config/hypr-host/wallpapers.conf
+fallback=$walls/astronaut.jpg
+
+stop() {
+    pkill -x mpvpaper
+    pkill -x swaybg
+    for _ in {1..20}; do pgrep -x 'mpvpaper|swaybg' >/dev/null || break; sleep 0.1; done
+}
+
+# The scene for a monitor: the first line of wallpapers.conf whose first word is its name or starts its description
+scene_for() {  # $1 name, $2 description
+    local key scene
+    if [[ -r $conf ]]; then
+        while read -r line; do
+            [[ -z $line || $line == \#* ]] && continue
+            scene=${line##* }
+            key=${line% "$scene"}
+            key=${key%"${key##*[![:space:]]}"}
+            if [[ $1 == "$key" || $2 == "$key"* ]]; then echo "$scene"; return; fi
+        done < "$conf"
+    fi
+    echo front
+}
+
+ocean() {
+    stop
+    local name desc scene
+    while IFS=$'\t' read -r name desc; do
+        scene=$(scene_for "$name" "$desc")
+        if command -v mpvpaper >/dev/null && [[ -f $ocean/$scene.mp4 ]]; then
+            setsid mpvpaper -p -o "no-audio loop hwdec=auto" "$name" "$ocean/$scene.mp4" \
+                >"$dir/$name.log" 2>&1 9>&- &
+        elif [[ -f $ocean/$scene.png ]]; then
+            setsid swaybg -o "$name" -i "$ocean/$scene.png" -m fill >/dev/null 2>&1 9>&- &
+        else
+            setsid swaybg -o "$name" -i "$fallback" -m fill >/dev/null 2>&1 9>&- &
+        fi
+    done < <(hyprctl monitors -j | jq -r '.[] | "\(.name)\t\(.description)"')
+    echo ocean > "$dir/mode"
+}
+
+still() {  # $1 image, on every screen
+    stop
+    setsid swaybg -i "$1" -m fill >/dev/null 2>&1 9>&- &
+    printf 'still\t%s\n' "$1" > "$dir/mode"
+}
+
+case ${1:-} in
+    start)
+        exec 9>"$dir/lock"; flock 9
+        ocean ;;
+    random)
+        exec 9>"$dir/lock"; flock 9
+        pick=$(find "$walls" -path "$ocean" -prune -o -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) \
+               -print0 | shuf -z -n 1 | tr -d '\0')
+        [[ -n $pick ]] && still "$pick" ;;
+    sync)
+        exec 9>"$dir/lock"; flock 9
+        # not started yet (monitors appearing at login, before the autostart): nothing to do
+        [[ -r $dir/mode ]] || exit 0
+        IFS=$'\t' read -r mode image < "$dir/mode"
+        if [[ $mode == still && -f ${image:-} ]]; then still "$image"; else ocean; fi ;;
+    *)
+        echo "usage: wallpaper start|random|sync" >&2; exit 2 ;;
+esac

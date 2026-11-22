@@ -246,6 +246,11 @@ if (( ${#missing[@]} )); then
     note "copied ${#missing[@]} wallpapers to $wall_dir"
 fi
 
+say "Ocean wallpapers (moving, one per screen: hosts/$host/wallpapers)"
+if [[ -x $repo/hosts/$host/wallpapers/render.sh && ! -f $wall_dir/ocean/front.mp4 ]]; then
+    "$repo/hosts/$host/wallpapers/render.sh" "$wall_dir/ocean"   # about 10 minutes
+fi
+
 say "Dolphin application menu"
 XDG_MENU_PREFIX=arch- kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
 

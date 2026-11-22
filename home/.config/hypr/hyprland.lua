@@ -31,9 +31,8 @@ local lock        = "pidof hyprlock || hyprlock"
 -------------------
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd("swaybg -i ~/Pictures/wallpapers/astronaut.jpg -m fill")
-    -- hl.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh")
-    hl.exec_cmd("bar start")                               -- the bars (waybar, via ~/.local/bin/bar; Super+B)
+    hl.exec_cmd("wallpaper start")                         -- the ocean, moving (~/.local/bin/wallpaper; Alt+F9)
+    hl.exec_cmd("bar start")                              -- the bars (waybar, via ~/.local/bin/bar; Super+B)
     hl.exec_cmd("swaync")                                  -- notifications
     hl.exec_cmd("nm-applet --indicator")                   -- Wi-Fi in the tray
     hl.exec_cmd("blueman-applet")                          -- Bluetooth in the tray
@@ -61,9 +60,11 @@ hl.on("hyprland.start", function()
 end)
 
 -- A monitor plugged in later: the front monitor's bar is a separate waybar (~/.local/bin/bar), so the bars are
--- restarted when the front monitor appears or moves to another port (bar sync does nothing otherwise).
+-- restarted when the front monitor appears or moves to another port (bar sync does nothing otherwise); and the new
+-- screen gets its wallpaper (each screen has its own scene: ~/.config/hypr-host/wallpapers.conf).
 hl.on("monitor.added", function()
     hl.exec_cmd("bar sync")
+    hl.exec_cmd("wallpaper sync")
 end)
 
 
@@ -283,7 +284,9 @@ hl.bind(mainMod .. " + T",      desktop_or_office("T", hl.dsp.layout("togglespli
 -- Alt+Shift+F maximizes (fills the screen, keeps the bar). Same key again to go back.
 hl.bind(mainMod .. " + F",         desktop_or_office("F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" })))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized",  action = "toggle" }), always)
-hl.bind(mainMod .. " + F9",     hl.dsp.exec_cmd("~/.config/hypr/scripts/random_wallpaper.sh"))
+-- Wallpaper: Alt+F9 a random still from ~/Pictures/wallpapers on all screens, Alt+Shift+F9 back to the moving ocean
+hl.bind(mainMod .. " + F9",         hl.dsp.exec_cmd("wallpaper random"))
+hl.bind(mainMod .. " + SHIFT + F9", hl.dsp.exec_cmd("wallpaper start"))
 hl.bind(mainMod .. " + period", leave_office(hl.dsp.exec_cmd(lock)), always)
 
 -- Move focus with mainMod + h/j/k/l
