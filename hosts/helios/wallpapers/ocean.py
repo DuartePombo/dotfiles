@@ -3,12 +3,13 @@
 
     laptop (left):  a jellyfish, a whale far away, a small moon jellyfish
     front (OLED):   five jellyfish at different depths, one of them a moon jellyfish
-    right:          a whale under soft light rays, two tiny jellyfish far away
+    right:          a jellyfish under soft light rays, two tiny jellyfish far away
 
 Neon line art on a dark fog, Catppuccin Mocha colours, like the pigeon in the bar. Each call writes one frame as SVG;
-render.sh turns frames into seamless 12-second loops (every motion repeats exactly once per loop) and stills.
+render.sh turns frames into seamless 24-second loops at 12 frames a second (every motion repeats exactly once per
+loop; slow, so 12 fps looks smooth) and stills.
 
-    ocean.py <laptop|front|right> <out.svg> [t] [loop]     t = time in seconds (default 0), loop = 12
+    ocean.py <laptop|front|right> <out.svg> [t] [loop]     t = time in seconds (default 0), loop in seconds
 
 The fog is computed in desk coordinates (the layout from hyprctl monitors / host.lua), so it continues from one screen
 into the next: laptop 1920x1080 at (0, 360), front 2560x1440 at (1920, 0), right 1920x1080 at (4480, 180).
@@ -380,8 +381,10 @@ def right():
     lin_grad("lw2", [(0, LAVENDER, 1), (1, MAUVE, 1)], 0, 0, 1, 1)
     jellyfish(0.82 * W, 0.26 * H, 0.024 * H, "lw2", 0.30, 51, depth_blur=2.5 * U, fade=(LAVENDER, MAUVE))
     moon_jelly(0.16 * W, 0.74 * H, 0.022 * H, BLUE, LAVENDER, 0.28, 64, depth_blur=2.5 * U)
-    halo("halo", 0.52, 0.48, 0.45, TEAL, BLUE, 0.12)
-    whale(0.52 * W, 0.47 * H, 0.30 * W, facing_left=True, opacity=0.92)
+    # the "solo" jellyfish (pink to blue, long tentacles) where the whale was, a little right of centre
+    lin_grad("so1", [(0, PINK, 1), (0.5, MAUVE, 1), (1, BLUE, 1)], 0, 0, 1, 1)
+    halo("halo", 0.58, 0.44, 0.30, MAUVE, BLUE, 0.10)
+    jellyfish(0.58 * W, 0.36 * H, 0.085 * H, "so1", 0.95, 55, tent=1.1)
 
 
 def svg():

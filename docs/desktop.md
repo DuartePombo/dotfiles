@@ -102,11 +102,13 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 
 ## Wallpaper
 - The ocean: a gently moving wallpaper on each screen, one continuous fog across the desk. Laptop: a jellyfish with a
-  whale far away; front: five jellyfish, one of them a moon jellyfish; right: a whale under soft light rays.
-  Neon line art in the Catppuccin colours, seamless 12-second loops.
+  whale far away; front: five jellyfish, one of them a moon jellyfish; right: one jellyfish under soft light rays.
+  Neon line art in the Catppuccin colours, seamless 24-second loops at 12 frames a second (slow motion, so 12 fps
+  looks smooth and costs half the decoding of 24).
 - Played by mpvpaper (AUR), one per screen, decoded on the NVIDIA card (nvdec: less CPU than vaapi or software).
-  Without mpvpaper the same scenes show as stills (swaybg). Cost, measured 2026-11-22 with all three playing: about
-  930 MB of RAM, 17% of one CPU core (1.4% of the processor), +8.5 W on the NVIDIA card. mpvpaper's auto-pause (`-p`)
+  Without mpvpaper the same scenes show as stills (swaybg). Cost, measured 2026-11-22 with all three playing at 12 fps:
+  about 945 MB of RAM (mostly mpv itself: the same at 24 fps), 13% of one CPU core (1% of the processor), +7.7 W on
+  the NVIDIA card (24 fps: 17% and +8.5 W). Only the front moving would cost about a third. mpvpaper's auto-pause (`-p`)
   rarely triggers: the terminals are slightly see-through and the gaps between windows show the wallpaper.
 - `wallpaper start` (at login, `Alt+Shift+F9`), `wallpaper random` (`Alt+F9`): `~/.local/bin/wallpaper`. Which screen
   shows which scene: `~/.config/hypr-host/wallpapers.conf` (by model, like the monitors).
