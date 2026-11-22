@@ -167,6 +167,13 @@ mkdir -p "$HOME/.config" "$HOME/.local/bin" "$HOME/.local/share" "$HOME/.local/s
 chmod 700 "$HOME/.config/winapps" "$HOME/.config/restic"
 stow_pkg "$repo" home
 [[ -n $hostdir && -d $hostdir/home ]] && stow_pkg "$hostdir" home
+# Settings files the apps keep rewriting with personal things (Okular's and Dolphin's recent files, window state):
+# copied once from home-defaults/ when missing, never linked, so what the apps write stays on this laptop.
+while IFS= read -r -d '' f; do
+    target="$HOME/${f#"$repo/home-defaults/"}"
+    [[ -L $target && ! -e $target ]] && rm "$target"          # an old link into the repo, now dangling
+    [[ -e $target ]] || install -Dm644 "$f" "$target"
+done < <(find "$repo/home-defaults" -type f -print0)
 note "ok"
 
 # --- 6. Services and groups ------------------------------------------------------------------------------------
