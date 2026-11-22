@@ -108,7 +108,9 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - Played by mpvpaper (AUR), one per screen, decoded on the NVIDIA card (nvdec: less CPU than vaapi or software).
   Without mpvpaper the same scenes show as stills (swaybg). Cost, measured 2026-11-22 with all three playing at 12 fps:
   about 945 MB of RAM (mostly mpv itself: the same at 24 fps), 13% of one CPU core (1% of the processor), +7.7 W on
-  the NVIDIA card (24 fps: 17% and +8.5 W). Only the front moving would cost about a third. mpvpaper's auto-pause (`-p`)
+  the NVIDIA card (24 fps: 17% and +8.5 W), and ~1.7 GB of the card's 6 GB video memory (each player's decoding
+  context). Software decoding would use 0.8 GB less video memory but 5x the CPU and more RAM. Only the front moving
+  would cost about a third. Alt+F9 (a still) frees it all, e.g. before a game. mpvpaper's auto-pause (`-p`)
   rarely triggers: the terminals are slightly see-through and the gaps between windows show the wallpaper.
 - `wallpaper start` (at login, `Alt+Shift+F9`), `wallpaper random` (`Alt+F9`): `~/.local/bin/wallpaper`. Which screen
   shows which scene: `~/.config/hypr-host/wallpapers.conf` (by model, like the monitors).
