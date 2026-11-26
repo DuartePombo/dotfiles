@@ -8,6 +8,10 @@
 # (Neovim's Mason installs and js-debug need node even when Neovim isn't started from an interactive shell)
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
+# .NET: no usage data to Microsoft from the dotnet tools (on by default), also for VS Code's C# extension and
+# Neovim's Mason, which run dotnet with this login's environment
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 # Start Hyprland after logging in on the first console (tty1), always through hyprland-session: it picks docked or
 # mobile mode, the graphics card and the screen layout. exec: when Hyprland exits (Ctrl+Alt+Delete → Log out), this
 # login ends too and you're back at the login prompt; logging in starts the desktop again, the right way. (Started
