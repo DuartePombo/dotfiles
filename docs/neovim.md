@@ -23,7 +23,8 @@ The full tutorial, with exercises and mnemonics, is a local folder: `~/pombo/pro
 Format on save is off: format with `<leader>f`. TypeScript runs directly with Node (no build step).
 Inlay hints (`<leader>th`) show types, return types and parameter names in Python, TypeScript/JavaScript and C#
 (the servers have them off by default; VS Code is set to the same choices).
-C#: needs the .NET SDKs from packages/pacman.txt (current SDK for Roslyn, 6 and 8 for projects on those versions).
+C#: needs the .NET SDKs from packages/pacman.txt (the current one, also for Roslyn, and 8). They build .NET 6
+projects too; Arch dropped .NET 6 itself, so run such an app on .NET 8 with `DOTNET_ROLL_FORWARD=Major dotnet run`.
 `F5` in a .cs file attaches to a running process (start the app yourself with `dotnet run`); the second entry
 launches a built .dll. A project outside the .sln (e.g. a test project) gets fewer features.
 Web apps: Chrome debugging asks for the dev server's address (remembered) and maps sources from the app's own
