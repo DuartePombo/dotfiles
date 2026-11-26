@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Render the ocean wallpapers (ocean.py): per screen a seamless 24-second loop at 12 fps (MP4, for mpvpaper) and a still (PNG,
+# Render the ocean wallpapers (ocean.py): per screen a seamless 12-second loop at 24 fps (MP4, for mpvpaper) and a still (PNG,
 # the first frame, for swaybg when mpvpaper isn't there).
 #
 #   render.sh [output folder]        default: ~/Pictures/wallpapers/ocean
@@ -10,8 +10,8 @@ set -euo pipefail
 
 here=$(cd "$(dirname "$0")" && pwd)
 out=${1:-$HOME/Pictures/wallpapers/ocean}
-fps=12      # the motion is slow: 12 frames a second look smooth and cost half the decoding of 24
-loop=24     # seconds; every motion repeats exactly once per loop
+fps=24      # tried 12 (with 24 s loops): saved only ~0.5% CPU and <1 W, and the user preferred how 24 looked
+loop=12     # seconds; every motion repeats exactly once per loop
 jobs=$(( $(nproc) > 1 ? $(nproc) - 1 : 1 ))
 
 mkdir -p "$out" "${XDG_CACHE_HOME:-$HOME/.cache}"

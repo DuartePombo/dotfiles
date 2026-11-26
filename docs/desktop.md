@@ -3,7 +3,10 @@
 ## Logging in
 - After the disk passphrase, log in on the first console (tty1). Hyprland starts by itself; the same password
   unlocks the keyring (Chrome and VS Code passwords).
-- `Alt+M` quits Hyprland and drops you back at the tty1 shell. Start it again with `hyprland-session`.
+- `Ctrl+Alt+Delete`: a menu to lock, log out, restart or shut down (Cancel/Esc does nothing). Log out quits Hyprland
+  and brings you back to the login prompt; logging in starts it again (`.bash_profile` runs `exec hyprland-session`).
+  Never start Hyprland by hand with `Hyprland` or `start-hyprland`: only `hyprland-session` sets docked/mobile mode,
+  the graphics card and the screen layout (started directly, the screens came up in the wrong order).
 - Other consoles: `Ctrl+Alt+F2` … `F6` (useful if Hyprland won't start).
 
 ## Hyprland keys
@@ -15,7 +18,7 @@
 | `Alt+D` | app launcher (wofi) |
 | `Alt+E` | file manager (Dolphin) |
 | `Alt+Q` | close window |
-| `Alt+M` | quit Hyprland |
+| `Ctrl+Alt+Delete` | menu: lock / log out / restart / shut down (no single key quits the desktop) |
 | `Alt+.` or `Super+L` | lock the screen (hyprlock; `Super+L` like Windows, also from the Windows desktop) |
 | `Alt+H` / `J` / `K` / `L` | move focus left / down / up / right (vim keys) |
 | `Alt+T` | toggle the split direction (side by side / stacked) |
@@ -103,12 +106,12 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 ## Wallpaper
 - The ocean: a gently moving wallpaper on each screen, one continuous fog across the desk. Laptop: a jellyfish with a
   whale far away; front: five jellyfish, one of them a moon jellyfish; right: one jellyfish under soft light rays.
-  Neon line art in the Catppuccin colours, seamless 24-second loops at 12 frames a second (slow motion, so 12 fps
-  looks smooth and costs half the decoding of 24).
+  Neon line art in the Catppuccin colours, seamless 12-second loops at 24 frames a second (12 fps with 24 s loops was
+  tried: only ~0.5% CPU and <1 W less, and 24 looked better).
 - Played by mpvpaper (AUR), one per screen, decoded on the NVIDIA card (nvdec: less CPU than vaapi or software).
-  Without mpvpaper the same scenes show as stills (swaybg). Cost, measured 2026-11-22 with all three playing at 12 fps:
-  about 945 MB of RAM (mostly mpv itself: the same at 24 fps), 13% of one CPU core (1% of the processor), +7.7 W on
-  the NVIDIA card (24 fps: 17% and +8.5 W), and ~1.5 GB of the card's 6 GB video memory (each player's decoding
+  Without mpvpaper the same scenes show as stills (swaybg). Cost, measured 2026-11-22 with all three playing at 24 fps:
+  about 920 MB of RAM (mostly mpv itself), 17-20% of one CPU core (under 2% of the processor), +8.5 W on the NVIDIA
+  card, and ~1.4 GB of the card's 6 GB video memory (each player's decoding
   context; `hwdec-extra-frames=2` instead of mpv's 6 saves ~170 MiB). Software decoding would use less video memory
   but 5x the CPU and more RAM. Only the front moving
   would cost about a third. Alt+F9 (a still) frees it all, e.g. before a game. mpvpaper's auto-pause (`-p`)
@@ -131,7 +134,7 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - The NVIDIA GPU stays powered on all the time (its power saving broke external monitors with this driver).
 - Monitors on the laptop's HDMI and mini-DisplayPort ports (both wired to the NVIDIA GPU): Hyprland has to start in
   "docked" mode, which it picks by itself when a monitor is plugged in at login. Docked, monitors can be plugged in
-  and out freely; plugged in while on the laptop alone: `Alt+M`, then `hyprland-session` at the tty1 prompt. The
+  and out freely; plugged in while on the laptop alone: `Ctrl+Alt+Delete` → Log out, then log in again. The
   USB-C port carries no video (USB only).
 - The desk, left to right: laptop | front: AOC Q27G41ZDF (27" OLED, 2560x1440) | right: Acer VG252Q (1920x1080).
   `host.lua` knows them by model, not by port, so cables can be swapped. Speeds: the front monitor does 240 Hz

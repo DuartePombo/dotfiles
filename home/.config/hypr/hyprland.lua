@@ -274,7 +274,9 @@ end
 
 hl.bind(mainMod .. " + RETURN", desktop_or_office("Return", hl.dsp.exec_cmd(terminal)))
 hl.bind(mainMod .. " + Q",      desktop_or_office("Q", hl.dsp.window.close()))
-hl.bind(mainMod .. " + M",      desktop_or_office("M", hl.dsp.exit()))
+-- Quitting the desktop has no single key (Alt+M did, too easy to hit by accident): Ctrl+Alt+Delete opens a menu
+-- (Cancel / Lock / Log out / Restart / Shut down: ~/.local/bin/power-menu), also from the Windows desktop.
+hl.bind("CTRL + ALT + Delete",  leave_office(hl.dsp.exec_cmd("power-menu")), always)
 hl.bind(mainMod .. " + E",      desktop_or_office("E", hl.dsp.exec_cmd(fileManager)))
 hl.bind(mainMod .. " + V",      desktop_or_office("V", hl.dsp.window.float({ action = "toggle" })))
 hl.bind(mainMod .. " + D",      desktop_or_office("D", hl.dsp.exec_cmd(menu)))

@@ -6,8 +6,8 @@
     right:          a jellyfish under soft light rays, two tiny jellyfish far away
 
 Neon line art on a dark fog, Catppuccin Mocha colours, like the pigeon in the bar. Each call writes one frame as SVG;
-render.sh turns frames into seamless 24-second loops at 12 frames a second (every motion repeats exactly once per
-loop; slow, so 12 fps looks smooth) and stills.
+render.sh turns frames into seamless 12-second loops at 24 frames a second (every motion repeats exactly once per
+loop) and stills.
 
     ocean.py <laptop|front|right> <out.svg> [t] [loop]     t = time in seconds (default 0), loop in seconds
 

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# power-menu: Ctrl+Alt+Delete, like on Windows. Lock, log out, restart or shut down, picked from a small menu.
+# Cancel, Esc or a click elsewhere does nothing. (There's no single key that quits the desktop any more: Alt+M did, and
+# was too easy to hit by accident.) "Log out" closes every app: unsaved work is lost; you land at the login prompt and
+# logging in starts the desktop again (~/.bash_profile).
+choice=$(printf '%s\n' "Cancel" "Lock" "Log out (closes every app)" "Restart" "Shut down" |
+         wofi --dmenu --insensitive --prompt "Ctrl+Alt+Delete" --lines 6 2>/dev/null)
+case $choice in
+    Lock)         pidof hyprlock >/dev/null || hyprlock ;;
+    "Log out"*)   hyprctl dispatch 'hl.dsp.exit()' ;;
+    Restart)      systemctl reboot ;;
+    "Shut down")  systemctl poweroff ;;
+esac
