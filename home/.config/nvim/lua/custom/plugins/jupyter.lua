@@ -307,7 +307,7 @@ end
 return {
   {
     'benlubas/molten-nvim',
-    cond = has_host,
+    cond = has_host and not vim.g.vscode, -- inside VS Code its Jupyter extension runs notebooks
     lazy = false,
     build = ':UpdateRemotePlugins',
     dependencies = { '3rd/image.nvim' },
@@ -357,7 +357,7 @@ return {
   },
   {
     '3rd/image.nvim',
-    cond = has_host and has_images,
+    cond = has_host and has_images and not vim.g.vscode,
     opts = {
       backend = 'kitty',
       processor = 'magick_cli', -- ImageMagick's command line tools (packages/pacman.txt), no Lua rock needed
@@ -387,7 +387,7 @@ return {
   {
     -- .ipynb <-> "# %%" Python text (hydrogen style: IPython magics like %timeit stay runnable)
     'GCBallesteros/jupytext.nvim',
-    cond = has_host,
+    cond = has_host and not vim.g.vscode, -- inside VS Code its Jupyter extension runs notebooks
     lazy = false,
     init = function()
       -- `nvim new.ipynb` (a notebook that doesn't exist yet) would fail in jupytext.nvim, which reads the file's

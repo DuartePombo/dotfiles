@@ -125,8 +125,13 @@ end)
 -- Neovim's own Wayland clipboard, except that pasting asks for text only: with just a screenshot on the clipboard,
 -- p used to insert the PNG's raw bytes. Now it says "No suitable type of content copied" instead, and in Markdown
 -- notes p pastes the screenshot as an image (lua/custom/paste.lua).
-require('custom.paste').setup()
-if vim.env.WAYLAND_DISPLAY then
+-- Inside VS Code: yank and put go through VS Code's clipboard (the same system clipboard), and Ctrl+V is VS Code's.
+if vim.g.vscode then
+  vim.g.clipboard = vim.g.vscode_clipboard
+else
+  require('custom.paste').setup()
+end
+if vim.env.WAYLAND_DISPLAY and not vim.g.vscode then
   vim.g.clipboard = {
     name = 'wl-clipboard (text only)',
     copy = {
@@ -223,7 +228,8 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Terminal at the bottom (<leader>tt) and running the current file (<leader>r...): lua/custom/run.lua
-require('custom.run').setup()
+-- (inside VS Code, the same keys use VS Code's terminal and runner: lua/custom/vscode.lua)
+if not vim.g.vscode then require('custom.run').setup() end
 
 -- My Neovim tutorial (~/pombo/projects/nvim-tutorial): <leader>? opens its index, <leader>s? searches all of it
 local tutorial = vim.fn.expand '~/pombo/projects/nvim-tutorial'
@@ -1069,6 +1075,7 @@ require('lazy').setup({
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    vscode = true, -- also inside VS Code: its text objects and surround are pure editing (lua/custom/vscode.lua)
     config = function()
       -- Better Around/Inside textobjects
       --
@@ -1086,6 +1093,9 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
+
+      -- Inside VS Code, VS Code draws its own status bar: stop here
+      if vim.g.vscode then return end
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -1207,6 +1217,9 @@ require('lazy').setup({
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
 }, {
+  -- Inside VS Code (vscode-neovim), only plugins marked `vscode = true` load: VS Code itself does the IDE work
+  -- (language servers, completion, search, file tree, git, debugging). The others stay installed, just not loaded.
+  defaults = { cond = function(plugin) return not vim.g.vscode or plugin.vscode == true end },
   rocks = { enabled = false }, -- no plugin here needs luarocks
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -1228,6 +1241,9 @@ require('lazy').setup({
     },
   },
 })
+
+-- Inside VS Code (the vscode-neovim extension): the same Space keys, calling VS Code's commands
+if vim.g.vscode then require 'custom.vscode' end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

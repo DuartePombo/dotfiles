@@ -1,2 +1,13 @@
+anthropic.claude-code
+asvetliakov.vscode-neovim
+charliermarsh.ruff
 ms-azuretools.vscode-containers
 ms-mssql.mssql
+ms-python.debugpy
+ms-python.python
+ms-python.vscode-pylance
+ms-toolsai.jupyter
+ms-vscode.cpptools
+redhat.vscode-yaml
+tamasfe.even-better-toml
+usernamehw.errorlens

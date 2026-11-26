@@ -158,3 +158,21 @@ Deleting the link leaves the PNG in `assets/`.
 - Notebook support runs in the conda env `nvim` (`packages/conda/nvim.yml`). After updating molten, or if the
   `<leader>j` keys say it isn't registered: `:UpdateRemotePlugins` and restart Neovim.
 - Running tmux sessions pick up the image setting after `tmux source ~/.config/tmux/tmux.conf`.
+
+## Inside VS Code (VSCode Neovim)
+VS Code's `asvetliakov.vscode-neovim` extension runs this same config as its editor, in a "VS Code mode"
+(`vim.g.vscode` is set). The editing is real Neovim; VS Code does the IDE part.
+- Only plugins marked `vscode = true` load (mini.nvim: mini.ai, mini.surround): lazy.nvim's `defaults.cond` in
+  `init.lua`. The Jupyter plugins, the custom paste and run helpers stay off too.
+- `lua/custom/vscode.lua` gives the Space keys the same meaning with VS Code's commands: `Space s f` Quick Open,
+  `Space s g` the Search view, `gra` quick fixes, `Space g g` Source Control, `Space d ...` VS Code's debugger,
+  `Space j ...` notebook cells (or the Interactive Window for `# %%` cells in a `.py` file), `Space a c` Claude.
+  Keys without a VS Code counterpart say "only in Neovim" instead of falling through to Vim.
+- No which-key there, so `timeout` is off (a slow `Space s g` never turns into Vim commands); the mode and the keys
+  typed so far show in VS Code's status bar; yank/put use VS Code's clipboard.
+- VS Code side, in each profile's settings (local, not in this repo): `vscode-neovim.neovimExecutablePaths.linux`
+  `/usr/bin/nvim`, `editor.lineNumbers` relative, `editor.cursorSurroundingLines` 10 (scrolloff), `search.smartCase`,
+  `extensions.experimental.affinity` for the extension (its own extension host). keybindings.json: `Ctrl+l` from a
+  side bar list back to the code, `\` / `q` close the explorer (as in neo-tree), `Ctrl+k` from a panel list.
+- After changing this config: Command Palette → **Neovim: Restart Extension**. Logs: **Neovim: View Extension Logs**.
+- Every key, side by side with Neovim's: the tutorial's `reference/vscode.md`.
