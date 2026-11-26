@@ -33,7 +33,8 @@ local lock        = "pidof hyprlock || hyprlock"
 hl.on("hyprland.start", function()
     hl.exec_cmd("wallpaper start")                         -- the ocean, moving (~/.local/bin/wallpaper; Alt+F9)
     hl.exec_cmd("bar start")                              -- the bars (waybar, via ~/.local/bin/bar; Super+B)
-    hl.exec_cmd("swaync")                                  -- notifications
+    -- notifications (swaync) start on demand: the bar's bell asks for them at login, and the package's own service
+    -- starts swaync then (and restarts it if it crashes). Starting it here too raced with that service.
     hl.exec_cmd("nm-applet --indicator")                   -- Wi-Fi in the tray
     hl.exec_cmd("blueman-applet")                          -- Bluetooth in the tray
     hl.exec_cmd("hypridle")                                -- lock and suspend when idle
