@@ -1,7 +1,11 @@
 anthropic.claude-code
 asvetliakov.vscode-neovim
 charliermarsh.ruff
+dbaeumer.vscode-eslint
+editorconfig.editorconfig
+esbenp.prettier-vscode
 ms-azuretools.vscode-containers
+ms-dotnettools.csharp
 ms-mssql.mssql
 ms-python.debugpy
 ms-python.python
@@ -11,3 +15,4 @@ ms-vscode.cpptools
 redhat.vscode-yaml
 tamasfe.even-better-toml
 usernamehw.errorlens
+vitest.explorer

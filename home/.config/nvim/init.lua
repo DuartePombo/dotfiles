@@ -774,6 +774,14 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      -- What <leader>th shows (inlay hints) in TypeScript/JavaScript and C#: the language servers have them all off by
+      -- default. VS Code gets the same choices in its settings, so both editors show the same hints.
+      local ts_inlay_hints = {
+        parameterNames = { enabled = 'literals' },
+        variableTypes = { enabled = true, suppressWhenTypeMatchesName = true },
+        functionLikeReturnTypes = { enabled = true },
+        enumMemberValues = { enabled = true },
+      }
       local servers = {
         -- Python: basedpyright for types, completion and navigation; Ruff for linting, import sorting and
         -- quick fixes. The interpreter comes from venv-selector (<leader>vs).
@@ -806,7 +814,7 @@ require('lazy').setup({
         },
 
         -- JavaScript and TypeScript; ESLint only acts in projects that have an ESLint config
-        vtsls = {},
+        vtsls = { settings = { typescript = { inlayHints = ts_inlay_hints }, javascript = { inlayHints = ts_inlay_hints } } },
         eslint = {},
 
         -- Web
@@ -821,6 +829,33 @@ require('lazy').setup({
         yamlls = {
           settings = {
             yaml = { schemaStore = { enable = false, url = '' }, schemas = require('schemastore').yaml.schemas() },
+          },
+        },
+
+        -- C# (.NET): Microsoft's Roslyn, the same language server as VS Code's C# extension. It opens the nearest .sln
+        -- (else the .csproj's folder) and formats by the project's .editorconfig (<leader>f). Needs the .NET SDK.
+        roslyn_ls = {
+          cmd = {
+            'roslyn-language-server', -- Mason's name for it (lspconfig expects Microsoft.CodeAnalysis.LanguageServer)
+            '--logLevel', 'Information',
+            '--extensionLogDirectory', vim.fs.joinpath(vim.uv.os_tmpdir(), 'roslyn_ls/logs'),
+            '--stdio',
+          },
+          settings = {
+            ['csharp|inlay_hints'] = {
+              csharp_enable_inlay_hints_for_types = true,
+              csharp_enable_inlay_hints_for_implicit_variable_types = true,
+              csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+              csharp_enable_inlay_hints_for_implicit_object_creation = true,
+              dotnet_enable_inlay_hints_for_parameters = true,
+              dotnet_enable_inlay_hints_for_literal_parameters = true,
+              dotnet_enable_inlay_hints_for_other_parameters = true,
+              dotnet_enable_inlay_hints_for_indexer_parameters = true,
+              dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+              dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+              dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+              dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+            },
           },
         },
 
@@ -871,6 +906,7 @@ require('lazy').setup({
         'debugpy',
         'codelldb',
         'js-debug-adapter',
+        'netcoredbg',
         -- Java language server, started by nvim-jdtls (lua/custom/plugins/java.lua), not enabled below
         'jdtls',
       })
@@ -1150,10 +1186,10 @@ require('lazy').setup({
     build = ':TSUpdate',
     config = function()
       local parsers = {
-        'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'git_config', 'git_rebase', 'gitcommit', 'gitignore', 'html',
-        'java', 'javascript', 'json', 'lua', 'luadoc',
-        'make', 'markdown', 'markdown_inline', 'python', 'query', 'regex', 'toml', 'tsx', 'typescript', 'vim',
-        'vimdoc', 'yaml',
+        'bash', 'c', 'c_sharp', 'cpp', 'css', 'diff', 'dockerfile', 'git_config', 'git_rebase', 'gitcommit', 'gitignore',
+        'html', 'java', 'javascript', 'json', 'lua', 'luadoc',
+        'make', 'markdown', 'markdown_inline', 'python', 'query', 'regex', 'scss', 'sql', 'toml', 'tsx', 'typescript',
+        'vim', 'vimdoc', 'xml', 'yaml',
       }
       vim.g.treesitter_parsers = parsers -- setup.sh installs these synchronously
       require('nvim-treesitter').install(parsers)

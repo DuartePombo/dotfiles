@@ -11,8 +11,9 @@ The full tutorial, with exercises and mnemonics, is a local folder: `~/pombo/pro
 |---|---|---|---|---|
 | Python | basedpyright (types) + Ruff (lint, imports) | Ruff | selected env | debugpy |
 | C, C++ | clangd (with clang-tidy) | clang-format | gcc/g++ `-g` | codelldb |
-| JavaScript, TypeScript | vtsls + ESLint (if the project has a config) | Prettier | node | js-debug (Node, Chrome) |
-| HTML, CSS | html, cssls, emmet | Prettier | HTML: opens in the browser | |
+| JavaScript, TypeScript, React | vtsls + ESLint (if the project has a config) | Prettier (the project's own, with its plugins) | node | js-debug (Node, Chrome) |
+| HTML, CSS, SCSS | html, cssls, emmet | Prettier | HTML: opens in the browser | |
+| C# (.NET) | Roslyn (Microsoft's, as in VS Code); opens the nearest .sln | Roslyn, by the project's .editorconfig | `dotnet run` in a terminal | netcoredbg |
 | JSON, YAML | jsonls, yamlls (with schemas: package.json, compose...) | Prettier | | |
 | Shell | bashls + shellcheck | shfmt | bash | |
 | Markdown, Dockerfile, Compose, TOML | marksman, dockerls, compose, taplo | Prettier / taplo | | |
@@ -20,6 +21,13 @@ The full tutorial, with exercises and mnemonics, is a local folder: `~/pombo/pro
 | Java | jdtls (`<leader>c...`) | | `java File.java` | |
 
 Format on save is off: format with `<leader>f`. TypeScript runs directly with Node (no build step).
+Inlay hints (`<leader>th`) show types, return types and parameter names in Python, TypeScript/JavaScript and C#
+(the servers have them off by default; VS Code is set to the same choices).
+C#: needs the .NET SDKs from packages/pacman.txt (current SDK for Roslyn, 6 and 8 for projects on those versions).
+`F5` in a .cs file attaches to a running process (start the app yourself with `dotnet run`); the second entry
+launches a built .dll. A project outside the .sln (e.g. a test project) gets fewer features.
+Web apps: Chrome debugging asks for the dev server's address (remembered) and maps sources from the app's own
+folder (nearest package.json), so it works in repos with several apps. Vite's dev server already reloads the page.
 C/C++: language standard is gnu23 / gnu++23 everywhere (clangd, run, debug). For a project with several files, use
 its build (make/CMake: `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` so clangd follows it) and "debug an executable".
 

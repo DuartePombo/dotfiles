@@ -7,7 +7,7 @@
 --
 -- Python runs with the interpreter picked in venv-selector (<leader>vs): the program doesn't need debugpy, the
 -- adapter is Mason's. C/C++ files are compiled with -g into ~/.cache/nvim/run/ (same as <leader>rr).
--- Adapters (debugpy, codelldb, js-debug-adapter) are installed by mason-tool-installer (init.lua).
+-- Adapters (debugpy, codelldb, js-debug-adapter, netcoredbg) are installed by mason-tool-installer (init.lua).
 -- A project's .vscode/launch.json is read too: <leader>dc lists its configurations.
 
 local function mason_bin(name)
@@ -165,20 +165,42 @@ return {
       }
     end
     local skip = { '<node_internals>/**', '${workspaceFolder}/node_modules/**' }
+    -- Chrome: the dev server's address (remembered for next time) and the app's own folder (the nearest
+    -- package.json), so breakpoints bind also when one repo holds several apps
+    local last_url = 'http://localhost:5173' -- Vite's default port
+    local function ask_url()
+      last_url = vim.fn.input('URL: ', last_url)
+      return last_url
+    end
+    local function app_root() return vim.fs.root(0, 'package.json') or vim.fn.getcwd() end
     local js_configs = {
       -- Node runs TypeScript directly (type stripping), so .ts files need no build step
       { type = 'pwa-node', request = 'launch', name = 'Node: current file', program = '${file}', cwd = '${workspaceFolder}', console = 'integratedTerminal', skipFiles = skip },
       { type = 'pwa-node', request = 'launch', name = 'Node: current file with arguments', program = '${file}', args = ask_args, cwd = '${workspaceFolder}', console = 'integratedTerminal', skipFiles = skip },
       { type = 'pwa-node', request = 'attach', name = 'Node: attach to a process (node --inspect)', processId = utils.pick_process, cwd = '${workspaceFolder}', skipFiles = skip },
       {
-        type = 'pwa-chrome', request = 'launch', name = 'Chrome: open a URL (dev server)', webRoot = '${workspaceFolder}',
-        runtimeExecutable = '/usr/bin/google-chrome-stable',
-        url = function() return vim.fn.input('URL: ', 'http://localhost:5173') end,
+        type = 'pwa-chrome', request = 'launch', name = 'Chrome: open a URL (dev server)', webRoot = app_root,
+        runtimeExecutable = '/usr/bin/google-chrome-stable', url = ask_url,
       },
     }
     for _, ft in ipairs { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' } do
       dap.configurations[ft] = js_configs
     end
+
+    ---------------------------------------------------------------- C# / .NET (netcoredbg)
+    dap.adapters.coreclr = { type = 'executable', command = mason_bin 'netcoredbg', args = { '--interpreter=vscode' } }
+    -- the newest Debug build of the project this file belongs to (bin/Debug/<framework>/<Project>.dll)
+    local function pick_dll()
+      local proj = vim.fs.root(0, function(name) return name:match '%.csproj$' end) or vim.fn.getcwd()
+      local dlls = vim.fn.glob(proj .. '/bin/Debug/*/' .. vim.fs.basename(proj) .. '.dll', false, true)
+      table.sort(dlls, function(a, b) return vim.fn.getftime(a) > vim.fn.getftime(b) end)
+      return vim.fn.input('DLL (build it first: dotnet build): ', dlls[1] or (proj .. '/bin/Debug/'), 'file')
+    end
+    dap.configurations.cs = {
+      -- first (F5): attach to the app you started yourself (dotnet run), so nothing starts by surprise
+      { type = 'coreclr', request = 'attach', name = '.NET: attach to a running process (dotnet run)', processId = utils.pick_process },
+      { type = 'coreclr', request = 'launch', name = '.NET: launch a built .dll', program = pick_dll, cwd = '${workspaceFolder}', stopAtEntry = false },
+    }
 
     ---------------------------------------------------------------- UI
     dapui.setup {
