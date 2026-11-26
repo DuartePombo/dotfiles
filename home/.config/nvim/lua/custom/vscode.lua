@@ -21,10 +21,26 @@ local vscode = require 'vscode'
 -- running a slowly typed Space s g as Vim commands after 300 ms (Space = one letter right, s = delete a letter)
 vim.o.timeout = false
 
--- VS Code's status bar shows what Neovim reports: the mode (-- INSERT --, -- VISUAL --) and half-typed keys
--- (Space s ...), but not Neovim's own status line (file, line, column: VS Code shows those itself)
-vim.o.showmode = true
-vim.o.laststatus = 0
+-- The mode in VS Code's status bar (bottom left), Vim's way: nothing in normal mode, -- INSERT --, -- VISUAL --...
+-- It goes through Neovim's status line, which the extension recomputes after every redraw, not through 'showmode':
+-- the extension reads only the first of several mode messages that arrive together, so "-- INSERT --" could stay
+-- after Esc. Half-typed keys (Space s ...) still come through 'showcmd', "recording @a" through Neovim itself.
+local mode_labels = {
+  i = 'INSERT', R = 'REPLACE', v = 'VISUAL', V = 'VISUAL LINE', ['\22'] = 'VISUAL BLOCK',
+  s = 'SELECT', S = 'SELECT LINE', ['\19'] = 'SELECT BLOCK',
+}
+function _G.vscode_mode_label()
+  local label = mode_labels[vim.api.nvim_get_mode().mode:sub(1, 1)]
+  return label and ('-- ' .. label .. ' --') or ''
+end
+vim.o.showmode = false
+vim.o.laststatus = 3 -- the extension ignores the status line when this is 0
+vim.o.statusline = '%{v:lua.vscode_mode_label()}'
+-- recompute it right away on every mode change
+vim.api.nvim_create_autocmd('ModeChanged', {
+  group = vim.api.nvim_create_augroup('custom.vscode_mode', { clear = true }),
+  callback = function() vim.schedule(function() vim.cmd.redrawstatus() end) end,
+})
 
 local function map(modes, lhs, rhs, desc) vim.keymap.set(modes, lhs, rhs, { desc = desc, silent = true }) end
 
@@ -225,5 +241,25 @@ map('n', '<leader>ac', act 'claude-vscode.editor.openLast', '[A]I: [C]laude Code
 -- (its own key for this, Alt+K, is Hyprland's focus-up key, so it never reaches VS Code)
 map('x', '<leader>ac', act 'claude-vscode.insertAtMention', '[A]I: the selection into [C]laude (@file#lines)')
 map('n', '<leader>tm', act 'markdown.showPreviewToSide', '[T]oggle [M]arkdown preview (beside)')
+
+-- Markdown links and tasks, as in Neovim (lua/custom/markdown_links.lua): Enter or gd on a link opens it (a file, a
+-- #heading in it, a web page; Ctrl+o comes back), Enter on a "- [ ]" task ticks it. Elsewhere both keep their meaning.
+local md = require 'custom.markdown_links'
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('custom.vscode_markdown', { clear = true }),
+  pattern = 'markdown',
+  callback = function(ev)
+    local function follow_or(fallback)
+      return function()
+        if md.link_under_cursor() then return vscode.action 'editor.action.openLink' end
+        fallback()
+      end
+    end
+    vim.keymap.set('n', '<CR>', follow_or(function()
+      if not md.toggle_task() then vim.api.nvim_feedkeys(vim.keycode '<CR>', 'n', false) end
+    end), { buffer = ev.buf, desc = 'Open link / tick task' })
+    vim.keymap.set('n', 'gd', follow_or(act 'editor.action.revealDefinition'), { buffer = ev.buf, desc = 'Open link' })
+  end,
+})
 neovim_only('<leader>pi', 'Paste image') -- in VS Code, Ctrl+V pastes an image into Markdown by itself
 for _, k in ipairs { 'co', 'crv', 'crc', 'crm' } do neovim_only('<leader>' .. k, 'Java refactoring (jdtls)') end

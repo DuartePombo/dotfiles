@@ -168,8 +168,11 @@ VS Code's `asvetliakov.vscode-neovim` extension runs this same config as its edi
   `Space s g` the Search view, `gra` quick fixes, `Space g g` Source Control, `Space d ...` VS Code's debugger,
   `Space j ...` notebook cells (or the Interactive Window for `# %%` cells in a `.py` file), `Space a c` Claude.
   Keys without a VS Code counterpart say "only in Neovim" instead of falling through to Vim.
-- No which-key there, so `timeout` is off (a slow `Space s g` never turns into Vim commands); the mode and the keys
-  typed so far show in VS Code's status bar; yank/put use VS Code's clipboard.
+- No which-key there, so `timeout` is off (a slow `Space s g` never turns into Vim commands); the keys typed so far
+  show in VS Code's status bar, and so does the mode (`-- INSERT --`...), through a one-item status line rather than
+  `showmode` (the extension can miss the clear after Esc); yank/put use VS Code's clipboard.
+- Markdown: `Enter` / `gd` on a link open it with VS Code's Open Link, `Enter` on `- [ ]` ticks it (the link and
+  task detection come from `lua/custom/markdown_links.lua`).
 - VS Code side, in each profile's settings (local, not in this repo): `vscode-neovim.neovimExecutablePaths.linux`
   `/usr/bin/nvim`, `editor.lineNumbers` relative, `editor.cursorSurroundingLines` 10 (scrolloff), `search.smartCase`,
   `extensions.experimental.affinity` for the extension (its own extension host). keybindings.json: `Ctrl+l` from a

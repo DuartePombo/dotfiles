@@ -105,4 +105,8 @@ function M.attach(buf)
   vim.wo.linebreak = true -- wrap long lines at word boundaries
 end
 
+-- Also used inside VS Code (lua/custom/vscode.lua), where VS Code itself opens the link
+M.link_under_cursor = link_under_cursor
+M.toggle_task = toggle_task
+
 return M
