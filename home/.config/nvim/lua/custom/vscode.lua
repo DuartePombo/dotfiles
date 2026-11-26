@@ -209,8 +209,13 @@ local function add_py_cell(markdown)
   vim.api.nvim_buf_set_lines(0, at, at, false, lines)
   vim.api.nvim_win_set_cursor(0, { row, #body })
 end
-map('n', '<leader>ji', nb('notebook.selectKernel', 'python.setInterpreter'), '[I]nit kernel (selected Python env)')
-map('n', '<leader>jk', nb('notebook.selectKernel', 'python.setInterpreter'), 'Pick a [K]ernel')
+-- (VS Code 1.148 calls "Select Notebook Kernel" _notebook.selectKernel; the old name stays as the fallback)
+local function pick_kernel()
+  if not in_notebook() then return vscode.action 'python.setInterpreter' end
+  vscode.action('_notebook.selectKernel', { callback = function(err) if err then vscode.action 'notebook.selectKernel' end end })
+end
+map('n', '<leader>ji', pick_kernel, '[I]nit kernel (selected Python env)')
+map('n', '<leader>jk', pick_kernel, 'Pick a [K]ernel')
 map('n', '<leader>jr', nb('notebook.cell.execute', 'jupyter.runcurrentcell'), '[R]un cell')
 map('x', '<leader>jr', act 'jupyter.execSelectionInteractive', '[R]un selection')
 map('n', '<leader>jn', nb('notebook.cell.executeAndSelectBelow', 'jupyter.runcurrentcelladvance'), 'Run cell, go to [N]ext')
