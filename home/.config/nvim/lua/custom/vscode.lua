@@ -147,9 +147,11 @@ map('n', '<leader>rl', act 'workbench.action.terminal.runRecentCommand', '[R]un 
 neovim_only('<leader>ra', 'Run with arguments')
 
 -- [D]ebug (nvim-dap in Neovim; F5 / F9 / F10 / F11 are VS Code's own and the same in both) -------------------------
+-- C#: like F5 in Neovim, attach to the app you started yourself (dotnet run), so nothing starts by surprise
 map('n', '<leader>dd', function()
-  vscode.action(debugging() and 'workbench.action.debug.continue' or 'workbench.action.debug.start')
-end, '[D]ebug current file / continue')
+  if debugging() then return vscode.action 'workbench.action.debug.continue' end
+  vscode.action(vim.bo.filetype == 'cs' and 'csharp.attachToProcess' or 'workbench.action.debug.start')
+end, '[D]ebug current file / continue (C#: attach to a process)')
 map('n', '<leader>dc', function()
   vscode.action(debugging() and 'workbench.action.debug.continue' or 'workbench.action.debug.selectandstart')
 end, '[C]ontinue / pick a configuration')
@@ -172,8 +174,13 @@ map('n', '<leader>du', act 'workbench.view.debug', 'Toggle debugger [U]I (Run an
 map('n', '<leader>dr', act 'workbench.debug.action.toggleRepl', 'Toggle [R]EPL (Debug Console)')
 map('n', '<leader>de', act 'editor.debug.action.showDebugHover', '[E]valuate expression under the cursor')
 map({ 'n', 'x' }, '<leader>dw', act 'editor.debug.action.selectionToWatch', '[W]atch expression')
-map('n', '<leader>dt', act 'testing.debugAtCursor', 'Debug [T]est at the cursor')
-map('n', '<leader>dT', act 'testing.debugCurrentFile', 'Debug [T]ests in this file')
+-- (C# without C# Dev Kit: the C# extension's own test commands; the Run Test / Debug Test links above tests work too)
+map('n', '<leader>dt', function()
+  vscode.action(vim.bo.filetype == 'cs' and 'dotnet.test.debugTestsInContext' or 'testing.debugAtCursor')
+end, 'Debug [T]est at the cursor')
+map('n', '<leader>dT', function()
+  vscode.action(vim.bo.filetype == 'cs' and 'dotnet.test.debugTestsInContext' or 'testing.debugCurrentFile')
+end, 'Debug [T]ests (C#: the test, class or file at the cursor)')
 
 -- [V]env: the Python interpreter (venv-selector in Neovim; VS Code shows it in the status bar) ----------------------
 map('n', '<leader>vs', act 'python.setInterpreter', '[V]env [S]elect (Python interpreter)')
