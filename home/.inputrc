@@ -1,0 +1,5 @@
+# readline (bash and other programs' line editing): the system's settings, plus one line
+$include /etc/inputrc
+
+# kitty sends Shift+Enter as ESC [13;2u (kitty.conf, so Claude Code gets a new line inside tmux): in bash it's Enter
+"\e[13;2u": accept-line
