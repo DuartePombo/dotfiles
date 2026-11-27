@@ -199,7 +199,8 @@ bar, kitty and VS Code.
   over DisplayPort, 144 over HDMI; the right one 165 over HDMI, 60 through the mini-DP→HDMI adapter (its limit). Both
   at full speed: the front monitor on the mini-DP port with a mini-DP→DP cable (DP 1.4), the right one on HDMI.
   Check: `hyprctl monitors`. Without the right monitor, its workspaces (5, 10) go to the other screens.
-- Size of everything on the front monitor: scale 1.25 (like Windows' 125%; at 1 the text was too small). Bigger or
+- Size of everything on the front monitor: scale 1.333333 (like Windows' 133%: lays out like a 1920x1080 screen, so
+  all three screens sit in one row; at 1 the text was too small, 1.25 still a bit small). Bigger or
   smaller: the `scale` in its `hl.monitor` line in `host.lua`, with a value that divides 2560x1440 evenly (1.25 =
   2048x1152, 1.333333 = 1920x1080, 1.6 = 1600x900), then move the right monitor's x to 1920 + the new width and
   the laptop's y to the new height − 1080. Apply: `hyprctl reload`.
