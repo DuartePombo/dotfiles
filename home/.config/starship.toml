@@ -1,13 +1,13 @@
 # starship: the shell prompt, in every terminal (kitty, tmux, VS Code). The classic bash prompt, in colour:
-#   (proposal-automation) [duarte@helios proposal-automation (main*)]$
-# (environment) when one is active, [user@machine folder], (git branch) inside a repository with * when there are
+#   (proposal-automation) duarte@helios proposal-automation (main*)$
+# (environment) when one is active, user@machine folder, (git branch) inside a repository with * when there are
 # uncommitted changes, then $: red when the last command failed. Catppuccin Mocha colours like the rest of the desktop.
 # Reference: https://starship.rs/config/
 
 "$schema" = "https://starship.rs/config-schema.json"
 add_newline = false
 palette = "catppuccin_mocha"
-format = '$conda$python\[$username$hostname$directory( \($git_branch${custom.dirty}\))\]$character'
+format = '$conda$python$username$hostname$directory( \($git_branch${custom.dirty}\))$character'
 
 # (proposal-automation): the active conda environment, as conda itself shows it
 [conda]
