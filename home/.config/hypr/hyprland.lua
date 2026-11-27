@@ -372,6 +372,11 @@ hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("swayosd-client --output-volume
 hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"),  media)
 hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("~/.config/hypr/scripts/brightness.sh up"),    media)
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("~/.config/hypr/scripts/brightness.sh down"),  media)
+-- The same volume from the Glove80, which has no volume keys of its own: Super+Left quieter, Super+Right louder
+-- (hold to keep going). Like the laptop keys: whatever is playing (earbuds or laptop speakers), also on the lock
+-- screen and over the Windows desktop.
+hl.bind("SUPER + Left",  super_cmd("swayosd-client --output-volume lower"),                    media)
+hl.bind("SUPER + Right", super_cmd("swayosd-client --output-volume raise --max-volume 100"),   media)
 
 -- Media keys (playerctl)
 hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })

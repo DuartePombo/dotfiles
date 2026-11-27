@@ -37,6 +37,7 @@
 | `Alt+F9` / `Alt+Shift+F9` | a random still wallpaper from `~/Pictures/wallpapers` on all screens (curated list: `packages/wallpapers.txt`) / back to the moving ocean (see Wallpaper) |
 | `Alt+Tab` / `Alt+Shift+Tab` | back to the previous window (any workspace or screen) / cycle the windows of this workspace |
 | `Super+V` | clipboard history (cliphist): pick an entry, then `Ctrl+V`. `cliphist wipe` empties it |
+| `Super+Left` / `Super+Right` | volume down / up (hold to keep going), like the laptop's volume keys: for the Glove80, which has none |
 | `Super+A` | **a**udio: choose the speaker and microphone (e.g. the laptop's speakers while the earbuds are in); also a right-click on the bar's volume. Bluetooth headphones take over again when they next connect |
 | `Super+B` / `Super+Shift+B` | the **b**ars: hide them all (the windows take the space) or bring them back / pin the front monitor's bar (see Bar and tray) |
 | `Super+.` | emoji picker (rofimoji): the emoji is typed where the cursor is |
