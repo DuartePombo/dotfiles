@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# code-open: Dolphin's right-click "Open in VS Code", like Windows' "Open with Code". A folder opens as the window's
+# folder; a file opens inside its project (the git repository around it, else its folder), so search, git and the
+# language servers see the whole project. New windows use VS Code's profile for new windows, or the one the folder
+# was last opened with.
+#   code-open <file|folder>
+set -euo pipefail
+
+target=${1:-$PWD}
+if [[ -d $target ]]; then
+    exec code "$target"
+fi
+dir=$(dirname -- "$target")
+root=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$dir")
+exec code "$root" "$target"

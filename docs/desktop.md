@@ -154,6 +154,22 @@ bar, kitty and VS Code.
   A new KDE app that comes up light: its Settings → Color Scheme → "Catppuccin Mocha (peach)".
   The `qt6ct` app (in `Alt+D`) shows and changes these settings; what it saves lands in the repo.
 
+## Opening files (Dolphin)
+
+- Double-click a code or text file (.py, .ts/.tsx, .cs, .json, .sh, .lua, .yaml...): Neovim opens it in a new kitty
+  window, started in the file's project (its git repository, else its folder), so `Space s f` and the file tree
+  show the whole project. Markdown opens in Okular (preview), HTML in the browser, PDFs in Okular.
+- Right-click a file or folder, or the empty space of a folder: **Open in VS Code** (the folder, or the file inside
+  its project, like Windows' "Open with Code") and **Open in Neovim**. Open With lists the other apps.
+- `Shift+F4` (Open Terminal Here): kitty in that folder. `F4` shows/hides Dolphin's built-in terminal panel, which
+  needs Konsole (not installed), so leave it hidden.
+- Scripts marked executable open in Neovim like any code file: a click never runs them (`kiorc`). Run them from
+  a terminal.
+- Where it's set: `~/.config/mimeapps.list` (what a double-click opens), `~/.local/share/applications/nvim.desktop`
+  (Neovim in kitty, replacing the package's entry; re-check it if the neovim package changes its own),
+  `~/.local/bin/nvim-open` and `code-open`, `~/.local/share/kio/servicemenus/open-in-editor.desktop` (the right-click
+  entries; KDE ignores the file unless it's executable), `~/.config/kdeglobals` (`TerminalApplication=kitty`).
+
 ## Idle, lock, suspend
 - After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does
   its panel care in standby). Nothing locks or suspends: a key or the mouse brings them back. Playing videos keep

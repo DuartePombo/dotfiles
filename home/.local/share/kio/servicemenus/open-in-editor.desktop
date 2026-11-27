@@ -1,0 +1,18 @@
+[Desktop Entry]
+# Dolphin's right-click menu: "Open in VS Code" and "Open in Neovim" on folders (also on the empty space of a folder)
+# and on code files, like Windows' "Open with Code". A file opens inside its project (~/.local/bin/code-open,
+# nvim-open). KDE only loads these menus when the file is executable.
+Type=Service
+MimeType=inode/directory;text/plain;text/x-python;text/x-shellscript;application/x-shellscript;application/json;text/javascript;application/javascript;text/vnd.trolltech.linguist;application/x-tiled-tsx;text/x-csharp;text/x-lua;application/toml;application/yaml;application/sql;text/x-scss;text/css;text/html;application/xml;text/x-csrc;text/x-chdr;text/x-c++src;text/x-c++hdr;text/x-java;text/x-go;text/rust;text/x-makefile;text/x-dockerfile;text/x-cmake;text/markdown;application/x-ipynb+json;
+Actions=openInVSCode;openInNeovim;
+X-KDE-Priority=TopLevel
+
+[Desktop Action openInVSCode]
+Name=Open in VS Code
+Icon=vscode
+Exec=code-open %f
+
+[Desktop Action openInNeovim]
+Name=Open in Neovim
+Icon=nvim
+Exec=nvim-open %f

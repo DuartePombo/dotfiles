@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# nvim-open: open files or a folder in Neovim, in a new kitty window. Used by the Neovim menu entry
+# (~/.local/share/applications/nvim.desktop: double-click a code file in Dolphin) and Dolphin's right-click
+# "Open in Neovim". Neovim starts in the project: the git repository around the file, else the file's folder, so
+# Space s f and the file tree show the whole project. A folder opens as itself.
+#   nvim-open <file>...   nvim-open <folder>
+set -euo pipefail
+
+first=${1:-$PWD}
+if [[ -d $first ]]; then
+    exec kitty --directory "$first" nvim .
+fi
+dir=$(dirname -- "$first")
+root=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$dir")
+exec kitty --directory "$root" nvim "$@"

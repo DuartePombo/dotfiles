@@ -1,0 +1,18 @@
+[Desktop Entry]
+# Replaces the package's /usr/share/applications/nvim.desktop (same file name). The package's entry is a terminal
+# app (Terminal=true), which KDE apps like Dolphin would open in Konsole (not installed); this one opens Neovim in a
+# kitty window, in the file's project (~/.local/bin/nvim-open). File types: the package's list, plus code files it
+# doesn't name (by the names the system gives them: .ts is "Qt translation", .tsx "Tiled tileset"). The defaults
+# (what a double-click opens) are in ~/.config/mimeapps.list.
+Type=Application
+Name=Neovim
+GenericName=Text Editor
+Comment=Edit text files
+TryExec=nvim
+Exec=nvim-open %F
+Terminal=false
+Icon=nvim
+Categories=Utility;TextEditor;
+Keywords=Text;editor;
+StartupNotify=false
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;text/x-python;text/x-python3;text/x-shellscript;application/json;text/javascript;application/javascript;text/vnd.trolltech.linguist;application/x-tiled-tsx;text/x-csharp;text/x-lua;application/toml;application/yaml;application/x-yaml;application/sql;text/x-scss;text/css;text/html;application/xml;text/xml;text/x-go;text/rust;text/x-log;text/x-dockerfile;text/x-cmake;text/markdown;application/x-ipynb+json;

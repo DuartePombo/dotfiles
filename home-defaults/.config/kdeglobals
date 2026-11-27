@@ -138,6 +138,9 @@ ForegroundVisited=203,166,247
 [General]
 ColorScheme=CatppuccinMochaPeach
 Name=Catppuccin Mocha (peach)
+# the terminal KDE apps open (Dolphin's Open Terminal Here, Shift+F4; there's no Konsole)
+TerminalApplication=kitty
+TerminalService=kitty.desktop
 
 [Icons]
 Theme=Papirus-Dark

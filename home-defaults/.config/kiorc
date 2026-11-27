@@ -1,0 +1,5 @@
+# KDE's file handling (Dolphin), copied once by setup.sh (never linked: Dolphin's settings dialog writes here).
+# Clicking an executable script (a .py or .sh marked executable) opens it in its app (Neovim) instead of asking
+# "Open / Launch": nothing runs by a click. Run scripts from a terminal.
+[Executable scripts]
+behaviourOnLaunch=open
