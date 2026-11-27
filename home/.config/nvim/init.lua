@@ -265,16 +265,16 @@ vim.api.nvim_create_autocmd('TermOpen', {
   end,
 })
 
--- Set the NormalDark highlight group to match Neo-tree background
-vim.api.nvim_create_autocmd('ColorScheme', {
-  pattern = '*',
-  callback = function()
-    vim.api.nvim_set_hl(0, 'NormalDark', { bg = '#000000' })  -- Darker background
-  end,
-})
+-- NormalDark: the terminal windows' background = the file tree's (neo-tree uses the theme's sidebar colour, NormalSB:
+-- #16161e in tokyonight-night), so with both open they look like one panel. A step darker than the code (#1a1b26).
+local function set_normal_dark()
+  local sidebar = vim.api.nvim_get_hl(0, { name = 'NormalSB', link = false })
+  vim.api.nvim_set_hl(0, 'NormalDark', { bg = sidebar.bg or '#16161e' })
+end
+vim.api.nvim_create_autocmd('ColorScheme', { pattern = '*', callback = set_normal_dark })
 
--- Apply immediately
-vim.api.nvim_set_hl(0, 'NormalDark', { bg = '#000000' })
+-- Apply immediately (the ColorScheme event sets it again once the theme is loaded)
+set_normal_dark()
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -1097,6 +1097,12 @@ require('lazy').setup({
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
+        -- The lines between windows (│ side by side, ─ stacked: there's one status line, see mini.statusline below)
+        -- in a muted blue-grey (fg_gutter, #3b4261) that shows on both the code (#1a1b26) and the terminal
+        -- (#141420). tokyonight's own (#15161e) was almost the code's colour: the lines were nearly invisible.
+        on_highlights = function(hl, c)
+          hl.WinSeparator = { fg = c.fg_gutter, bold = true }
+        end,
       }
 
       -- Load the colorscheme here.
@@ -1139,6 +1145,10 @@ require('lazy').setup({
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
       statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- ONE status line at the bottom, for the window you're in (like VS Code's status bar). Stacked windows (a file
+      -- above the Space t t terminal) are then divided by a thin ─ line instead of each one's own bar, so the
+      -- boundary looks the same whichever side you're on. Line colour: WinSeparator in tokyonight's setup above.
+      vim.o.laststatus = 3
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
