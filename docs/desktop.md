@@ -59,6 +59,10 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 | 8 / 9 | free | front monitor / laptop |
 | 10 | Windows: the whole Windows desktop in fullscreen, where Office lives (see Microsoft Office below) | right monitor |
 
+A Chrome started by a program (an RPA robot through Selenium: no window name of its own, class `google-chrome`)
+opens on the right monitor, in whatever workspace shows there, to watch it next to the code (`host.lua`; the laptop
+alone: where you are).
+
 At login, Work projects, Chrome (work), Slack, Work notes, Chrome (personal) and WhatsApp open in their homes
 silently, while the screens start on empty workspaces: 8 in front, 5 on the right and 9 on the laptop (the laptop
 alone: 9). The list:

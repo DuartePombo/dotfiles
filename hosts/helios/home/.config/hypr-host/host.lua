@@ -43,6 +43,11 @@ if mode == "docked" then
         end
     end
 
+    -- Chrome started by a program without a window name of its own (an RPA robot through Selenium: class
+    -- "google-chrome"; your own Chromes are chrome-work / chrome-personal): on the right monitor, in whatever
+    -- workspace shows there, to watch it next to the code. Laptop alone: it opens where you are.
+    hl.window_rule({ name = "plain-chrome-right", match = { class = "^google-chrome$" }, monitor = "desc:" .. right })
+
     -- From the old config, where external monitors stuttered without the NVIDIA settings.
     hl.config({
         cursor = { no_hardware_cursors = true },

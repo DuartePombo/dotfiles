@@ -421,7 +421,7 @@ local app_homes = {
     { name = "home-chrome-work",     class = "^chrome-work$",                     workspace = "2" },
     { name = "home-slack",           class = "^[Ss]lack$",                        workspace = "3" },
     { name = "home-work-notes",      class = "^work-notes$",                      workspace = "4" },
-    { name = "home-chrome-personal", class = "^(chrome-personal|google-chrome)$", workspace = "6" },
+    { name = "home-chrome-personal", class = "^chrome-personal$",                 workspace = "6" },
     { name = "home-whatsapp",        class = "^chrome-web\\.whatsapp\\.com__-",    workspace = "7" },
     { name = "home-windows-desktop", class = "^Microsoft Windows$",              workspace = "10" },
 }
