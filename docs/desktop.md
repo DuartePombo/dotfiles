@@ -161,8 +161,9 @@ bar, kitty and VS Code.
   show the whole project. Markdown opens in Okular (preview), HTML in the browser, PDFs in Okular.
 - Right-click a file or folder, or the empty space of a folder: **Open in VS Code** (the folder, or the file inside
   its project, like Windows' "Open with Code") and **Open in Neovim**. Open With lists the other apps.
-- `Shift+F4` (Open Terminal Here): kitty in that folder. `F4` shows/hides Dolphin's built-in terminal panel, which
-  needs Konsole (not installed), so leave it hidden.
+- kitty from Dolphin: `Shift+F4` in the folder you're viewing, `Alt+Shift+F4` (right-click → Open Terminal Here) in
+  the selected folder. `F4` shows/hides Dolphin's built-in terminal panel, which needs Konsole (not installed), so
+  leave it hidden.
 - Scripts marked executable open in Neovim like any code file: a click never runs them (`kiorc`). Run them from
   a terminal.
 - Archives (Ark): right-click files or folders → **Compress** (Here as .zip / .tar.gz, or Compress to… for a name
