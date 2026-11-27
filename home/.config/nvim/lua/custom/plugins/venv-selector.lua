@@ -1,7 +1,7 @@
 -- Python environments, like VS Code's "Select Interpreter": <leader>vs lists the Miniforge conda envs (and base)
 -- and venvs such as uv's .venv in the project. The selection applies to the language server (basedpyright),
--- the debugger (dap-python runs your program with it), <leader>rr and terminals opened from Neovim (it updates
--- Neovim's own PATH and VIRTUAL_ENV/CONDA_PREFIX), and it is remembered per project.
+-- the debugger (dap-python runs your program with it), <leader>rr and the terminal opened from Neovim (<leader>tt
+-- activates the env in it: terminal.bashrc), and it is remembered per project.
 return {
   'linux-cultist/venv-selector.nvim',
   dependencies = {

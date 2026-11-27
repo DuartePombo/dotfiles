@@ -12,6 +12,7 @@ format = '$conda$python$username$hostname(${git_branch}${custom.dirty} )$directo
 # (proposal-automation): the active conda environment, as conda itself shows it
 [conda]
 style = "green"
+ignore_base = false   # base too, when you activate it (it isn't activated by itself: ~/.condarc)
 format = '[\($environment\) ]($style)'
 
 # (.venv): a project's own environment (uv, venv), only when one is active

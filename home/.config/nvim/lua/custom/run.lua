@@ -8,9 +8,27 @@ local M = {}
 local term = { buf = nil, win = nil, env = nil }
 local last_cmd = nil
 
--- Terminals inherit Neovim's environment when they start; venv-selector changes PATH/VIRTUAL_ENV/CONDA_PREFIX.
+-- The Python environment the terminal should activate: the folder holding the interpreter M.python() resolves
+-- (conda env or venv), or nil for the system Python.
+local function python_env()
+  local root = vim.fn.fnamemodify(M.python(), ':h:h')
+  if vim.fn.isdirectory(root .. '/conda-meta') == 1 or vim.fn.filereadable(root .. '/bin/activate') == 1 then return root end
+end
+
+-- Which environment a terminal was started with: when it changes, the terminal is replaced
 local function env_key()
-  return table.concat({ vim.env.VIRTUAL_ENV or '', vim.env.CONDA_PREFIX or '' }, '|')
+  return python_env() or ''
+end
+
+-- Start the shell in the current (empty) buffer. bash gets terminal.bashrc: ~/.bashrc, then the env activated
+-- (a new shell's start-up resets PATH, so Neovim's own PATH change alone doesn't reach `python` in the terminal).
+local function start_shell()
+  local shell = vim.o.shell
+  if vim.fn.fnamemodify(shell, ':t') ~= 'bash' then return vim.cmd.terminal() end
+  vim.cmd.enew()
+  local opts, env_dir = { term = true }, python_env()
+  if env_dir then opts.env = { NVIM_PYTHON_ENV = env_dir } end -- (an empty env table is an error)
+  vim.fn.jobstart({ shell, '--rcfile', vim.fn.stdpath 'config' .. '/terminal.bashrc', '-i' }, opts)
 end
 
 local function term_valid()
@@ -32,7 +50,7 @@ local function show_terminal(enter_insert)
     vim.api.nvim_set_current_win(term.win)
   end
   if not term_valid() then
-    vim.cmd.terminal()
+    start_shell()
     term.buf = vim.api.nvim_get_current_buf()
     term.env = env_key()
     vim.bo[term.buf].buflisted = false
