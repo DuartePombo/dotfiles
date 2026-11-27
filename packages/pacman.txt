@@ -8,6 +8,7 @@ bash-completion
 blueman
 bluez
 bluez-utils
+breeze
 brightnessctl
 btrfs-progs
 bubblewrap
@@ -27,6 +28,7 @@ fzf
 git
 github-cli
 gnome-keyring
+gnome-themes-extra
 grim
 gwenview
 haruna
@@ -63,6 +65,7 @@ openbsd-netcat
 openssh
 otf-font-awesome
 pacman-contrib
+papirus-icon-theme
 pavucontrol
 pdfarranger
 piper

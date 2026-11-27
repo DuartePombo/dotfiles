@@ -1,0 +1,18 @@
+# satty, the screenshot editor (Super+Shift+S / Print, then click the notification). Options that
+# ~/.config/hypr/scripts/screenshot.sh passes (file names, Enter = copy + save + close) win over these.
+# Reference: /usr/share/doc/satty/README.md ("Configuration File").
+
+[general]
+# Start with the pen (brush), in the palette's first colour (red). Other tools by key: p pointer, c crop, b pen,
+# i line, z arrow, r rectangle, e ellipse, t text, m numbered marker, u blur, g highlighter. 1-5 pick a colour.
+initial-tool = "brush"
+
+[color-palette]
+# satty's own colours, red moved to the front so it's the starting one (and key 1)
+palette = [
+    "#eb4d4bff",  # red
+    "#f0932bff",  # orange
+    "#6ab04cff",  # green
+    "#22a6b3ff",  # teal
+    "#130f40ff",  # dark blue
+]

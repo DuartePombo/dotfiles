@@ -258,6 +258,17 @@ if [[ -x $repo/hosts/$host/wallpapers/render.sh && ! -f $wall_dir/ocean/front.mp
     "$repo/hosts/$host/wallpapers/render.sh" "$wall_dir/ocean"   # about 10 minutes
 fi
 
+say "Desktop look: dark GTK apps, the dark preference, Papirus icons (docs/desktop.md, Look)"
+# GNOME's settings store (dconf): GTK apps read it, and the portal passes the dark preference on to Chrome, Electron
+# apps and websites. Needs the desktop's session bus: from a bare console it would not be saved.
+if [[ -n ${DBUS_SESSION_BUS_ADDRESS:-} ]] && command -v gsettings >/dev/null; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+else
+    note "skipped (no desktop session): run setup.sh again from a terminal in Hyprland"
+fi
+
 say "Dolphin application menu"
 XDG_MENU_PREFIX=arch- kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
 

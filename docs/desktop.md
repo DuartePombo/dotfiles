@@ -31,7 +31,7 @@
 | `Alt+P` | pseudo-tile |
 | `Alt+scroll` | next / previous workspace |
 | `Alt+left drag` / `Alt+right drag` | move / resize a window |
-| `Super+Shift+S` or `Print` | screenshot, like Windows' Snipping Tool: the screen freezes, drag an area or click a window (`Esc` cancels). It's copied to the clipboard and saved in `~/Pictures/Screenshots`; click the notification to draw on it (satty: `Enter` copies, saves and closes) |
+| `Super+Shift+S` or `Print` | screenshot, like Windows' Snipping Tool: the screen freezes, drag an area or click a window (`Esc` cancels). It's copied to the clipboard and saved in `~/Pictures/Screenshots`; click the notification to draw on it (satty: opens large, with the pen in red; `Ctrl+wheel` zooms, `Alt` + right-drag resizes, `Alt+Shift+F` fills the screen; keys `b` pen, `z` arrow, `r` box, `t` text, `1`-`5` colours; `Enter` copies, saves and closes) |
 | `Shift+Print` | screenshot of the whole screen under the mouse (same clipboard, folder and notification) |
 | `Super+Shift+R` | screen recording: drag an area or click a window, recording starts (red `● REC` in the bar). Press again or click `● REC` to stop. MP4 in `~/Videos/Recordings`, with the computer's sound (no microphone); the notification plays it (Haruna) or shows it in the folder |
 | `Alt+F9` / `Alt+Shift+F9` | a random still wallpaper from `~/Pictures/wallpapers` on all screens (curated list: `packages/wallpapers.txt`) / back to the moving ocean (see Wallpaper) |
@@ -137,6 +137,14 @@ bar, kitty and VS Code.
   console and shell, lstopo). Each has a small file in `home/.local/share/applications/` with `Hidden=true`; the
   program stays installed. Delete the file to show it again; add one with the same file name as the app's
   `/usr/share/applications/*.desktop` to hide another.
+- Notifications and the bell's panel: `~/.config/swaync/style.css` (the package's style with these colours; apply
+  with `swaync-client --reload-css`). Volume/brightness pop-up: `~/.config/swayosd/style.css` (applies when
+  swayosd-server starts, i.e. at login). Screenshot editor: `~/.config/satty/overrides.css` and `config.toml`.
+- GTK apps (Bluetooth, Volume Control, network windows, satty, file dialogs) are dark (Adwaita-dark), and the system
+  says "prefer dark", so Chrome on its "Device" theme, websites that offer a dark mode, Slack/VS Code set to follow
+  the system, all go dark too. Icons: Papirus-Dark. These live in GNOME's settings store, set by setup.sh:
+  `gsettings get org.gnome.desktop.interface color-scheme` (`prefer-dark`; `default` = light again).
+  To keep one app light: its own theme setting (Chrome: Settings → Appearance → Mode).
 
 ## Idle, lock, suspend
 - After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does

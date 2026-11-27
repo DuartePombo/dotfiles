@@ -1,0 +1,54 @@
+/* The volume / brightness pop-up (swayosd) in the desktop's colours: Catppuccin Mocha like the bar, the level in
+   peach. Based on the package's /etc/xdg/swayosd/style.css (same layout). Applies when swayosd-server starts. */
+
+window#osd {
+  border-radius: 999px;
+  border: 2px solid rgba(250, 179, 135, 0.45);       /* peach */
+  background: rgba(30, 30, 46, 0.95);                /* base */
+}
+
+window#osd #container {
+  margin: 16px;
+}
+
+window#osd image,
+window#osd label {
+  color: #cdd6f4;                                    /* text */
+}
+
+window#osd progressbar:disabled,
+window#osd image:disabled {
+  opacity: 0.5;
+}
+
+window#osd progressbar,
+window#osd segmentedprogress {
+  min-height: 6px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+}
+
+window#osd trough,
+window#osd segment {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: #45475a;                               /* surface1: the empty part */
+}
+
+window#osd progress,
+window#osd segment.active {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: #fab387;                               /* peach: the level */
+}
+
+window#osd segment {
+  margin-left: 8px;
+}
+
+window#osd segment:first-child {
+  margin-left: 0;
+}

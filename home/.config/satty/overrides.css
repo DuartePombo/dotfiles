@@ -1,0 +1,27 @@
+/* satty (screenshot editor) in the desktop's colours: Catppuccin Mocha like the bar and the menus, peach for the
+   chosen tool. Satty loads this file on top of its own style (parts: .outer_box, .toolbar, .inner_box). */
+
+.outer_box,
+.toolbar {
+    background-color: #1e1e2e;                       /* base */
+    color: #cdd6f4;                                  /* text */
+}
+
+/* around the picture */
+.inner_box {
+    background-color: #11111b;                       /* crust */
+}
+
+.toolbar button:hover {
+    background-color: #313244;                       /* surface0 */
+}
+
+/* the chosen tool, colour and size */
+.toolbar button:checked {
+    background-color: #45475a;                       /* surface1 */
+    color: #fab387;                                  /* peach */
+}
+
+button.editing {
+    color: #fab387;
+}

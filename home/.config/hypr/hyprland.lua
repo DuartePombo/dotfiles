@@ -390,10 +390,13 @@ hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecor
 -- See https://wiki.hypr.land/configuring/core/rules/
 
 hl.window_rule({
-    -- The screenshot editor (satty) opens floating and centred, like a dialog
+    -- The screenshot editor (satty) opens floating and centred, like a dialog, and large: on its own it took the
+    -- screenshot's size, so a small capture left no room to zoom in (Ctrl+wheel). Resize: Alt + right-drag;
+    -- Alt+Shift+F fills the screen.
     name   = "screenshot-editor",
     match  = { class = "com.gabm.satty" },
     float  = true,
+    size   = "monitor_w*0.75 monitor_h*0.75",
     center = true,
 })
 
