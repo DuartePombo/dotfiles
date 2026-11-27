@@ -9,7 +9,7 @@
 }
 
 window#waybar {
-    background-color: rgba(26, 27, 38, 0.85); /* Dark background with some transparency */
+    background-color: rgba(26, 27, 38, 0.90); /* Dark, 90% opaque; Hyprland blurs what shows through (layer rule in hyprland.lua) */
     color: #cdd6f4; /* Light text color (Catppuccin Macchiato text) */
     transition-property: background-color;
     transition-duration: .5s;

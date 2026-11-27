@@ -409,6 +409,10 @@ hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenrecor
 
 -- See https://wiki.hypr.land/configuring/core/rules/
 
+-- The bar (waybar, a layer, not a window: decoration.blur doesn't reach it) blurs what shows through its 10%
+-- see-through background, like the see-through terminals; ignore_alpha 0 leaves its fully transparent margin alone.
+hl.layer_rule({ name = "bar-blur", match = { namespace = "^waybar$" }, blur = true, ignore_alpha = 0 })
+
 hl.window_rule({
     -- The screenshot editor (satty) opens floating and centred, like a dialog, and large: on its own it took the
     -- screenshot's size, so a small capture left no room to zoom in (Ctrl+wheel). Resize: Alt + right-drag;
