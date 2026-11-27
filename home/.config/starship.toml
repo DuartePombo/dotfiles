@@ -1,7 +1,7 @@
 # starship: the shell prompt, in every terminal (kitty, tmux, VS Code). The classic bash prompt, in colour:
 #   (proposal-automation) duarte@helios  main* proposal-automation$
 # (environment) when one is active, user@machine, the git branch inside a repository with * when there are
-# uncommitted changes, the folder, then $: red when the last command failed. Catppuccin Mocha colours like the rest of the desktop.
+# uncommitted changes, the folder's whole path (from ~), then $: red when the last command failed. Catppuccin Mocha colours like the rest of the desktop.
 # Reference: https://starship.rs/config/
 
 "$schema" = "https://starship.rs/config-schema.json"
@@ -34,10 +34,10 @@ ssh_only = false
 style = "subtext0"
 format = "[@$hostname]($style) "
 
-# only the folder's own name, like bash's \W (~ at home)
+# the whole path from ~, like bash's \w (truncation_length 0 = no limit; 1 = only the folder's name)
 [directory]
 style = "bold blue"
-truncation_length = 1
+truncation_length = 0
 truncate_to_repo = false
 read_only = " 󰌾"
 read_only_style = "red"
