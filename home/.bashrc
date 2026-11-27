@@ -6,13 +6,28 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls -la --color=auto'
+# ls = eza: the same long listing, with every column in colour (permissions, sizes, dates), icons, folders first and
+# a git column inside repositories. The plain GNU ls is still there as `command ls` (its options differ: ls -t...).
+if command -v eza >/dev/null; then
+    alias ls='eza -la --group-directories-first --icons=auto --git'
+else
+    alias ls='ls -la --color=auto'
+fi
 alias grep='grep --color=auto'
+
+# Colours by file type (code, images, archives, documents...) for ls/eza, fd, tree and fzf: vivid's Catppuccin Mocha
+if command -v vivid >/dev/null; then
+    LS_COLORS="$(vivid generate catppuccin-mocha)"
+    export LS_COLORS
+fi
 alias fz='tmux-sessionizer'
 alias hyprland='start-hyprland'
 alias projects='cd ~/pombo/projects/'
 
+# The plain prompt, used only if starship (below) isn't installed
 PS1='[\u@\h \W]\$ '
+# A Python venv's activate script adds "(venv)" to the prompt itself: starship already shows it, in colour
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 
 export PATH="$HOME/.local/bin:$PATH"
@@ -39,7 +54,7 @@ if command -v fzf >/dev/null; then
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND="fd --type d $fd_skip"
     export FZF_CTRL_T_OPTS="--preview 'file --mime {} | grep -q binary && echo \"(binary file)\" || head -n 200 {}'"
-    export FZF_ALT_C_OPTS="--preview 'ls -la --color=always {}'"
+    export FZF_ALT_C_OPTS="--preview 'eza -la --color=always --icons=always --group-directories-first {} 2>/dev/null || ls -la --color=always {}'"
     # shellcheck disable=SC2086  # $fd_skip holds several options on purpose
     _fzf_compgen_path() { fd $fd_skip . "$1"; }
     # shellcheck disable=SC2086
@@ -55,6 +70,12 @@ fi
 # conda from Miniforge; base is not auto-activated (see ~/.condarc)
 if [ -f "$HOME/miniforge3/etc/profile.d/conda.sh" ]; then
     . "$HOME/miniforge3/etc/profile.d/conda.sh"
+fi
+
+# Prompt: starship (~/.config/starship.toml): the folder, git branch and changes, the Python environment, how long a
+# slow command took; the ❯ turns red when the last command failed. Last of the shell setup, so it wraps the rest.
+if command -v starship >/dev/null; then
+    eval "$(starship init bash)"
 fi
 
 # Machine-local additions, kept out of this repo

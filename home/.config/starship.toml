@@ -1,0 +1,74 @@
+# starship: the shell prompt, in every terminal (kitty, tmux, VS Code). Catppuccin Mocha colours like the rest of the
+# desktop. One line: the folder (shortened to the git repository), the git branch and what changed, the Python
+# environment, how long a slow command took, then ❯: green, or red when the last command failed. user@helios only
+# appears over SSH. Reference: https://starship.rs/config/
+
+"$schema" = "https://starship.rs/config-schema.json"
+add_newline = false
+palette = "catppuccin_mocha"
+format = "$username$hostname$directory$git_branch$git_state$git_status$conda$python$cmd_duration$jobs$character"
+
+[directory]
+style = "bold blue"
+truncation_length = 4
+truncate_to_repo = true
+read_only = " 󰌾"
+read_only_style = "red"
+
+[git_branch]
+symbol = " "
+style = "mauve"
+format = "[$symbol$branch]($style) "
+
+[git_state]
+style = "yellow"
+
+# ! changed, + staged, ? new files, ⇡ ⇣ commits ahead / behind the remote
+[git_status]
+style = "peach"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+
+[conda]
+symbol = " "
+style = "green"
+format = "[$symbol$environment]($style) "
+
+# only a project's own environment (.venv from uv, or a venv): not on every folder with Python files
+[python]
+symbol = " "
+style = "yellow"
+format = '[(${symbol}$virtualenv )]($style)'
+detect_extensions = []
+detect_files = []
+detect_folders = []
+
+[cmd_duration]
+min_time = 2000
+style = "overlay1"
+format = "[took $duration]($style) "
+
+[jobs]
+style = "sky"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[username]
+style_user = "bold sky"
+format = "[$user]($style)"
+
+[hostname]
+style = "bold sky"
+format = "[@$hostname]($style) "
+
+[palettes.catppuccin_mocha]
+text = "#cdd6f4"
+overlay1 = "#7f849c"
+red = "#f38ba8"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+sky = "#89dceb"
+blue = "#89b4fa"
+mauve = "#cba6f7"

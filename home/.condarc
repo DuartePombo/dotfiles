@@ -1,1 +1,3 @@
 auto_activate_base: false
+# the prompt (starship) shows the active environment itself, in colour: conda's own "(env)" prefix would repeat it
+changeps1: false

@@ -24,6 +24,7 @@ docker-compose
 dolphin
 dotnet-sdk
 dotnet-sdk-8.0
+eza
 fastfetch
 fd
 freerdp
@@ -92,6 +93,7 @@ snap-pac
 snapper
 socat
 sof-firmware
+starship
 steam
 stow
 sudo
@@ -104,6 +106,7 @@ ttf-jetbrains-mono-nerd
 unzip
 usbutils
 uv
+vivid
 waybar
 wf-recorder
 wireplumber
