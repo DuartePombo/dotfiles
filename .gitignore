@@ -22,6 +22,21 @@
 **/.tmux-sessionizer.local
 **/.work-notes.local
 
+# Database work never belongs here: saved queries, exported results, schema builds, backups (a file saved into
+# this folder by mistake must not be committable)
+*.sql
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.dacpac
+*.bacpac
+*.bak
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
 # App data (logins, caches)
 **/.config/google-chrome/
 **/.config/google-chrome-work/
