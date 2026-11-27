@@ -31,6 +31,7 @@
         // Number + what the workspace is for (hyprland.lua, "Fixed homes for apps"): work on 1-5, personal on 6-10
         // (style.css leaves a gap between them). Free workspaces show just the number; urgent ones turn red.
         "format": "{icon}",
+        "tooltip": false,  // no pop-up with the workspace's name on hover (the other modules keep theirs)
         "format-icons": {
             "1": "1 <span size='4pt'> </span>",  // Work projects (kitty + tmux)
             "2": "2 <span size='4pt'> </span>",  // Chrome (work)
