@@ -43,8 +43,9 @@ read_only_style = "red"
 format = "[$path]($style)[$read_only]($read_only_style)"
 
 [git_branch]
+symbol = " "   # the branch symbol (Nerd Font), written as a code so it can't get lost
 style = "mauve"
-format = "[$branch]($style)"
+format = "[$symbol$branch]($style)"
 
 # * = anything not committed yet (changed, staged or new files); one quick `git status` per prompt
 [custom.dirty]
