@@ -189,6 +189,11 @@ vim.o.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
 
+-- Pop-ups (K documentation, parameter hints, the completion menu, Ctrl+w d) get a rounded frame in the theme's border
+-- colour (FloatBorder). Without one they melted into whatever was behind them, e.g. the terminal window, which has
+-- the same background. Plugins that draw their own frames (Telescope, which-key, Lazy, Mason) keep theirs.
+vim.o.winborder = 'rounded'
+
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
