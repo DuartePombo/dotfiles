@@ -14,12 +14,13 @@ if mode == "docked" then
     -- Modes: each monitor's best. When a connection can't carry it, Hyprland falls back to the same resolution at the
     -- fastest refresh it can (tested: the right monitor through the adapter → 1920x1080@60; the front one over HDMI →
     -- 2560x1440@144). Not "highrr": that picks the fastest refresh at ANY resolution (1024x768@75 through the adapter).
-    -- Heights: the front monitor is 1440 pixels tall, the others 1080: the laptop sits lower, so its bottom edge lines
-    -- up with the front one's (y 360); the right monitor is centred on it (y 180). The mouse crosses between screens
-    -- where their edges overlap.
-    hl.monitor({ output = "eDP-1", mode = "1920x1080@144", position = "0x360", scale = 1 })
-    hl.monitor({ output = "desc:" .. front, mode = "2560x1440@240", position = "1920x0", scale = 1 })
-    hl.monitor({ output = "desc:" .. right, mode = "1920x1080@165", position = "4480x180", scale = 1 })
+    -- The front monitor is scaled 1.25 (like Windows' 125%): at scale 1 its text was too small from the desk chair. It
+    -- stays 2560x1440 and sharp, but lays out like a 2048x1152 screen. Positions use that size: the laptop's bottom edge
+    -- lines up with the front one's (y 1152-1080 = 72), the right monitor sits after it (x 1920+2048 = 3968), centred
+    -- (y 36). The mouse crosses between screens where their edges overlap.
+    hl.monitor({ output = "eDP-1", mode = "1920x1080@144", position = "0x72", scale = 1 })
+    hl.monitor({ output = "desc:" .. front, mode = "2560x1440@240", position = "1920x0", scale = 1.25 })
+    hl.monitor({ output = "desc:" .. right, mode = "1920x1080@165", position = "3968x36", scale = 1 })
     -- Any other monitor: preferred mode, placed automatically
     hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
