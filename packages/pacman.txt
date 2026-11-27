@@ -4,6 +4,7 @@ archlinux-xdg-menu
 ark
 aspnet-runtime-8.0
 avahi
+aws-cli-v2
 base
 base-devel
 bash-completion
