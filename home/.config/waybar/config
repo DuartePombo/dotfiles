@@ -161,7 +161,8 @@
             "car": "",
             "default": ["", "", ""] // Icons for different volume levels
         },
-        "on-click": "pavucontrol" // Example: open pavucontrol
+        "on-click": "pavucontrol",           // Volume Control
+        "on-click-right": "audio-switch"     // menu: which speaker and microphone (also Super+A)
     },
     "battery": {
         "states": {

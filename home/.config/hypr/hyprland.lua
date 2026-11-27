@@ -352,6 +352,9 @@ hl.bind("SUPER + L", super_cmd(lock), always)
 -- with Super+Shift+B (the pigeon in the bar gets a ball and chain; again, or a click on the pigeon, unpins).
 hl.bind("SUPER + B",         super_cmd("bar toggle"), always)
 hl.bind("SUPER + SHIFT + B", super_cmd("bar pin"),    always)
+-- Super+A: choose the speaker and microphone (~/.local/bin/audio-switch), e.g. the laptop's speakers while the
+-- earbuds are in. Also a right-click on the bar's volume. Headphones take over again when they next connect.
+hl.bind("SUPER + A",         super_cmd("audio-switch"), always)
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))

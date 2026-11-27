@@ -37,6 +37,7 @@
 | `Alt+F9` / `Alt+Shift+F9` | a random still wallpaper from `~/Pictures/wallpapers` on all screens (curated list: `packages/wallpapers.txt`) / back to the moving ocean (see Wallpaper) |
 | `Alt+Tab` / `Alt+Shift+Tab` | back to the previous window (any workspace or screen) / cycle the windows of this workspace |
 | `Super+V` | clipboard history (cliphist): pick an entry, then `Ctrl+V`. `cliphist wipe` empties it |
+| `Super+A` | **a**udio: choose the speaker and microphone (e.g. the laptop's speakers while the earbuds are in); also a right-click on the bar's volume. Bluetooth headphones take over again when they next connect |
 | `Super+B` / `Super+Shift+B` | the **b**ars: hide them all (the windows take the space) or bring them back / pin the front monitor's bar (see Bar and tray) |
 | `Super+.` | emoji picker (rofimoji): the emoji is typed where the cursor is |
 | Volume, mute, mic, brightness, media keys | work as labelled, also on the lock screen; volume and brightness show a popup (swayosd) |
@@ -207,6 +208,11 @@ bar, kitty and VS Code.
   it (`hosts/helios/home/.config/wireplumber/`). So are the monitors' speakers (the NVIDIA card's HDMI/DisplayPort
   audio, both monitors): Zoom kept switching to them when a screen woke up.
 - Which device plays and records: Bluetooth headphones when connected (speaker and mic), otherwise the laptop.
+  Switch by hand with `Super+A` (or right-click the bar's volume): `~/.local/bin/audio-switch`. A hand pick lasts
+  until headphones connect again; then they take over (WirePlumber script
+  `hosts/helios/home/.local/share/wireplumber/scripts/headphones-take-over.lua`: without it WirePlumber keeps the
+  last pick for good, also over newly connected headphones). Volume Control's ✓ ("Set as fallback") is the same kind
+  of pick.
   In Zoom set Speaker and Microphone to "Same as System" and untick "Automatically adjust microphone volume"
   (it kept lowering the laptop mic).
 - Bluetooth headphones (JBL Live Pro 2): music and video in high quality (AAC). While an app uses their mic (a call)

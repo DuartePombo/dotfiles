@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# audio-switch: choose the speaker and the microphone from a menu (Super+A, or right-click the bar's volume), e.g.
+# the laptop's speakers while the earbuds are in. ✓ marks the ones in use. It applies at once, also to a call in
+# progress (Zoom on "Same as System" follows). The pick lasts until Bluetooth headphones connect again: they always
+# take over then (hosts/helios/.../wireplumber/scripts/headphones-take-over.lua).
+set -euo pipefail
+
+declare -A target   # menu line → "<sink|source> <node name>"
+declare -A seen     # "<kind>|<name shown>": a headset in call mode lists its microphone twice
+lines=()
+
+add() { # add <sink|source> <icon> <what the laptop's own one is called>
+    local kind=$1 icon=$2 laptop=$3 current name desc text
+    current=$(pactl "get-default-$kind")
+    # the stand-in names with ":" (bluez_input.AA:BB:...) first: they last across music/call mode
+    while IFS=$'\t' read -r name desc; do
+        [[ -n $name ]] || continue
+        case $desc in "Built-in Audio"*) desc=$laptop ;; esac
+        [[ -n ${seen[$kind|$desc]:-} ]] && continue
+        seen[$kind|$desc]=1
+        text="$icon  $desc"
+        [[ $name == "$current" ]] && text+="   ✓"
+        target[$text]="$kind $name"
+        lines+=("$text")
+    done < <(pactl -f json list "${kind}s" |
+             jq -r 'map(select(.name | endswith(".monitor") | not))
+                    | sort_by(.name | contains(":") | not) | .[] | [.name, .description] | @tsv')
+}
+add sink "🔊" "Laptop speakers"
+add source "🎤" "Laptop microphone"
+
+choice=$(printf '%s\n' "${lines[@]}" |
+         wofi --dmenu --cache-file /dev/null --insensitive --prompt "Speaker and microphone" \
+              --lines $(( ${#lines[@]} + 1 )) 2>/dev/null) || exit 0
+[[ -n ${target[$choice]:-} ]] || exit 0
+
+read -r kind name <<<"${target[$choice]}"
+pactl "set-default-$kind" "$name"
+shown=${choice%   ✓}
+if [[ $kind == sink ]]; then icon=audio-volume-high-symbolic; else icon=audio-input-microphone-symbolic; fi
+swayosd-client --custom-message "${shown#*  }" --custom-icon "$icon" >/dev/null 2>&1 || true
