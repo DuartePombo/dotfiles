@@ -47,9 +47,10 @@ symbol = " "   # the branch symbol (Nerd Font), written as a code so it can't
 style = "mauve"
 format = "[$symbol$branch]($style)"
 
-# * = anything not committed yet (changed, staged or new files); one quick `git status` per prompt
+# * = changes to tracked files not committed yet (edited or staged). New files git doesn't track yet don't count:
+# they don't stop a branch switch. One quick `git status` per prompt.
 [custom.dirty]
-when = 'test -n "$(git status --porcelain --ignore-submodules 2>/dev/null | head -n 1)"'
+when = 'test -n "$(git status --porcelain --untracked-files=no --ignore-submodules 2>/dev/null | head -n 1)"'
 require_repo = true
 shell = ["bash", "--noprofile", "--norc"]
 style = "mauve"
