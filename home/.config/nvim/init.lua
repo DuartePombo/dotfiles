@@ -1094,6 +1094,8 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
+        -- (The code area is see-through by kitty, not here: kitty.conf's transparent_background_colors renders this
+        -- theme's background #1a1b26 at 65%. The file tree and terminal windows, #16161e, stay solid.)
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
