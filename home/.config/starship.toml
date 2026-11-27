@@ -1,13 +1,13 @@
 # starship: the shell prompt, in every terminal (kitty, tmux, VS Code). The classic bash prompt, in colour:
 #   (proposal-automation) duarte@helios  main* proposal-automation$
 # (environment) when one is active, user@machine, the git branch inside a repository with * when there are
-# uncommitted changes, the folder's whole path (from ~), then $: red when the last command failed. Catppuccin Mocha colours like the rest of the desktop.
+# uncommitted changes, the folder's whole path from ~ (the folder you're in, in peach), then $: red when the last command failed. Catppuccin Mocha colours like the rest of the desktop.
 # Reference: https://starship.rs/config/
 
 "$schema" = "https://starship.rs/config-schema.json"
 add_newline = false
 palette = "catppuccin_mocha"
-format = '$conda$python$username$hostname(${git_branch}${custom.dirty} )$directory$character'
+format = '$conda$python$username$hostname(${git_branch}${custom.dirty} )${custom.dir_parent}$directory$character'
 
 # (proposal-automation): the active conda environment, as conda itself shows it
 [conda]
@@ -34,10 +34,11 @@ ssh_only = false
 style = "subtext0"
 format = "[@$hostname]($style) "
 
-# the whole path from ~, like bash's \w (truncation_length 0 = no limit; 1 = only the folder's name)
+# The path like bash's \w: everything up to the current folder in blue (custom.dir_parent below), the current
+# folder itself in bold peach (this module, cut to one folder; it also shows the read-only lock).
 [directory]
-style = "bold blue"
-truncation_length = 0
+style = "bold peach"
+truncation_length = 1
 truncate_to_repo = false
 read_only = " 󰌾"
 read_only_style = "red"
@@ -62,10 +63,20 @@ success_symbol = '[\$](text)'
 error_symbol = '[\$](bold red)'
 format = "$symbol "
 
+# The path up to the current folder, with a trailing /: ~/pombo/projects/ or /usr/share/ (nothing at ~, / or /etc,
+# where the directory module shows it all)
+[custom.dir_parent]
+command = 'case $PWD in "$HOME" | /) ;; "$HOME"/*) p="~${PWD#"$HOME"}"; printf "%s/" "${p%/*}" ;; *) p=${PWD%/*}; [ -n "$p" ] && printf "%s/" "$p" ;; esac'
+when = true
+shell = ["bash", "--noprofile", "--norc"]
+style = "blue"
+format = "[$output]($style)"
+
 [palettes.catppuccin_mocha]
 text = "#cdd6f4"
 subtext0 = "#a6adc8"
 red = "#f38ba8"
 green = "#a6e3a1"
 blue = "#89b4fa"
+peach = "#fab387"
 mauve = "#cba6f7"
