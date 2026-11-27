@@ -204,7 +204,18 @@ bar, kitty and VS Code.
 ## Audio, Bluetooth, Wi-Fi, power
 - Audio: `wpctl status` (devices, defaults), `wpctl set-default <id>`, or pavucontrol.
   The UGREEN dock's sound card ("SMI USB Display") is switched off: nothing plays through it, but apps kept picking
-  it (`hosts/helios/home/.config/wireplumber/`).
+  it (`hosts/helios/home/.config/wireplumber/`). So are the monitors' speakers (the NVIDIA card's HDMI/DisplayPort
+  audio, both monitors): Zoom kept switching to them when a screen woke up.
+- Which device plays and records: Bluetooth headphones when connected (speaker and mic), otherwise the laptop.
+  In Zoom set Speaker and Microphone to "Same as System" and untick "Automatically adjust microphone volume"
+  (it kept lowering the laptop mic).
+- Bluetooth headphones (JBL Live Pro 2): music and video in high quality (AAC). While an app uses their mic (a call)
+  they switch to call mode (mono, phone quality, both ways: a Bluetooth limit, mSBC is the best they offer) and
+  back a few seconds after. Anything that listens to the mic keeps them in call mode, also the Input tab of
+  pavucontrol. Stuck in call mode, or no high-quality option (e.g. after restarting the sound service): reconnect
+  them (`bluetoothctl disconnect <MAC>` then `connect <MAC>`, or back in the case).
+- Volume: each device keeps its own level (like Windows); the volume keys change the one playing, app volumes are
+  a share of it: leave apps at 100%.
 - Bluetooth: blueman (tray), or `bluetoothctl`, then `power on`, `scan on`, `pair <MAC>`, `trust <MAC>`, `connect <MAC>`.
   `trust` makes it reconnect by itself. To forget a device: `bluetoothctl remove <MAC>`.
 - Glove80 (factory layout; hold Magic, the bottom-left key of the left half, then tap):
