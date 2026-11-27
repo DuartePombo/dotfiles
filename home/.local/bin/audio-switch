@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # audio-switch: choose the speaker and the microphone from a menu (Super+A, or right-click the bar's volume), e.g.
-# the laptop's speakers while the earbuds are in. ✓ marks the ones in use. It applies at once, also to a call in
-# progress (Zoom on "Same as System" follows). The pick lasts until Bluetooth headphones connect again: they always
-# take over then (hosts/helios/.../wireplumber/scripts/headphones-take-over.lua).
+# the laptop's speakers while the earbuds are in. ✓ marks the ones in use. Space or Enter picks the highlighted line
+# and the menu stays, with the ✓ moved, so the speaker and the microphone can be set in one go; Esc closes it.
+# A pick applies at once, also to a call in progress (Zoom on "Same as System" follows), and lasts until Bluetooth
+# headphones connect again: they always take over then (hosts/helios/.../wireplumber/scripts/headphones-take-over.lua).
 set -euo pipefail
 
 declare -A target   # menu line → "<sink|source> <node name>"
@@ -26,16 +27,21 @@ add() { # add <sink|source> <icon> <what the laptop's own one is called>
              jq -r 'map(select(.name | endswith(".monitor") | not))
                     | sort_by(.name | contains(":") | not) | .[] | [.name, .description] | @tsv')
 }
-add sink "🔊" "Laptop speakers"
-add source "🎤" "Laptop microphone"
 
-choice=$(printf '%s\n' "${lines[@]}" |
-         wofi --dmenu --cache-file /dev/null --insensitive --prompt "Speaker and microphone" \
-              --lines $(( ${#lines[@]} + 1 )) 2>/dev/null) || exit 0
-[[ -n ${target[$choice]:-} ]] || exit 0
+while true; do
+    target=() seen=() lines=()
+    add sink "🔊" "Laptop speakers"
+    add source "🎤" "Laptop microphone"
 
-read -r kind name <<<"${target[$choice]}"
-pactl "set-default-$kind" "$name"
-shown=${choice%   ✓}
-if [[ $kind == sink ]]; then icon=audio-volume-high-symbolic; else icon=audio-input-microphone-symbolic; fi
-swayosd-client --custom-message "${shown#*  }" --custom-icon "$icon" >/dev/null 2>&1 || true
+    # Space picks too (wofi: comma-separated keys); it can't type into the search, which this short list doesn't need
+    choice=$(printf '%s\n' "${lines[@]}" |
+             wofi --dmenu --cache-file /dev/null --insensitive -D key_submit=Return,space \
+                  --prompt "Space or Enter: choose · Esc: done" --lines $(( ${#lines[@]} + 1 )) 2>/dev/null) || break
+    [[ -n ${target[$choice]:-} ]] || continue
+
+    read -r kind name <<<"${target[$choice]}"
+    pactl "set-default-$kind" "$name"
+    shown=${choice%   ✓}
+    if [[ $kind == sink ]]; then icon=audio-volume-high-symbolic; else icon=audio-input-microphone-symbolic; fi
+    swayosd-client --custom-message "${shown#*  }" --custom-icon "$icon" >/dev/null 2>&1 || true
+done
