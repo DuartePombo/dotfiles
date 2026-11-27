@@ -1,5 +1,7 @@
+7zip
 alacritty
 archlinux-xdg-menu
+ark
 aspnet-runtime-8.0
 avahi
 base

@@ -148,7 +148,7 @@ bar, kitty and VS Code.
 - Qt and KDE apps (Dolphin, Okular, Gwenview, Haruna, Kdenlive, the password prompt): qt6ct gives them the Breeze
   style, the same palette and Papirus icons (`~/.config/qt6ct/`: `qt6ct.conf` and `colors/catppuccin-mocha-peach.conf`;
   switched on by `QT_QPA_PLATFORMTHEME=qt6ct` in hyprland.lua and `.bash_profile`). Outside the KDE desktop, KDE apps
-  reset to light Breeze unless they name a colour scheme themselves: dolphinrc, okularrc, gwenviewrc and kdenliverc
+  reset to light Breeze unless they name a colour scheme themselves: dolphinrc, okularrc, gwenviewrc, kdenliverc, arkrc
   have `[UiSettings] ColorScheme=CatppuccinMochaPeach` (the scheme: `~/.local/share/color-schemes/`; the same colours
   in `~/.config/kdeglobals`). Those files are written by the apps too, so they're copied once from `home-defaults/`.
   A new KDE app that comes up light: its Settings → Color Scheme → "Catppuccin Mocha (peach)".
@@ -165,6 +165,9 @@ bar, kitty and VS Code.
   needs Konsole (not installed), so leave it hidden.
 - Scripts marked executable open in Neovim like any code file: a click never runs them (`kiorc`). Run them from
   a terminal.
+- Archives (Ark): right-click files or folders → **Compress** (Here as .zip / .tar.gz, or Compress to… for a name
+  and format); right-click an archive → **Extract** (Extract here, Extract to…). A double-click opens it in Ark.
+  .zip, .tar.*, .7z (7zip); .rar would need `unrar` (not installed).
 - Where it's set: `~/.config/mimeapps.list` (what a double-click opens), `~/.local/share/applications/nvim.desktop`
   (Neovim in kitty, replacing the package's entry; re-check it if the neovim package changes its own),
   `~/.local/bin/nvim-open` and `code-open`, `~/.local/share/kio/servicemenus/open-in-editor.desktop` (the right-click
