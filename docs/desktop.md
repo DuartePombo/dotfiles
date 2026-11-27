@@ -139,6 +139,9 @@ bar, kitty and VS Code.
   Changes apply to open windows after `kill -USR1` to kitty (or a new window).
 - Neovim: its terminal window has the file tree's colour; one status line at the bottom for the window you're in,
   thin lines between windows (`WinSeparator`, tokyonight's setup in init.lua).
+- Windows (hyprland.lua, `general.col` and `decoration`): the focused window's border fades from vivid orange to cyan
+  (tokyonight's colours), the others are blue-grey; 12 px corners with a smooth "squircle" curve (`rounding_power 3`);
+  a wide, faint shadow. Gaps stay 5 / 10 (a 7 / 14 try felt like too much).
 - tmux bar (`~/.config/tmux/tmux.conf`): session in blue, current window in peach, date and time; `Ctrl+b r` reloads.
 - Menus (wofi: `Alt+D`, `Super+V`, `Super+.`, `Ctrl+Alt+Delete`): `~/.config/wofi/style.css` (colours) and `config`
   (size, icons, search). A change shows the next time a menu opens.

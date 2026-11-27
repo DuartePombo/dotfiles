@@ -106,9 +106,12 @@ hl.config({
 
         border_size = 2,
 
+        -- Borders (were Hyprland's stock cyan→green): the active window a vivid orange (the desktop's peach, saturated:
+        -- tokyonight's orange, Neovim's theme) fading into tokyonight's cyan, diagonally, fully opaque; the others a
+        -- quiet blue-grey. 2 px: with see-through terminals the border is what shows a window's edge.
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = { colors = {"rgba(ff9e64ff)", "rgba(7dcfffff)"}, angle = 45 },
+            inactive_border = "rgba(45475aaa)",
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -121,20 +124,24 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 10,
-        rounding_power = 2,
+        -- Corners: 12 px, and rounding_power 3 = a "squircle" (the smooth continuous curve macOS uses) instead of a
+        -- plain circle (2). Was 10 / 2. Past ~14 px corners look bubbly and cut into small windows.
+        rounding       = 12,
+        rounding_power = 3,
 
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
 
+        -- A wide, faint shadow: windows seem to float a little above the wallpaper (was 4 px, nearly opaque grey,
+        -- which looked like a dark smudge around see-through windows)
         shadow = {
             enabled      = true,
-            range        = 4,
+            range        = 15,
             render_power = 3,
-            color        = 0xee1a1a1a,
+            color        = 0x66000000,
         },
 
-        -- Behind see-through windows (kitty at 0.90): a soft frosted look rather than a sharp wallpaper (was 3 / 1)
+        -- Behind see-through windows (kitty at 0.50): a soft frosted look rather than a sharp wallpaper (was 3 / 1)
         blur = {
             enabled  = true,
             size     = 5,
