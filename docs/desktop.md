@@ -133,6 +133,13 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 One palette everywhere: Catppuccin Mocha (dark blue-grey, light text) with peach for "selected / active", as in the
 bar, kitty and VS Code.
 
+- Terminal (kitty, `~/.config/kitty/kitty.conf`): blue-black background `#141420` (darker than the editors, like the
+  VS Code terminal) with Catppuccin's text colours, 8 px padding, 10% taller lines, 90% opacity over Hyprland's blur
+  (`decoration.blur` in hyprland.lua, size 5, passes 2), and a quick grey cursor trail on jumps (`cursor_trail_*`).
+  Changes apply to open windows after `kill -USR1` to kitty (or a new window).
+- Neovim: its terminal window has the file tree's colour; one status line at the bottom for the window you're in,
+  thin lines between windows (`WinSeparator`, tokyonight's setup in init.lua).
+- tmux bar (`~/.config/tmux/tmux.conf`): session in blue, current window in peach, date and time; `Ctrl+b r` reloads.
 - Menus (wofi: `Alt+D`, `Super+V`, `Super+.`, `Ctrl+Alt+Delete`): `~/.config/wofi/style.css` (colours) and `config`
   (size, icons, search). A change shows the next time a menu opens.
 - The clipboard menu and the power menu don't remember past picks (`--cache-file /dev/null`): the clipboard stays
