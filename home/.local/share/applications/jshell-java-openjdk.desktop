@@ -1,0 +1,5 @@
+# Hidden from the app menu (Alt+D): Java shell from the JDK (installed for Neovim's Java support), never started by hand. The program stays installed.
+[Desktop Entry]
+Type=Application
+Name=OpenJDK Java Shell
+Hidden=true

@@ -1,0 +1,5 @@
+# Hidden from the app menu (Alt+D): webcam capture tool from v4l-utils (a dependency), never started by hand. The program stays installed.
+[Desktop Entry]
+Type=Application
+Name=Qt V4L2 video capture utility
+Hidden=true

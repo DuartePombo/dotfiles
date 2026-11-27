@@ -1,0 +1,18 @@
+# wofi: Alt+D (apps), Super+V (clipboard), Super+. (emoji), Ctrl+Alt+Delete (power menu). The look is in style.css.
+# Options given on a command line (e.g. power-menu's --lines 6) win over these.
+width=680
+lines=9
+prompt=Search apps
+# app icons (from the icon theme), the search box with its icon, no scroll bar
+allow_images=true
+image_size=26
+hide_scroll=true
+# typing "chrome work" finds "Chrome (work)": every word must appear, upper/lower case doesn't matter
+matching=multi-contains
+insensitive=true
+# only the apps themselves, not their extra actions (the › rows: "New Incognito Window"...)
+no_actions=true
+# apps that run in a terminal (Htop, Neovim) open in kitty
+term=kitty
+# the dark variant of the GTK theme underneath (the search box keeps no light edges)
+gtk_dark=true

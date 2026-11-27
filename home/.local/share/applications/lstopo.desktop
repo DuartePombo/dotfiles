@@ -1,0 +1,5 @@
+# Hidden from the app menu (Alt+D): hardware layout viewer from hwloc (a dependency), never started by hand. The program stays installed.
+[Desktop Entry]
+Type=Application
+Name=Hardware Locality lstopo
+Hidden=true

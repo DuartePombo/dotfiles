@@ -15,7 +15,7 @@
 | Keys | Action |
 |---|---|
 | `Alt+Return` | terminal (kitty); in Office windows it goes to the app instead (Excel's new line in a cell, see below) |
-| `Alt+D` | app launcher (wofi) |
+| `Alt+D` | app launcher (wofi): type any words of the name, in any case (`chrome work` → Chrome (work)) |
 | `Alt+E` | file manager (Dolphin) |
 | `Alt+Q` | close window |
 | `Ctrl+Alt+Delete` | menu: lock / log out / restart / shut down (no single key quits the desktop) |
@@ -121,6 +121,22 @@ the icons were black. Drawing Zoom in software also fixed the icons but made all
 - The pictures are drawn by a program, not downloaded: `hosts/helios/wallpapers/ocean.py` (the scenes, the fog, the
   creatures), `render.sh` turns them into `~/Pictures/wallpapers/ocean/{laptop,front,right}.mp4` + `.png` (about 10
   minutes; setup.sh does it on a new install). Change a scene: edit ocean.py, run render.sh, then `wallpaper start`.
+
+## Look (colours)
+
+One palette everywhere: Catppuccin Mocha (dark blue-grey, light text) with peach for "selected / active", as in the
+bar, kitty and VS Code.
+
+- Menus (wofi: `Alt+D`, `Super+V`, `Super+.`, `Ctrl+Alt+Delete`): `~/.config/wofi/style.css` (colours) and `config`
+  (size, icons, search). A change shows the next time a menu opens.
+- The clipboard menu and the power menu don't remember past picks (`--cache-file /dev/null`): the clipboard stays
+  newest first and Cancel stays first. Otherwise wofi moves your most used pick to the top (one restart put Restart
+  first) and keeps every picked clip in plain text in `~/.cache/wofi-dmenu`. The app launcher keeps its memory: apps
+  you start often come first.
+- Hidden from the launcher: technical tools that other packages bring along (webcam and GPS test tools, the Java
+  console and shell, lstopo). Each has a small file in `home/.local/share/applications/` with `Hidden=true`; the
+  program stays installed. Delete the file to show it again; add one with the same file name as the app's
+  `/usr/share/applications/*.desktop` to hide another.
 
 ## Idle, lock, suspend
 - After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does

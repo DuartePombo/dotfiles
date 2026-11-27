@@ -1,0 +1,5 @@
+# Hidden from the app menu (Alt+D): GPS test tool from gpsd (a dependency), never started by hand. The program stays installed.
+[Desktop Entry]
+Type=Application
+Name=xgps
+Hidden=true

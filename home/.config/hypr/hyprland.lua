@@ -325,7 +325,9 @@ end, always)
 hl.bind(mainMod .. " + SHIFT + TAB", hl.dsp.window.cycle_next(), always)
 
 -- Like Windows: Super+V clipboard history (pick an entry, then Ctrl+V), Super+. emoji picker (types it)
-hl.bind("SUPER + V",      hl.dsp.exec_cmd("cliphist list | wofi --dmenu --prompt 'Clipboard' | cliphist decode | wl-copy"), always)
+-- (--cache-file /dev/null: wofi would otherwise save every picked clip in plain text in ~/.cache/wofi-dmenu and move
+-- it above newer ones; the history stays newest first)
+hl.bind("SUPER + V",      hl.dsp.exec_cmd("cliphist list | wofi --dmenu --cache-file /dev/null --prompt 'Clipboard' | cliphist decode | wl-copy"), always)
 hl.bind("SUPER + period", hl.dsp.exec_cmd("rofimoji --selector wofi --action type --typer wtype --clipboarder wl-copy"), always)
 -- Super+key commands that also work on the Windows desktop (workspace 10): Windows never sees the key. In an office
 -- window a Super+F24 tap goes first: Remote Desktop sees Super go down and up without the key, and Windows would read

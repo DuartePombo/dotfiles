@@ -1,0 +1,73 @@
+/* wofi in the desktop's colours: Catppuccin Mocha like the bar, kitty and VS Code (dark base, light text), peach for
+   the selection like the bar's active workspace. Names: man 5 wofi (CSS SELECTORS). */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 15px;
+}
+
+#window {
+    background-color: #1e1e2e;                       /* base, solid: text behind it showed through */
+    border: 2px solid rgba(250, 179, 135, 0.55);     /* peach */
+    border-radius: 14px;
+}
+
+#outer-box {
+    padding: 14px;
+}
+
+/* the search box */
+#input {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border: 1px solid #45475a;                       /* surface1 */
+    border-radius: 10px;
+    background-color: #181825;                       /* mantle */
+    background-image: none;
+    box-shadow: none;
+    color: #cdd6f4;                                  /* text */
+    caret-color: #fab387;
+}
+
+#input selection {
+    background-color: rgba(250, 179, 135, 0.35);     /* selected search text: peach, not GTK's blue */
+    color: #cdd6f4;
+}
+
+#input image {
+    color: #a6adc8;                                  /* subtext0: the search and clear icons */
+}
+
+#scroll,
+#inner-box {
+    background-color: transparent;
+}
+
+/* one row per app */
+#entry {
+    padding: 6px 10px;
+    border-radius: 9px;
+    background-color: transparent;
+    outline-style: none;
+}
+
+#entry:hover {
+    background-color: #313244;                       /* surface0 */
+}
+
+#entry:selected {
+    background-color: #fab387;                       /* peach */
+}
+
+#img {
+    margin-right: 12px;
+}
+
+#text {
+    color: #cdd6f4;
+}
+
+#entry:selected #text {
+    color: #11111b;                                  /* crust: dark text on peach */
+    font-weight: bold;
+}

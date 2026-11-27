@@ -3,8 +3,10 @@
 # Cancel, Esc or a click elsewhere does nothing. (There's no single key that quits the desktop any more: Alt+M did, and
 # was too easy to hit by accident.) "Log out" closes every app: unsaved work is lost; you land at the login prompt and
 # logging in starts the desktop again (~/.bash_profile).
+# --cache-file /dev/null: no memory of past picks, so Cancel always comes first (wofi otherwise moves the last pick to
+# the top: after one restart, a stray Enter here would restart again).
 choice=$(printf '%s\n' "Cancel" "Lock" "Log out (closes every app)" "Restart" "Shut down" |
-         wofi --dmenu --insensitive --prompt "Ctrl+Alt+Delete" --lines 6 2>/dev/null)
+         wofi --dmenu --cache-file /dev/null --insensitive --prompt "Ctrl+Alt+Delete" --lines 6 2>/dev/null)
 case $choice in
     Lock)         pidof hyprlock >/dev/null || hyprlock ;;
     "Log out"*)   hyprctl dispatch 'hl.dsp.exit()' ;;
