@@ -1,0 +1,4 @@
+# copied once by setup.sh (never linked: the app writes its own settings here too)
+# Colours: Catppuccin Mocha with peach (~/.local/share/color-schemes); the app's own Settings → Color Scheme menu
+[UiSettings]
+ColorScheme=CatppuccinMochaPeach

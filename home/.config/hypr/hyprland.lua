@@ -79,6 +79,10 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 -- Lets Dolphin and other KDE apps find installed applications (archlinux-xdg-menu)
 hl.env("XDG_MENU_PREFIX", "arch-")
+-- Qt apps (Dolphin, Okular, Gwenview, Haruna, Kdenlive, the password prompt) take their look from qt6ct:
+-- Breeze, the Catppuccin palette, Papirus icons (~/.config/qt6ct). KDE apps also name the scheme in their own
+-- settings ([UiSettings] in dolphinrc...), or they reset to light Breeze. Applies to apps started after login.
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 
 
 -----------------------

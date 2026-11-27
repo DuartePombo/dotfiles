@@ -8,3 +8,7 @@ Places Icons Static Size=22
 
 [MainWindow]
 MenuBar=Disabled
+
+# Colours: Catppuccin Mocha with peach (~/.local/share/color-schemes); the app's own Settings → Color Scheme menu
+[UiSettings]
+ColorScheme=CatppuccinMochaPeach

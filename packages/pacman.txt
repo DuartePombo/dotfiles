@@ -77,6 +77,7 @@ power-profiles-daemon
 qpdf
 qt5-wayland
 qt6-wayland
+qt6ct
 reflector
 restic
 ripgrep

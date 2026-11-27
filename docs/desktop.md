@@ -145,6 +145,14 @@ bar, kitty and VS Code.
   the system, all go dark too. Icons: Papirus-Dark. These live in GNOME's settings store, set by setup.sh:
   `gsettings get org.gnome.desktop.interface color-scheme` (`prefer-dark`; `default` = light again).
   To keep one app light: its own theme setting (Chrome: Settings → Appearance → Mode).
+- Qt and KDE apps (Dolphin, Okular, Gwenview, Haruna, Kdenlive, the password prompt): qt6ct gives them the Breeze
+  style, the same palette and Papirus icons (`~/.config/qt6ct/`: `qt6ct.conf` and `colors/catppuccin-mocha-peach.conf`;
+  switched on by `QT_QPA_PLATFORMTHEME=qt6ct` in hyprland.lua and `.bash_profile`). Outside the KDE desktop, KDE apps
+  reset to light Breeze unless they name a colour scheme themselves: dolphinrc, okularrc, gwenviewrc and kdenliverc
+  have `[UiSettings] ColorScheme=CatppuccinMochaPeach` (the scheme: `~/.local/share/color-schemes/`; the same colours
+  in `~/.config/kdeglobals`). Those files are written by the apps too, so they're copied once from `home-defaults/`.
+  A new KDE app that comes up light: its Settings → Color Scheme → "Catppuccin Mocha (peach)".
+  The `qt6ct` app (in `Alt+D`) shows and changes these settings; what it saves lands in the repo.
 
 ## Idle, lock, suspend
 - After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does

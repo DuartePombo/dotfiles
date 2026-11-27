@@ -4,3 +4,7 @@ FullScreen=false
 [General]
 LockSidebar=true
 ShowSidebar=true
+
+# Colours: Catppuccin Mocha with peach (~/.local/share/color-schemes); the app's own Settings → Color Scheme menu
+[UiSettings]
+ColorScheme=CatppuccinMochaPeach
