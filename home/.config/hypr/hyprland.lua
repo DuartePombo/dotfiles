@@ -106,12 +106,15 @@ hl.config({
 
         border_size = 2,
 
-        -- Borders (were Hyprland's stock cyan→green): the active window goes orange → pink → purple → cyan (tokyonight,
-        -- Neovim's theme), diagonally, fully opaque; the others a quiet blue-grey. Only neighbouring colours blend: orange
-        -- straight into cyan (opposites) turned grey (#beb6b1) in the middle, at the bottom-left corner, so the active
-        -- window didn't look active there. 2 px: with see-through terminals the border is what shows a window's edge.
+        -- Borders (were Hyprland's stock cyan→green): the active window a "golden hour" sunset, gold → peach → coral →
+        -- hot pink → magenta → violet, diagonally, fully opaque, at 80% brightness (full brightness was too loud at the
+        -- edge of the eye all day); the others a quiet blue-grey. Only neighbouring colours blend: orange straight into
+        -- cyan (opposites) had turned grey (#beb6b1) in one corner, and tokyonight's soft blues looked dull next to the
+        -- peach. Still, not rotating: motion distracted (and Hyprland 0.57's borderangle "loop" turns only once per
+        -- focus anyway). 2 px: with see-through terminals the border is what shows a window's edge.
         col = {
-            active_border   = { colors = {"rgba(ff9e64ff)", "rgba(f7768eff)", "rgba(bb9af7ff)", "rgba(7dcfffff)"}, angle = 45 },
+            active_border   = { colors = {"rgba(cc8f38ff)", "rgba(cc7e50ff)", "rgba(cc6161ff)", "rgba(cc496eff)",
+                                          "rgba(b344caff)", "rgba(8f6cccff)"}, angle = 45 },
             inactive_border = "rgba(45475aaa)",
         },
 
