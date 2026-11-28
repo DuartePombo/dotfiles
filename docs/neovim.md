@@ -164,8 +164,8 @@ Work notes (`lua/custom/notes.lua`; folder = first line of `~/.work-notes.local`
 note per day) and `projects/<project>/` (README.md overview + one `YYYY-MM-DD-title.md` per note). `<leader>nd` today's
 note (template: Catch-up, Notes, To-do; meetings go in project notes, or in an "Other" project), `<leader>nn` new note
 (title asked; outside a project: picker, a new name creates the project), `<leader>nl` a project's notes newest first,
-`<leader>np` a project's overview (its `## Notes` section is rebuilt from the folder, newest first, on every new note
-and every opening), `<leader>nt` all open to-dos, `<leader>nf` / `<leader>ns` find / search notes. The work-notes window opens on today's
+`<leader>np` a project's overview (Decisions, `## Recent notes` = the 5 newest, rebuilt from the folder on every new
+note and every opening, To-do), `<leader>nt` all open to-dos, `<leader>nf` / `<leader>ns` find / search notes. The work-notes window opens on today's
 note (`app-launch work-notes`).
 
 ## Maintenance
