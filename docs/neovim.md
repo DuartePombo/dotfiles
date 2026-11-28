@@ -160,6 +160,11 @@ PNG in `./assets` next to the note, link inserted); images show inline in kitty 
 `p` with only an image on the clipboard: in Markdown it pastes the image, elsewhere it says so and pastes nothing
 (`lua/custom/paste.lua`; Neovim's clipboard asks for text only, so a screenshot never becomes raw PNG bytes).
 Deleting the link leaves the PNG in `assets/`.
+Work notes (`lua/custom/notes.lua`; folder = first line of `~/.work-notes.local`, else `~/notes/work`): `daily/` (one
+note per day) and `projects/` (one per project). `<leader>nd` today's note (template: Catch-up, Meetings, Notes,
+To-do), `<leader>np` project picker (a new name creates the note), `<leader>nl` dated log entry in a project,
+`<leader>nt` all open to-dos, `<leader>nf` / `<leader>ns` find / search notes. The work-notes window opens on today's
+note (`app-launch work-notes`).
 
 ## Maintenance
 - `:Lazy` plugins (`:Lazy update`, then commit `lazy-lock.json`), `:Mason` language tools,

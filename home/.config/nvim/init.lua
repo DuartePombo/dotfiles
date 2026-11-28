@@ -235,6 +235,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Terminal at the bottom (<leader>tt) and running the current file (<leader>r...): lua/custom/run.lua
 -- (inside VS Code, the same keys use VS Code's terminal and runner: lua/custom/vscode.lua)
 if not vim.g.vscode then require('custom.run').setup() end
+-- Work notes: daily note, project notes, to-dos (<leader>n...): lua/custom/notes.lua
+if not vim.g.vscode then require('custom.notes').setup() end
 
 -- My Neovim tutorial (~/pombo/projects/nvim-tutorial): <leader>? opens its index, <leader>s? searches all of it
 local tutorial = vim.fn.expand '~/pombo/projects/nvim-tutorial'
@@ -432,6 +434,7 @@ require('lazy').setup({
         { '<leader>v', group = '[V]env (Python interpreter)' },
         { '<leader>d', group = '[D]ebug', mode = { 'n', 'v' } },
         { '<leader>r', group = '[R]un' },
+        { '<leader>n', group = '[N]otes (work notes)' },
         { '<leader>j', group = '[J]upyter' },
         { '<leader>c', group = '[C]ode' }, -- you already use <leader>c* for jdtls
         { '<leader>s', group = '[S]earch' },

@@ -23,7 +23,8 @@ case "${1:-}" in
         fi
         mkdir -p "$notes"
         cd "$notes" || exit 1
-        exec kitty --class work-notes nvim index.md ;;
+        # opens today's daily note (Neovim's <leader>n keys: lua/custom/notes.lua, same folder rule as above)
+        exec kitty --class work-notes nvim "+lua require('custom.notes').daily()" ;;
     chrome-personal)
         shift
         exec google-chrome-stable --class=chrome-personal "$@" ;;
