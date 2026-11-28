@@ -29,8 +29,31 @@ case "${1:-}" in
         shift
         exec google-chrome-stable --class=chrome-personal "$@" ;;
     whatsapp)
-        # No --class: Chrome ignores it for --app windows (the window is "chrome-web.whatsapp.com__-Default")
-        exec google-chrome-stable --user-data-dir="$HOME/.config/whatsapp-web" --app=https://web.whatsapp.com ;;
+        # WhatsApp Web as an app window of the PERSONAL Chrome profile: Chrome opens links clicked in it in the profile
+        # the window belongs to, so they land in personal Chrome (with its own profile, ~/.config/whatsapp-web until
+        # 2026-11-28, they opened in a bare window of that profile). --class=chrome-personal: if this starts the Chrome
+        # process, later personal windows still get their class (Chrome ignores --class for the app window itself: it's
+        # "chrome-web.whatsapp.com__-<profile>"). Its home rule is silent (hyprland.lua), so: from the menu this focuses
+        # the new window; at login (--login) it waits for personal Chrome to be up first and stays in the background.
+        wa_class='^chrome-web\.whatsapp\.com__-'
+        wa_windows() { hyprctl -j clients | jq -r --arg c "$wa_class" '.[] | select(.class | test($c)) | .address' | sort; }
+        if [[ ${2:-} == --login ]]; then
+            for _ in $(seq 60); do
+                hyprctl -j clients | jq -e 'any(.[]; .class == "chrome-personal")' >/dev/null && break
+                sleep 0.5
+            done
+            exec google-chrome-stable --class=chrome-personal --app=https://web.whatsapp.com
+        fi
+        before=$(wa_windows)
+        setsid -f google-chrome-stable --class=chrome-personal --app=https://web.whatsapp.com >/dev/null 2>&1
+        for _ in $(seq 40); do
+            new=$(comm -13 <(echo "$before") <(wa_windows) | head -n 1)
+            if [[ -n $new ]]; then
+                hyprctl eval "hl.dispatch(hl.dsp.focus({ window = \"address:$new\" }))" >/dev/null
+                break
+            fi
+            sleep 0.25
+        done ;;
     *)
         echo "usage: app-launch work-projects|chrome-work|work-notes|chrome-personal|whatsapp" >&2
         exit 2 ;;

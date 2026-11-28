@@ -53,7 +53,7 @@ hl.on("hyprland.start", function()
         { cmd = "slack --gtk-version=3 -s",   workspace = 3 },
         { cmd = "app-launch work-notes",      workspace = 4 },
         { cmd = "app-launch chrome-personal", workspace = 6 },
-        { cmd = "app-launch whatsapp",        workspace = 7 },
+        { cmd = "app-launch whatsapp --login", workspace = 7 },  -- waits for personal Chrome (same profile)
     }
     for _, app in ipairs(login_apps) do
         hl.exec_cmd(app.cmd, { workspace = app.workspace .. " silent" })
@@ -434,7 +434,9 @@ local app_homes = {
     { name = "home-slack",           class = "^[Ss]lack$",                        workspace = "3" },
     { name = "home-work-notes",      class = "^work-notes$",                      workspace = "4" },
     { name = "home-chrome-personal", class = "^chrome-personal$",                 workspace = "6" },
-    { name = "home-whatsapp",        class = "^chrome-web\\.whatsapp\\.com__-",    workspace = "7" },
+    -- silent: WhatsApp shares personal Chrome's process, so at login its window can't be matched to its own start
+    -- command; from the menu, app-launch focuses it itself
+    { name = "home-whatsapp",        class = "^chrome-web\\.whatsapp\\.com__-",    workspace = "7 silent" },
     { name = "home-windows-desktop", class = "^Microsoft Windows$",              workspace = "10" },
 }
 for _, home in ipairs(app_homes) do
