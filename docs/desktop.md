@@ -250,15 +250,6 @@ bar, kitty and VS Code.
   a share of it: leave apps at 100%.
 - Bluetooth: blueman (tray), or `bluetoothctl`, then `power on`, `scan on`, `pair <MAC>`, `trust <MAC>`, `connect <MAC>`.
   `trust` makes it reconnect by itself. To forget a device: `bluetoothctl remove <MAC>`.
-- Glove80 layout: the factory layout with Up and Down swapped on the right half's bottom row (index finger = down,
-  middle finger = up, like Vim's j/k; 2026-11-28, firmware v26.09). Changing it again:
-  - MoErgo's Layout Editor (my.moergo.com/glove80, "My Layouts"): edit, Build, download the `.uf2`.
-  - Flash the right half, then the left, each over a direct USB cable: switch the half off, hold `I` + `PgDn`
-    (right) or `Magic` + `E` (left) and switch it on. A slowly pulsing red LED = ready, and a drive `GLV80RHBOOT` /
-    `GLV80LHBOOT` appears (not opened by itself): `udisksctl mount -b /dev/disk/by-label/GLV80RHBOOT`, copy the
-    `.uf2` onto it (or click it in Dolphin's Devices and drag the file in). The drive disappearing = done.
-  - The Bluetooth pairing survived this flash. If a half stops typing after a firmware version change, MoErgo's
-    factory reset (power-up combo `C6R6 + C3R2`) fixes it, and every computer then needs pairing again.
 - Glove80 (factory layout; hold Magic, the bottom-left key of the left half, then tap):
   - BT slots: Magic + Backspace (0), Delete (1), the thumb key above Backspace (2), the one above Delete (3).
     Magic + Left Alt: type over the USB cable.
