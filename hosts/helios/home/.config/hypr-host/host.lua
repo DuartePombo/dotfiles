@@ -53,6 +53,10 @@ if mode == "docked" then
     hl.config({
         cursor = { no_hardware_cursors = true },
         opengl = { nvidia_anti_flicker = false },
+        -- No automatic HDR for fullscreen windows: switching the front OLED in and out of HDR is a full modeset,
+        -- 1-2 s of black every time a YouTube video went fullscreen or you left it (Alt+1) and came back
+        -- (2026-11-28; tested: with this off, no blackouts). HDR videos play as SDR.
+        render = { cm_auto_hdr = 0 },
     })
 else
     -- Internal 1080p 144 Hz panel (on the Intel GPU)
