@@ -49,6 +49,11 @@ if [[ $mode == docked && -e $nvidia_card ]]; then
 else
     mode=mobile
     export AQ_DRM_DEVICES="$intel_card"
+    # Programs draw with Intel too (OpenGL through EGL: Wayland apps, the lock screen). Without this they picked
+    # NVIDIA's EGL first, and after a suspend the lock screen froze half faded-in (2026-11-26 and 11-28: NVIDIA
+    # logged a power event error at wake-up). prime-run (~/.local/bin/prime-run) puts NVIDIA back for one program,
+    # so games still get it; Vulkan (Proton/DXVK games) isn't limited here.
+    export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
 fi
 export HELIOS_GPU_MODE=$mode
 

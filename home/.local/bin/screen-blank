@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# screen-blank on|off: turn every screen black (and back) without switching the screens off.
+# Used by hypridle (hypridle.conf) for the idle screen-off. Real power-off (DPMS) goes through the NVIDIA driver,
+# and waking the screens from it froze the desktop with driver 620 (2026-11-28: black screens, power button needed).
+# Black is drawn by Hyprland's screen shader (decoration.screen_shader), so nothing changes on the display side;
+# on the OLED black pixels are off, which protects it as much as power-off did.
+set -euo pipefail
+
+shader="$HOME/.config/hypr/shaders/blank.frag"
+
+case "${1:-}" in
+    on)  hyprctl eval "hl.config({ decoration = { screen_shader = \"$shader\" } })" >/dev/null ;;
+    off) hyprctl eval 'hl.config({ decoration = { screen_shader = "" } })' >/dev/null ;;
+    *)   echo "usage: screen-blank on|off" >&2; exit 2 ;;
+esac

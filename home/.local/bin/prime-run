@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# prime-run: run one program on the NVIDIA GPU (games: Steam launch option `prime-run %command%`).
+# Same as /usr/bin/prime-run (nvidia-prime), plus NVIDIA's EGL: in laptop-only mode hyprland-session limits EGL to
+# Mesa (Intel) so the desktop and the lock screen never depend on NVIDIA across a suspend, and the plain prime-run
+# only switches GLX (X11 OpenGL) and Vulkan, not EGL. This file comes first in PATH (~/.local/bin).
+export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+exec /usr/bin/prime-run "$@"

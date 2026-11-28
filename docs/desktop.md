@@ -191,14 +191,20 @@ bar, kitty and VS Code.
   entries; KDE ignores the file unless it's executable), `~/.config/kdeglobals` (`TerminalApplication=kitty`).
 
 ## Idle, lock, suspend
-- After 10 minutes without a key press or mouse movement the screens switch off (for the OLED: burn-in, and it does
-  its panel care in standby). Nothing locks or suspends: a key or the mouse brings them back. Playing videos keep
-  them on. Lock with `Alt+.` or `Super+L`.
+- After 10 minutes without a key press or mouse movement the screens turn black (for the OLED: black pixels are off,
+  no burn-in). Nothing locks or suspends: a key or the mouse brings them back. Playing videos keep them on. Lock with
+  `Alt+.` or `Super+L`. Black, not switched off (`screen-blank`): waking switched-off screens through the NVIDIA
+  driver froze the desktop. The OLED's panel care runs when it loses the signal (shutdown, lid closed, its power
+  button), not during idle.
+- If the desktop ever freezes: `Ctrl+Alt+F2`, log in, `cp -r /run/user/1000/hypr ~/hypr-log-$(date +%F-%H%M)` (Hyprland's
+  log, lost at reboot), then `systemctl reboot`.
 - Closing the lid suspends; every suspend locks the screen first.
 - Settings: `~/.config/hypr/hypridle.conf`, look of the lock screen: `~/.config/hypr/hyprlock.conf`.
 
 ## Graphics (NVIDIA + Intel)
-- Default ("mobile"): Intel draws the desktop. Run a program on NVIDIA with `prime-run <program>`.
+- Default ("mobile"): Intel draws the desktop, and programs draw with Intel too. Run a program on NVIDIA with
+  `prime-run <program>`; games in Steam: launch option `prime-run %command%`. (`~/.local/bin/prime-run` adds
+  NVIDIA's EGL to the system one, since the session limits EGL to Intel: the lock screen froze after suspends.)
 - The NVIDIA GPU stays powered on all the time (its power saving broke external monitors with this driver).
 - Monitors on the laptop's HDMI and mini-DisplayPort ports (both wired to the NVIDIA GPU): Hyprland has to start in
   "docked" mode, which it picks by itself when a monitor is plugged in at login. Docked, monitors can be plugged in
