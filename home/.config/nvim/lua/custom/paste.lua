@@ -1,5 +1,5 @@
 -- p / P when the system clipboard holds only an image (a screenshot from Super+Shift+S):
---   in Markdown notes: paste it as an image, like <leader>pi (img-clip saves a PNG in ./assets and inserts the link)
+--   in Markdown notes: paste it as an image, like <leader>pi (img-clip saves a PNG in ./assets/images and inserts the link)
 --   anywhere else: say so, instead of pasting old text from Neovim's own registers
 -- Text on the clipboard, or another register ("ap), is the normal paste. The clipboard itself only gives Neovim text
 -- (vim.g.clipboard in init.lua), so a screenshot never turns into raw PNG bytes.

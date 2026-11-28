@@ -3,7 +3,7 @@
 -- under the cursor shows the raw text, for editing). <leader>tm switches between rendered and raw.
 -- Enter / gd on a link opens it, Enter on a "- [ ]" task ticks it: lua/custom/markdown_links.lua
 -- Notes with screenshots: Super+Shift+S copies a screenshot, <leader>pi pastes it: img-clip saves it as a PNG in
--- ./assets next to the note and inserts the link; image.nvim (jupyter.lua) shows images inline in kitty.
+-- ./assets/images next to the note and inserts the link; image.nvim (jupyter.lua) shows images inline in kitty.
 return {
   {
     'MeanderingProgrammer/render-markdown.nvim',
@@ -34,7 +34,8 @@ return {
     },
     opts = {
       default = {
-        dir_path = 'assets', -- next to the note
+        -- next to the note, in its own subfolder: assets/ also holds other things (a meeting recording, files)
+        dir_path = 'assets/images',
         relative_to_current_file = true,
         prompt_for_file_name = false,
         file_name = '%Y-%m-%d_%H-%M-%S',

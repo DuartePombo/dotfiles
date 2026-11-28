@@ -156,10 +156,10 @@ Rendered in place (`<leader>tm` switches to raw). Enter (or `gd`) on a link open
 Enter on a `- [ ]` task ticks it. Link targets can be `file.md#heading`, `code.lua#text` (first line with that
 text) or `code.lua#L12`.
 Notes with screenshots: `Super+Shift+S` copies a screenshot, `p` (or `<leader>pi`) pastes it (img-clip: saved as a
-PNG in `./assets` next to the note, link inserted); images show inline in kitty (image.nvim's Markdown integration).
+PNG in `./assets/images` next to the note, link inserted); images show inline in kitty (image.nvim's Markdown integration).
 `p` with only an image on the clipboard: in Markdown it pastes the image, elsewhere it says so and pastes nothing
 (`lua/custom/paste.lua`; Neovim's clipboard asks for text only, so a screenshot never becomes raw PNG bytes).
-Deleting the link leaves the PNG in `assets/`.
+Deleting the link leaves the PNG in `assets/images/`.
 Work notes (`lua/custom/notes.lua`; folder = first line of `~/.work-notes.local`, else `~/notes/work`): `daily/` (one
 note per day) and `projects/<project>/` (README.md overview + one `YYYY-MM-DD-title.md` per note). `<leader>nd` today's
 note (template: Catch-up, Notes, To-do; meetings go in project notes, or in an "Other" project), `<leader>nn` new note
