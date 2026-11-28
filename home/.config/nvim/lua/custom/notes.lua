@@ -1,5 +1,5 @@
 -- Work notes: one note per day, one note per project, and keys to reach them from anywhere (<leader>n = [N]otes).
---   <leader>nd  today's daily note (created from a template: Catch-up, Meetings, Notes, To-do)
+--   <leader>nd  today's daily note (created from a template: Catch-up, Notes, To-do)
 --   <leader>np  project picker: Enter opens a project note; a name that matches nothing creates it
 --   <leader>nl  log entry: today's date heading in the project's Log section, ready to type
 --   <leader>nt  every open to-do (- [ ] ...) in all notes; <leader>nf find a note, <leader>ns search all notes
@@ -43,7 +43,7 @@ function M.daily()
     table.sort(earlier)
     local previous = earlier[#earlier]
     if previous then vim.list_extend(lines, { 'Previous day: [' .. previous .. '](' .. previous .. '.md)', '' }) end
-    vim.list_extend(lines, { '## Catch-up', '', '', '## Meetings', '', '', '## Notes', '', '', '## To-do', '', '- [ ] ', '' })
+    vim.list_extend(lines, { '## Catch-up', '', '', '## Notes', '', '', '## To-do', '', '- [ ] ', '' })
     create(path, lines)
   end
   open(path)
