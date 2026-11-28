@@ -161,9 +161,10 @@ PNG in `./assets` next to the note, link inserted); images show inline in kitty 
 (`lua/custom/paste.lua`; Neovim's clipboard asks for text only, so a screenshot never becomes raw PNG bytes).
 Deleting the link leaves the PNG in `assets/`.
 Work notes (`lua/custom/notes.lua`; folder = first line of `~/.work-notes.local`, else `~/notes/work`): `daily/` (one
-note per day) and `projects/` (one per project). `<leader>nd` today's note (template: Catch-up, Notes,
-To-do; meetings go in project notes, or in an "Other" project), `<leader>np` project picker (a new name creates the note), `<leader>nl` dated log entry in a project,
-`<leader>nt` all open to-dos, `<leader>nf` / `<leader>ns` find / search notes. The work-notes window opens on today's
+note per day) and `projects/<project>/` (README.md overview + one `YYYY-MM-DD-title.md` per note). `<leader>nd` today's
+note (template: Catch-up, Notes, To-do; meetings go in project notes, or in an "Other" project), `<leader>nn` new note
+(title asked; outside a project: picker, a new name creates the project), `<leader>nl` a project's notes newest first,
+`<leader>np` a project's overview, `<leader>nt` all open to-dos, `<leader>nf` / `<leader>ns` find / search notes. The work-notes window opens on today's
 note (`app-launch work-notes`).
 
 ## Maintenance
