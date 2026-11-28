@@ -346,7 +346,8 @@ bar, kitty and VS Code.
   here" marks the current one), then project folders without a session. `Enter` goes there (a folder gets a session
   named after it, starting in it), `Ctrl+x` closes the highlighted session and everything in it, `Esc` cancels.
   Folders: those in `~/pombo/projects`, plus those in each path listed in `~/.tmux-sessionizer.local` (one per line;
-  that file stays on this machine, so work paths never reach the repo).
+  a path ending in `/**` means every git repository anywhere inside it, found with fd; two with the same name get their
+  parent folder's name in front). That file stays on this machine, so work paths never reach the repo.
 - tmux (prefix `Ctrl+b`): `f` sessions and projects, `h`/`j`/`k`/`l` panes, `r` reload config, `[` copy mode (`v`
   select, `y` copy).
 - Node: mise (`mise use -g node@lts`, per project `mise use node@22`). Python: `uv` for pip-style projects;

@@ -5,14 +5,16 @@
 #   Ctrl+x  close the highlighted session and everything running in it. The list stays open.
 #   Esc     cancel.
 # Usage: tmux-sessionizer [folder]   (with a folder: skip the list, go straight to that folder's session)
-# Folders: one level inside ~/pombo/projects, plus inside every path listed in ~/.tmux-sessionizer.local (one path per
-# line, ~ allowed, # comments). That file is machine-local and not in the dotfiles repo, so work paths stay out of it.
+# Folders: one level inside ~/pombo/projects, plus what ~/.tmux-sessionizer.local lists (one path per line, ~ allowed,
+# # comments). A path there means "its subfolders are projects"; a path ending in /** means "every git repository
+# anywhere inside it" (found with fd; node_modules and .venv skipped). That file is machine-local and not in the
+# dotfiles repo, so work paths stay out of it.
 
 local_paths=~/.tmux-sessionizer.local
 self=$0                                    # this script's full path, for fzf's key bindings
 peach=$'\e[38;2;250;179;135m' grey=$'\e[38;2;108;112;134m' reset=$'\e[0m'
 
-session_name() { basename "$1" | tr . _; }   # tmux uses dots in targets
+session_name() { local n=${1%/}; n=${n##*/}; printf '%s' "${n//./_}"; }   # the folder's name; tmux uses dots in targets
 
 # Inside tmux: the terminal (tmux "client") this runs for. From a shell in a pane, tmux knows it; in the prefix + f
 # pop-up it doesn't (it answers with a stale session), so tmux.conf's key notes it in @sessionizer_client first.
@@ -22,21 +24,38 @@ client() {
 }
 here() { local c; c=$(client); [[ -n $c ]] && tmux display -p -c "$c" '#{client_session}' 2>/dev/null; }
 
+# Project folders, one per line as "folder<tab>session name"
 folders() {
-    local paths=("$HOME/pombo/projects") line
+    local children=("$HOME/pombo/projects") repos=() line dir name
     if [[ -f $local_paths ]]; then
         while IFS= read -r line; do
             line=${line%%#*}                          # strip comments
             line=${line#"${line%%[![:space:]]*}"}     # trim leading spaces
             line=${line%"${line##*[![:space:]]}"}     # trim trailing spaces
             [[ -z $line ]] && continue
-            paths+=("${line/#\~/$HOME}")
+            line=${line/#\~/$HOME}
+            if [[ $line == */\*\* ]]; then repos+=("${line%/\*\*}"); else children+=("$line"); fi
         done < "$local_paths"
     fi
-    find "${paths[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort
+    local dirs=()
+    mapfile -t dirs < <({
+        find "${children[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+        if ((${#repos[@]})); then
+            fd --hidden --prune --max-depth 7 --exclude node_modules --exclude .venv '^\.git$' "${repos[@]}" 2>/dev/null |
+                sed -E 's#/\.git/?$##'
+        fi
+    } | sort -u)
+    # Session names: the folder's name; folders sharing a name get their parent's in front (dms-client, rpa-client)
+    local -A count=()
+    for dir in "${dirs[@]}"; do name=$(session_name "$dir"); count[$name]=$((${count[$name]:-0} + 1)); done
+    for dir in "${dirs[@]}"; do
+        name=$(session_name "$dir")
+        ((count[$name] > 1)) && name="$(session_name "${dir%/*}")-$name"
+        printf '%s\t%s\n' "$dir" "$name"
+    done
 }
 
-# The list: "S<tab>session<tab>shown text" or "D<tab>folder<tab>shown text"
+# The list: "S<tab>session<tab>session<tab>shown text" or "D<tab>folder<tab>session name<tab>shown text"
 list() {
     local here="" name windows attached dir note parent
     local -A running=()
@@ -47,13 +66,12 @@ list() {
         if [[ $name == "$here" ]]; then note+=", you are here"
         elif ((attached > 0)); then note+=", open in a terminal"
         fi
-        printf 'S\t%s\t%s●%s %s  %s(%s)%s\n' "$name" "$peach" "$reset" "$name" "$grey" "$note" "$reset"
+        printf 'S\t%s\t%s\t%s●%s %s  %s(%s)%s\n' "$name" "$name" "$peach" "$reset" "$name" "$grey" "$note" "$reset"
     done < <(tmux ls -F '#{session_activity}	#{session_name}	#{session_windows}	#{session_attached}' 2>/dev/null | sort -rn)
-    while IFS= read -r dir; do
-        name=$(session_name "$dir")
+    while IFS=$'\t' read -r dir name; do
         [[ -n ${running[$name]:-} ]] && continue      # already running: listed above as a session
         parent=${dir%/*}
-        printf 'D\t%s\t  %s  %s%s%s\n' "$dir" "$name" "$grey" "${parent/#"$HOME"/\~}" "$reset"
+        printf 'D\t%s\t%s\t  %s  %s%s%s\n' "$dir" "$name" "$name" "$grey" "${parent/#"$HOME"/\~}" "$reset"
     done < <(folders)
 }
 
@@ -77,10 +95,9 @@ close() {     # $1 S or D, $2 session or folder: only sessions can be closed
     tmux kill-session -t "=$2"
 }
 
-go() {        # $1 S or D, $2 session or folder
-    local name=$2
+go() {        # $1 S or D, $2 session or folder, $3 session name
+    local name=${3:-$2}
     if [[ $1 == D ]]; then
-        name=$(session_name "$2")
         tmux has-session -t "=$name" 2>/dev/null || tmux new-session -ds "$name" -c "$2"
     fi
     if [[ -n $TMUX ]]; then
@@ -98,15 +115,15 @@ esac
 
 if [[ $# -eq 1 ]]; then
     dir=$(cd "$1" 2>/dev/null && pwd) || { echo "No such folder: $1" >&2; exit 1; }
-    go D "$dir"
+    go D "$dir" "$(session_name "$dir")"
     exit
 fi
 
-choice=$(list | fzf --ansi --delimiter='\t' --with-nth=3 --layout=reverse --tiebreak=index \
+choice=$(list | fzf --ansi --delimiter='\t' --with-nth=4 --layout=reverse --tiebreak=index \
     --prompt='go to > ' \
     --header=$'Enter: go there   Ctrl+x: close a session (●)   Esc: cancel' \
     --preview="$self --preview {1} {2}" --preview-window='down,60%,border-top' \
     --bind="ctrl-x:execute-silent($self --close {1} {2})+reload($self --list)")
 [[ -z $choice ]] && exit 0
-IFS=$'\t' read -r kind target _ <<< "$choice"
-go "$kind" "$target"
+IFS=$'\t' read -r kind target name _ <<< "$choice"
+go "$kind" "$target" "$name"
