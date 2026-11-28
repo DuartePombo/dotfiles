@@ -4,7 +4,8 @@
 --   <leader>nn  new note: asks a title, creates projects/<project>/YYYY-MM-DD-title.md (outside a project: pick one;
 --               a name that matches nothing creates the project)
 --   <leader>nl  list the project's notes, newest first, with a preview
---   <leader>np  a project's overview page (its README.md: what it is, links, decisions, to-dos)
+--   <leader>np  a project's overview page (its README.md: what it is, links, decisions, to-dos, and a Notes list
+--               rebuilt from the folder, newest first, each time a note is made or the overview opened)
 --   <leader>nt  every open to-do (- [ ] ...) in all notes; <leader>nf find a note, <leader>ns search all notes
 -- The folder: the first non-comment line of ~/.work-notes.local (local, never in the repo), else ~/notes/work: the
 -- same rule as `app-launch work-notes`, which opens today's note in its own window (workspace 4).
@@ -72,7 +73,7 @@ local function ensure_project(name, title)
   end
   if vim.fn.filereadable(dir .. '/README.md') == 0 then
     create(dir .. '/README.md', { '# ' .. (title or name), '', 'What it is: ', '', '## Links', '', '', '## Decisions', '',
-      '', '## To-do', '', '- [ ] ', '' })
+      '', '## To-do', '', '- [ ] ', '', '## Notes', '' })
   end
   return dir
 end
@@ -147,8 +148,80 @@ function M.pick_project(on_pick)
 end
 
 -- The project's overview page (README.md)
+-- The notes of a project (every .md but README.md), newest first: by the date in the name, then by when the file was
+-- made (several notes on one day: the latest first)
+local function sorted_notes(project)
+  local dir = projects_dir() .. '/' .. project
+  local paths = vim.tbl_filter(function(path) return vim.fn.fnamemodify(path, ':t') ~= 'README.md' end,
+    vim.fn.glob(dir .. '/*.md', false, true))
+  local function key(path)
+    local stat = vim.uv.fs_stat(path)
+    local made = stat and (stat.birthtime.sec > 0 and stat.birthtime or stat.mtime) or { sec = 0, nsec = 0 }
+    return vim.fn.fnamemodify(path, ':t'):sub(1, 10) .. string.format('%012d%09d', made.sec, made.nsec)
+  end
+  table.sort(paths, function(a, b) return key(a) > key(b) end)
+  return paths
+end
+
+local NOTES_HEADING = '## Notes'
+local NOTES_INTRO = '_Newest first, rebuilt from the folder by Space n n and Space n p: write your own text in the other sections._'
+
+-- Rebuild the "## Notes" section of the project's README (the last section; added if missing): one line per note,
+-- "- date · [title](file)", the title being the note's first "# " line. Works on the open buffer if the README is open.
+function M.refresh_readme(project)
+  local readme = projects_dir() .. '/' .. project .. '/README.md'
+  if vim.fn.filereadable(readme) == 0 then return end
+  local links = {}
+  for _, path in ipairs(sorted_notes(project)) do
+    local file = vim.fn.fnamemodify(path, ':t')
+    local title = file:gsub('%.md$', '')
+    for _, line in ipairs(vim.fn.readfile(path, '', 5)) do
+      if line:match '^# ' then
+        title = vim.trim(line:sub(3)):gsub('[%[%]]', '')
+        break
+      end
+    end
+    table.insert(links, '- ' .. file:sub(1, 10) .. ' · [' .. title .. '](' .. file .. ')')
+  end
+  local section = { NOTES_HEADING, '', NOTES_INTRO, '' }
+  vim.list_extend(section, links)
+  table.insert(section, '')
+
+  local buf = vim.fn.bufnr(readme)
+  local loaded = buf ~= -1 and vim.api.nvim_buf_is_loaded(buf)
+  local lines = loaded and vim.api.nvim_buf_get_lines(buf, 0, -1, false) or vim.fn.readfile(readme)
+  local first, last = nil, #lines
+  for i, line in ipairs(lines) do
+    if first and line:match '^## ' then
+      last = i - 1
+      break
+    end
+    if line == NOTES_HEADING then first = i end
+  end
+  local new_lines
+  if first then
+    new_lines = vim.list_slice(lines, 1, first - 1)
+    vim.list_extend(new_lines, section)
+    vim.list_extend(new_lines, vim.list_slice(lines, last + 1, #lines))
+  else
+    new_lines = vim.list_extend(vim.list_slice(lines, 1, #lines), { '' })
+    if new_lines[#new_lines - 1] == '' then table.remove(new_lines) end
+    vim.list_extend(new_lines, section)
+  end
+  if loaded then
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, new_lines)
+    vim.api.nvim_buf_call(buf, function() vim.cmd 'silent noautocmd write' end)
+  else
+    vim.fn.writefile(new_lines, readme)
+  end
+end
+
+-- The project's overview page (README.md), with its Notes list brought up to date
 function M.project()
-  M.pick_project(function(name) open(projects_dir() .. '/' .. name .. '/README.md') end)
+  M.pick_project(function(name)
+    M.refresh_readme(name)
+    open(projects_dir() .. '/' .. name .. '/README.md')
+  end)
 end
 
 -- A new note in a project: asks for a title, creates YYYY-MM-DD-title.md, and you're typing under the title
@@ -164,6 +237,7 @@ function M.new_note_in(project)
       path, n = base .. '-' .. n .. '.md', n + 1
     end
     create(path, { '# ' .. title, '', date .. ' · [' .. project .. '](README.md)', '', '' })
+    M.refresh_readme(project)
     open(path)
     vim.api.nvim_win_set_cursor(0, { 5, 0 })
     vim.cmd 'startinsert'
@@ -178,16 +252,7 @@ end
 
 -- The notes of a project, newest first (their names start with the date)
 function M.list_notes_in(project)
-  local dir = projects_dir() .. '/' .. project
-  local paths = vim.tbl_filter(function(path) return vim.fn.fnamemodify(path, ':t') ~= 'README.md' end,
-    vim.fn.glob(dir .. '/*.md', false, true))
-  -- by the date in the name, then by when the file was made (several notes on one day: the latest first)
-  local function key(path)
-    local stat = vim.uv.fs_stat(path)
-    local made = stat and (stat.birthtime.sec > 0 and stat.birthtime or stat.mtime) or { sec = 0, nsec = 0 }
-    return vim.fn.fnamemodify(path, ':t'):sub(1, 10) .. string.format('%012d%09d', made.sec, made.nsec)
-  end
-  table.sort(paths, function(a, b) return key(a) > key(b) end)
+  local paths = sorted_notes(project)
   if #paths == 0 then return vim.notify('No notes in ' .. project .. ' yet: Space n n makes one') end
   file_picker('Notes in ' .. project .. ' (newest first)', paths, function(path) return vim.fn.fnamemodify(path, ':t:r') end)
 end
