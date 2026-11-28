@@ -1,16 +1,29 @@
 #!/usr/bin/env bash
-# tmux-sessionizer: pick a project folder with fzf and switch to a tmux session for it, creating it if needed.
-# Usage: tmux-sessionizer [folder]   (alias `fz`; inside tmux: prefix + f)
-# Searches the folders one level inside ~/pombo/projects, plus those inside every path listed in
-# ~/.tmux-sessionizer.local (one path per line, ~ allowed, # comments). That file is machine-local and not in
-# the dotfiles repo, so work paths stay out of it.
+# tmux-sessionizer: ONE list for tmux (alias `fz`; inside tmux: prefix + f, in a pop-up).
+#   ● sessions that are running (most recently used first), then project folders without a session yet.
+#   Enter   go there. A folder gets a session first, named after it and starting in it.
+#   Ctrl+x  close the highlighted session and everything running in it. The list stays open.
+#   Esc     cancel.
+# Usage: tmux-sessionizer [folder]   (with a folder: skip the list, go straight to that folder's session)
+# Folders: one level inside ~/pombo/projects, plus inside every path listed in ~/.tmux-sessionizer.local (one path per
+# line, ~ allowed, # comments). That file is machine-local and not in the dotfiles repo, so work paths stay out of it.
 
 local_paths=~/.tmux-sessionizer.local
+self=$0                                    # this script's full path, for fzf's key bindings
+peach=$'\e[38;2;250;179;135m' grey=$'\e[38;2;108;112;134m' reset=$'\e[0m'
 
-if [[ $# -eq 1 ]]; then
-    selected=$1
-else
-    paths=("$HOME/pombo/projects")
+session_name() { basename "$1" | tr . _; }   # tmux uses dots in targets
+
+# Inside tmux: the terminal (tmux "client") this runs for. From a shell in a pane, tmux knows it; in the prefix + f
+# pop-up it doesn't (it answers with a stale session), so tmux.conf's key notes it in @sessionizer_client first.
+client() {
+    [[ -n $TMUX ]] || return 0
+    if [[ -n ${TMUX_PANE:-} ]]; then tmux display -p '#{client_name}'; else tmux show -gv @sessionizer_client; fi 2>/dev/null
+}
+here() { local c; c=$(client); [[ -n $c ]] && tmux display -p -c "$c" '#{client_session}' 2>/dev/null; }
+
+folders() {
+    local paths=("$HOME/pombo/projects") line
     if [[ -f $local_paths ]]; then
         while IFS= read -r line; do
             line=${line%%#*}                          # strip comments
@@ -20,18 +33,80 @@ else
             paths+=("${line/#\~/$HOME}")
         done < "$local_paths"
     fi
-    selected=$(find "${paths[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | fzf)
-fi
-[[ -z $selected ]] && exit 0
+    find "${paths[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort
+}
 
-name=$(basename "$selected" | tr . _)
+# The list: "S<tab>session<tab>shown text" or "D<tab>folder<tab>shown text"
+list() {
+    local here="" name windows attached dir note parent
+    local -A running=()
+    here=$(here)
+    while IFS=$'\t' read -r _ name windows attached; do
+        running[$name]=1
+        note="$windows window"; ((windows > 1)) && note+="s"
+        if [[ $name == "$here" ]]; then note+=", you are here"
+        elif ((attached > 0)); then note+=", open in a terminal"
+        fi
+        printf 'S\t%s\t%s●%s %s  %s(%s)%s\n' "$name" "$peach" "$reset" "$name" "$grey" "$note" "$reset"
+    done < <(tmux ls -F '#{session_activity}	#{session_name}	#{session_windows}	#{session_attached}' 2>/dev/null | sort -rn)
+    while IFS= read -r dir; do
+        name=$(session_name "$dir")
+        [[ -n ${running[$name]:-} ]] && continue      # already running: listed above as a session
+        parent=${dir%/*}
+        printf 'D\t%s\t  %s  %s%s%s\n' "$dir" "$name" "$grey" "${parent/#"$HOME"/\~}" "$reset"
+    done < <(folders)
+}
 
-if ! tmux has-session -t "=$name" 2>/dev/null; then
-    tmux new-session -ds "$name" -c "$selected"
+preview() {   # $1 S or D, $2 session or folder
+    if [[ $1 == S ]]; then
+        tmux capture-pane -ep -t "=$2:" 2>/dev/null     # its current window, as it looks right now
+    else
+        eza -la --color=always --icons=always --group-directories-first "$2" 2>/dev/null || ls -la --color=always "$2"
+    fi
+}
+
+close() {     # $1 S or D, $2 session or folder: only sessions can be closed
+    [[ $1 == S ]] || return 0
+    if [[ -n $TMUX && $2 == "$(here)" ]]; then
+        # Closing the session this terminal shows: move the terminal to the next session first, if there's one
+        # (with none left, the terminal simply leaves tmux)
+        local other
+        other=$(tmux ls -F '#{session_activity}	#{session_name}' | sort -rn | cut -f2 | grep -vxF -- "$2" | head -n 1)
+        [[ -n $other ]] && tmux switch-client -c "$(client)" -t "=$other"
+    fi
+    tmux kill-session -t "=$2"
+}
+
+go() {        # $1 S or D, $2 session or folder
+    local name=$2
+    if [[ $1 == D ]]; then
+        name=$(session_name "$2")
+        tmux has-session -t "=$name" 2>/dev/null || tmux new-session -ds "$name" -c "$2"
+    fi
+    if [[ -n $TMUX ]]; then
+        tmux switch-client -c "$(client)" -t "=$name"
+    else
+        tmux attach-session -t "=$name"
+    fi
+}
+
+case ${1:-} in
+    --list)    list; exit ;;
+    --preview) preview "$2" "$3"; exit ;;
+    --close)   close "$2" "$3"; exit ;;
+esac
+
+if [[ $# -eq 1 ]]; then
+    dir=$(cd "$1" 2>/dev/null && pwd) || { echo "No such folder: $1" >&2; exit 1; }
+    go D "$dir"
+    exit
 fi
 
-if [[ -n $TMUX ]]; then
-    tmux switch-client -t "=$name"
-else
-    tmux attach-session -t "=$name"
-fi
+choice=$(list | fzf --ansi --delimiter='\t' --with-nth=3 --layout=reverse --tiebreak=index \
+    --prompt='go to > ' \
+    --header=$'Enter: go there   Ctrl+x: close a session (●)   Esc: cancel' \
+    --preview="$self --preview {1} {2}" --preview-window='down,60%,border-top' \
+    --bind="ctrl-x:execute-silent($self --close {1} {2})+reload($self --list)")
+[[ -z $choice ]] && exit 0
+IFS=$'\t' read -r kind target _ <<< "$choice"
+go "$kind" "$target"

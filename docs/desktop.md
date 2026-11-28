@@ -49,7 +49,7 @@ screen. Start the apps from `Alt+D` by these names and they open on their worksp
 
 | # | App (`Alt+D` name) | Screen when docked |
 |---|---|---|
-| 1 | Work projects: kitty + tmux session `work` (`fz` / `Ctrl+b f` switch projects, `claude` in a tmux window) | front monitor |
+| 1 | Work projects: kitty + tmux session `work` (`fz` / `Ctrl+b f` switch or close sessions and projects, `claude` in a tmux window) | front monitor |
 | 2 | Chrome (work): its own data folder, sign in with the work account; links from Slack and Zoom open here | front monitor |
 | 3 | Slack | laptop |
 | 4 | Work notes: Neovim on today's note in the work notes folder (named in `~/.work-notes.local`, local only; default `~/notes/work`); `Space n` keys (see neovim.md); `Super+Shift+S`, then `p` (or `Space p i`) pastes the screenshot | laptop |
@@ -342,10 +342,13 @@ bar, kitty and VS Code.
 - Shell (bash + fzf): `Ctrl+R` search history, `Ctrl+T` insert a file, `Alt+C` jump into a folder, `**` + `Tab`
   fuzzy-complete a path (`nvim **<Tab>`). `Tab` completes commands too (git, pacman, systemctl...). History is
   shared between terminals; a command started with a space isn't saved.
-- `fz`: pick a project folder and jump into a tmux session for it (`tmux-sessionizer`). It lists the folders in
-  `~/pombo/projects`, plus those in each path listed in `~/.tmux-sessionizer.local` (one per line; that file stays
-  on this machine, so work paths never reach the repo).
-- tmux (prefix `Ctrl+b`): `f` projects, `h`/`j`/`k`/`l` panes, `r` reload config, `[` copy mode (`v` select, `y` copy).
+- `fz` (inside tmux: `Ctrl+b f`, a pop-up): one list for tmux (`tmux-sessionizer`). Running sessions first (●, "you are
+  here" marks the current one), then project folders without a session. `Enter` goes there (a folder gets a session
+  named after it, starting in it), `Ctrl+x` closes the highlighted session and everything in it, `Esc` cancels.
+  Folders: those in `~/pombo/projects`, plus those in each path listed in `~/.tmux-sessionizer.local` (one per line;
+  that file stays on this machine, so work paths never reach the repo).
+- tmux (prefix `Ctrl+b`): `f` sessions and projects, `h`/`j`/`k`/`l` panes, `r` reload config, `[` copy mode (`v`
+  select, `y` copy).
 - Node: mise (`mise use -g node@lts`, per project `mise use node@22`). Python: `uv` for pip-style projects;
   conda (Miniforge) for environments: `conda activate jupyter && jupyter lab`.
 - Docker: `docker ps`, `docker compose up -d`. Images and containers live on their own subvolumes and are not in
