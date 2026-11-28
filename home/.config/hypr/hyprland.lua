@@ -106,11 +106,12 @@ hl.config({
 
         border_size = 2,
 
-        -- Borders (were Hyprland's stock cyan→green): the active window a vivid orange (the desktop's peach, saturated:
-        -- tokyonight's orange, Neovim's theme) fading into tokyonight's cyan, diagonally, fully opaque; the others a
-        -- quiet blue-grey. 2 px: with see-through terminals the border is what shows a window's edge.
+        -- Borders (were Hyprland's stock cyan→green): the active window goes orange → pink → purple → cyan (tokyonight,
+        -- Neovim's theme), diagonally, fully opaque; the others a quiet blue-grey. Only neighbouring colours blend: orange
+        -- straight into cyan (opposites) turned grey (#beb6b1) in the middle, at the bottom-left corner, so the active
+        -- window didn't look active there. 2 px: with see-through terminals the border is what shows a window's edge.
         col = {
-            active_border   = { colors = {"rgba(ff9e64ff)", "rgba(7dcfffff)"}, angle = 45 },
+            active_border   = { colors = {"rgba(ff9e64ff)", "rgba(f7768eff)", "rgba(bb9af7ff)", "rgba(7dcfffff)"}, angle = 45 },
             inactive_border = "rgba(45475aaa)",
         },
 
